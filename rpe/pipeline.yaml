@@ -72,7 +72,7 @@ jobs:
     inputs:
       # targetType: 'inline'
       arguments: -ARMOutput '$(vnetOutputs)'
-      filePath: rpe/scripts/Parse-ARMOutput.ps1'
+      filePath: rpe/scripts/Parse-ARMOutput.ps1
 
   - task: AzureResourceGroupDeployment@2
     displayName: 'Deploy AKS Cluster'
