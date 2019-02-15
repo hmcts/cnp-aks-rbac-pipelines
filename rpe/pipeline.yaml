@@ -50,7 +50,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       azurePowerShellVersion: latestVersion
       scriptArguments: -ResourceGroupName $(aksResourceGroup) -VnetCIDR $(aksVnetCidr) -SubnetCIDR $(aksSubnetCidr)
-      scriptPath: $(Build.SourcesDirectory)/rpe/scripts/Check-Vnet-Prerequisites.ps1
+      scriptPath: rpe/scripts/Check-Vnet-Prerequisites.ps1
 
   - task: AzureResourceGroupDeployment@2
     displayName: 'Deploy VNET'
@@ -62,7 +62,7 @@ jobs:
       deploymentMode: 'Incremental'
       location: 'UK South'
       templateLocation: 'Linked artifact'
-      csmFile: 'arm/templates/aks-rbac-vnet.json'
+      csmFile: 'rpe/arm-vnet-template.json'
       overrideParameters: '-aksVnetName $(aksClusterName) -aksVnetPrefix $(aksVnetCidr) -aksSubnetName default -aksSubnetPrefix $(aksSubnetCidr)'
       deploymentOutputs: 'vnetOutputs'
 
@@ -72,7 +72,7 @@ jobs:
     inputs:
       # targetType: 'inline'
       arguments: -ARMOutput '$(vnetOutputs)'
-      filePath: '$(Build.SourcesDirectory)/rpe/scripts/Parse-ARMOutput.ps1'
+      filePath: rpe/scripts/Parse-ARMOutput.ps1'
 
   - task: AzureResourceGroupDeployment@2
     displayName: 'Deploy AKS Cluster'
@@ -83,7 +83,7 @@ jobs:
       deploymentMode: 'Incremental'
       location: 'UK South'
       templateLocation: 'Linked artifact'
-      csmFile: 'arm/templates/aks-rbac.json'
+      csmFile: 'rpe/arm-aks-template.json'
       csmParametersFile: 'rpe/arm-aks-parameters.json'
       overrideParameters: '-aksClusterName $(aksClusterName) -aksVnetSubnetId $(aksSubnetId) -aksServiceCidr $(aksServiceCidr) -aksDnsServiceIp $(aksDnsServiceIp) -servicePrincipalSecret $(aksServicePrincipalSecret) -serverAppId $(aksServerAppId) -serverAppSecret $(aksServerAppSecret) -clientAppId $(aksClientAppId)'
 
@@ -143,7 +143,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       azurePowerShellVersion: latestVersion
       scriptType: 'inlineScript'
-      inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/rpe/scripts/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)'}} -OutputFile $(Build.SourcesDirectory)/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
+      inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/rpe/scripts/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)'}} -OutputFile $(Build.SourcesDirectory)/rpe/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
       timeoutInMinutes: 1
       
   - task: PublishTestResults@2
