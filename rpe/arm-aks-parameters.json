@@ -9,10 +9,10 @@
       "value": "1.12.4"
     },
     "vmSize": {
-      "value": "Standard_B4ms"
+      "value": "Standard_B2ms"
     },
     "nodeCount": {
-      "value": 3
+      "value": 2
     },
     "aksVnetSubnetId": {
       "value": ""
