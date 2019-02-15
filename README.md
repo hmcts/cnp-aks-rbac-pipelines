@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Collection of pipelines that automate the recreation of the AKS RBAC enabled clusters used for continuous integration.
+Collection of pipelines that automate the recreation of the AKS RBAC enabled clusters.
 In general, the pipelines do the following:
 * Fetch required configuration from various sources (keyvault, az cli queries)
 * Check if the infrastructure for the parameters passed in does already exist; if not, the necessary infrastructure components are created.
