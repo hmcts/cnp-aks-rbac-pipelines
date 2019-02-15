@@ -87,7 +87,6 @@ jobs:
       csmParametersFile: 'rpe/arm-aks-parameters.json'
       overrideParameters: '-aksClusterName $(aksClusterName) -aksVnetSubnetId $(aksSubnetId) -aksServiceCidr $(aksServiceCidr) -aksDnsServiceIp $(aksDnsServiceIp) -servicePrincipalSecret $(aksServicePrincipalSecret) -serverAppId $(aksServerAppId) -serverAppSecret $(aksServerAppSecret) -clientAppId $(aksClientAppId)'
 
-  
 - job: SetRolesBindings
   dependsOn: DeployAKS
   pool:
@@ -113,7 +112,7 @@ jobs:
 
         az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
         
-        cat manifests/rpe/cluster-admin-role-binding.yml | \
+        cat rpe/roles/cluster-admin-role-binding.yml | \
           sed -e 's@${CLUSTER_ADMIN_GROUP}@'"$CLUSTER_ADMIN_GROUP"'@' | \
           sed -e 's@${CLUSTER_GLOBAL_ADMINS_GROUP}@'"$CLUSTER_GLOBAL_ADMINS_GROUP"'@' | \
           kubectl apply -f -
@@ -124,11 +123,11 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        kubectl apply -f manifests/rpe/developers-log-reader-role.yml
+        kubectl apply -f rpe/roles/developers-log-reader-role.yml
         DEVELOPERS_GROUP=$(az ad group list --query  "[?displayName=='developers'].objectId" -o tsv)
         if [ ! -z "${DEVELOPERS_GROUP}" ]; then
           az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
-          cat manifests/rpe/developers-log-reader-binding.yml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
+          cat rpe/rolesrpe/developers-log-reader-binding.yml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
         fi
 
 - job: RunTests
