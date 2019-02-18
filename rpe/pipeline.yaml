@@ -32,19 +32,18 @@ jobs:
 - job: DeployAKS
   dependsOn: Keyvault
   pool:
-    name: 'Hosted VS2017'
+    vmImage: 'Ubuntu 16.04'
   variables:
     aksClusterName: $(aksResourceGroup)-cluster
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
   steps:
-  - task: AzurePowerShell@3
+  - task: AzureCLI@1
     displayName: Check VNET prerequisites
     inputs:
       azureSubscription: $(serviceConnection)
-      azurePowerShellVersion: latestVersion
-      scriptArguments: -ResourceGroupName $(aksResourceGroup) -VnetCIDR $(aksVnetCidr) -SubnetCIDR $(aksSubnetCidr)
-      scriptPath: rpe/scripts/Check-Vnet-Prerequisites.ps1
+      arguments: $(aksResourceGroup) $(aksVnetCidr) $(aksSubnetCidr)
+      scriptPath: rpe/scripts/check-vnet-prerequisites.sh
 
   - task: AzureResourceGroupDeployment@2
     displayName: 'Deploy VNET'
@@ -60,12 +59,12 @@ jobs:
       overrideParameters: '-aksVnetName $(aksClusterName) -aksVnetPrefix $(aksVnetCidr) -aksSubnetName default -aksSubnetPrefix $(aksSubnetCidr)'
       deploymentOutputs: 'vnetOutputs'
 
-  - task: PowerShell@2
+  - task: AzureCLI@1
     displayName: Parse ARM Outputs
-    condition: not(variables['aksSubnetId'])
     inputs:
-      arguments: -ARMOutput '$(vnetOutputs)'
-      filePath: rpe/scripts/Parse-ARMOutput.ps1
+      azureSubscription: $(serviceConnection)
+      arguments: '$(vnetOutputs)'
+      scriptPath: rpe/scripts/parse-arm-output.sh
 
   - task: AzureResourceGroupDeployment@2
     displayName: 'Deploy AKS Cluster'
