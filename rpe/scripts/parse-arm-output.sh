@@ -2,6 +2,9 @@
 
 ARM_OUTPUT=$1
 
+echo 'Raw ARM OUTPUT is:'
+echo $ARM_OUTPUT
+
 if [ -z "${ARM_OUTPUT}" ] ; then
   echo "JSON ARM Output is required." 
   exit 1
