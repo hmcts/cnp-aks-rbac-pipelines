@@ -64,7 +64,7 @@ jobs:
     condition: not(variables['aksSubnetId'])
     inputs:
       azureSubscription: $(serviceConnection)
-      arguments: '$(vnetOutputs)'
+      arguments: "$(vnetOutputs)"
       scriptPath: rpe/scripts/parse-arm-output.sh
 
   - task: AzureResourceGroupDeployment@2
