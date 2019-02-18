@@ -32,7 +32,7 @@ if [ -z "$subnetCandidate" ] ; then
 fi
 
 subnetId=$(echo $subnetCandidate | jq -r ".id")
-echo "##vso[task.setvariable variable=aksSubnetId;isOutput=true]${subnetId}"
+echo "###vso[task.setvariable variable=aksSubnetId;isOutput=true]${subnetId}"
 
 
 
