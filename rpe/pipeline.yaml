@@ -80,13 +80,6 @@ jobs:
       csmParametersFile: 'rpe/arm-aks-parameters.json'
       overrideParameters: '-aksClusterName $(aksClusterName) -aksVnetSubnetId $(aksSubnetId) -aksServiceCidr $(aksServiceCidr) -aksDnsServiceIp $(aksDnsServiceIp) -servicePrincipalSecret $(aksServicePrincipalSecret) -serverAppSecret $(aksServerAppSecret)'
 
-- job: SetRolesBindings
-  dependsOn: DeployAKS
-  pool:
-    vmImage: 'Ubuntu 16.04'
-  variables:
-    aksClusterName: $(aksResourceGroup)-cluster
-  steps:
   - task: AzureCLI@1
     displayName: 'Bind admin role to "aks-cluster-admin" group'
     inputs:
@@ -134,7 +127,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       azurePowerShellVersion: latestVersion
       scriptType: 'inlineScript'
-      inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/rpe/scripts/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)'}} -OutputFile $(Build.SourcesDirectory)/rpe/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
+      inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/rpe/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)'}} -OutputFile $(Build.SourcesDirectory)/rpe/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
       timeoutInMinutes: 1
       
   - task: PublishTestResults@2
