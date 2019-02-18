@@ -64,8 +64,13 @@ jobs:
     condition: not(variables['aksSubnetId'])
     inputs:
       azureSubscription: $(serviceConnection)
-      arguments: "$(vnetOutputs)"
-      scriptPath: rpe/scripts/parse-arm-output.sh
+      scriptLocation: inlineScript
+      inlineScript: |
+        for row in $(echo '$(vnetOutputs)' | jq -c '. | to_entries[]'); do
+          outputName=$(echo ${row} | jq -r ".key")
+          outputValue=$(echo ${row} | jq -r ".value.value")
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+        done
 
   - task: AzureResourceGroupDeployment@2
     displayName: 'Deploy AKS Cluster'
