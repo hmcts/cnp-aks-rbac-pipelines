@@ -61,6 +61,7 @@ jobs:
 
   - task: AzureCLI@1
     displayName: Parse ARM Outputs
+    condition: not(variables['aksSubnetId'])
     inputs:
       azureSubscription: $(serviceConnection)
       arguments: '$(vnetOutputs)'
