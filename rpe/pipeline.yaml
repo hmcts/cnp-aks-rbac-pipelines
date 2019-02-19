@@ -11,6 +11,7 @@ variables:
   aksDnsServiceIp: ''
   keyvaultName: rpe-infra
   serviceConnection: azurerm-rpetemp
+  helmVersion: '2.12.0'
 
 jobs:
 - job: Keyvault
@@ -119,6 +120,36 @@ jobs:
           az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
           cat rpe/roles/developers-log-reader-binding.yml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
         fi
+
+  - task: Kubernetes@1
+    displayName: 'Configure RBAC for Helm'
+    enabled: true
+    inputs:
+      connectionType: 'Azure Resource Manager'
+      azureSubscriptionEndpoint: $(serviceConnection)
+      azureResourceGroup: $(aksResourceGroup)
+      kubernetesCluster: $(aksClusterName)
+      command: 'apply'
+      arguments: '-f https://raw.githubusercontent.com/Azure/helm-charts/master/docs/prerequisities/helm-rbac-config.yaml'
+      outputFormat: 'name'
+
+  - task: HelmInstaller@0
+    displayName: 'Install Helm $(helmVersion)'
+    inputs:
+        helmVersion: $(helmVersion)
+        checkLatestHelmVersion: false
+        installKubectl: false
+
+  - task: HelmDeploy@0
+    displayName: 'Install Tiller'
+    enabled: true
+    inputs:
+      connectionType: 'Azure Resource Manager'
+      azureSubscription: $(serviceConnection)
+      azureResourceGroup: $(aksResourceGroup)
+      kubernetesCluster: $(aksClusterName)
+      command: 'init'
+      arguments: '--service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion)'
 
 - job: RunTests
   dependsOn: DeployAKS
