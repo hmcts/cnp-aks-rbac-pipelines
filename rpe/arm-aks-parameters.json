@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "aksClusterName": {
+      "value": ""
+    },
+    "kubernetesVersion": {
+      "value": "1.12.5"
+    },
+    "vmSize": {
+      "value": "Standard_B2ms"
+    },
+    "nodeCount": {
+      "value": 2
+    },
+    "aksVnetSubnetId": {
+      "value": ""
+    },
+    "dnsPrefix": {
+      "value": "cnp-aks-rpe-cluster--bf308a"
+    },
+    "sshPublicKey": {
+      "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDByksOKZjMovSnLZGIljdrs6bSvUNM514q/HCo5ITi1P/pMbARYHFl62AyxSrIuk+0RA2dYlzl6H1iluQa2bPT5PQqii9cA1XDnCBikkrLO2lMDG11Pu0cvDdYZNCrfgcpWZLy987mwOWchnWDGOdvIHv8Drx8eywL7Mzrx0wXS+vBOozUq0bN3ze9+mH6igRO/05e+r2PC+ohL4g0998qShvOoETU16bzcSm1TAKs6kCUPCnjj1y2/8nXAcYUKyesqSYx9brYhGbEPgE51IY6KQG24t7NNers17jqqgDAjO6a6d4jxgmJInLb5fziuelysOAP7pU0l0i8f9dtQu6H"
+    },
+    "servicePrincipalId": {
+      "value": "b31d1a08-b9c7-44de-9a17-181313364d51"
+    },
+    "servicePrincipalSecret": {
+      "value": ""
+    },
+    "clientAppId": {
+      "value": "515343a3-7091-4bb8-bba3-0560ddb019a4"
+    },
+    "serverAppId": {
+      "value": "ac483ac6-6a1d-4654-94fa-3a473c16f7ce"
+    },
+    "serverAppSecret": {
+      "value": ""
+    },
+    "tenantId": {
+      "value": "a0d77fc4-df1e-4b0d-8e35-46750ca5a672"
+    }
+  }
+}

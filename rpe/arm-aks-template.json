@@ -1,0 +1,107 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "aksClusterName": {
+      "type": "String"
+    },
+    "kubernetesVersion": {
+      "type": "String"
+    },
+    "vmSize": {
+      "type": "String"
+    },
+    "nodeCount": {
+      "type": "int"
+    },
+    "aksVnetSubnetId": {
+      "type": "String"
+    },
+    "aksServiceCidr": {
+      "type": "String"
+    },
+    "aksDnsServiceIp": {
+      "type": "String"
+    },
+    "dnsPrefix": {
+      "type": "String"
+    },
+    "sshPublicKey": {
+      "type": "String"
+    },
+    "servicePrincipalId": {
+      "type": "String"
+    },
+    "servicePrincipalSecret": {
+      "type": "String"
+    },
+    "clientAppId": {
+      "type": "String"
+    },
+    "serverAppId": {
+      "type": "String"
+    },
+    "serverAppSecret": {
+      "type": "String"
+    },
+    "tenantId": {
+      "type": "String"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.ContainerService/managedClusters",
+      "name": "[parameters('aksClusterName')]",
+      "apiVersion": "2018-03-31",
+      "location": "uksouth",
+      "tags": {
+        "Team Name": "CNP"
+      },
+      "scale": null,
+      "properties": {
+        "kubernetesVersion": "[parameters('kubernetesVersion')]",
+        "dnsPrefix": "[parameters('dnsPrefix')]",
+        "agentPoolProfiles": [
+          {
+            "name": "nodepool1",
+            "count": "[parameters('nodeCount')]",
+            "vmSize": "[parameters('vmSize')]",
+            "osDiskSizeGB": 100,
+            "storageProfile": "ManagedDisks",
+            "maxPods": 30,
+            "vnetSubnetID": "[parameters('aksVnetSubnetId')]",
+            "osType": "Linux"
+          }
+        ],
+        "linuxProfile": {
+          "adminUsername": "azureuser",
+          "ssh": {
+            "publicKeys": [
+              {
+                "keyData": "[parameters('sshPublicKey')]"
+              }
+            ]
+          }
+        },
+        "servicePrincipalProfile": {
+          "clientId": "[parameters('servicePrincipalId')]",
+          "secret": "[parameters('servicePrincipalSecret')]"
+        },
+        "enableRBAC": true,
+        "aadProfile": {
+          "clientAppID": "[parameters('clientAppId')]",
+          "serverAppID": "[parameters('serverAppId')]",
+          "serverAppSecret": "[parameters('serverAppSecret')]",
+          "tenantID": "[parameters('tenantId')]"
+        },
+        "networkProfile": {
+          "networkPlugin": "azure",
+          "serviceCidr": "[parameters('aksServiceCidr')]",
+          "dnsServiceIP": "[parameters('aksDnsServiceIp')]",
+          "dockerBridgeCidr": "172.17.0.1/16"
+        }
+      }
+    }
+  ]
+}

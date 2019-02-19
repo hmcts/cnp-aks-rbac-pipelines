@@ -1,0 +1,143 @@
+#
+# Build for the RPE PoCs AKS Cluster
+#
+name: RPE AKS RBAC Enabled Pipeline
+trigger: none
+variables:
+  aksResourceGroup: ''
+  aksVnetCidr: ''
+  aksSubnetCidr: ''
+  aksServiceCidr: ''
+  aksDnsServiceIp: ''
+  keyvaultName: rpe-infra
+  serviceConnection: azurerm-rpetemp
+
+jobs:
+- job: Keyvault
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  steps:
+  - task: AzureKeyVault@1
+    displayName: 'Get secrets from Keyvault'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      keyVaultName: $(keyvaultName)
+      secretsFilter: 'aks-sp-secret,aks-sapp-secret'
+  - script: |
+      echo "##vso[task.setvariable variable=aksServicePrincipalSecret;isOutput=true]$(aks-sp-secret)"
+      echo "##vso[task.setvariable variable=aksServerAppSecret;isOutput=true]$(aks-sapp-secret)"
+    displayName: 'Export Keyvault Variables'
+    name: exportKeyvault
+
+- job: DeployAKS
+  dependsOn: Keyvault
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  variables:
+    aksClusterName: $(aksResourceGroup)-cluster
+    aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
+    aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
+  steps:
+  - task: AzureCLI@1
+    displayName: Check VNET prerequisites
+    inputs:
+      azureSubscription: $(serviceConnection)
+      arguments: $(aksResourceGroup) $(aksVnetCidr) $(aksSubnetCidr)
+      scriptPath: rpe/scripts/check-vnet-prerequisites.sh
+
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Deploy VNET'
+    condition: not(variables['aksSubnetId'])
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksResourceGroup)
+      deploymentMode: 'Incremental'
+      location: 'UK South'
+      templateLocation: 'Linked artifact'
+      csmFile: 'rpe/arm-vnet-template.json'
+      overrideParameters: '-aksVnetName $(aksClusterName) -aksVnetPrefix $(aksVnetCidr) -aksSubnetName default -aksSubnetPrefix $(aksSubnetCidr)'
+      deploymentOutputs: 'vnetOutputs'
+
+  - task: AzureCLI@1
+    displayName: Parse ARM Outputs
+    condition: not(variables['aksSubnetId'])
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: inlineScript
+      inlineScript: |
+        for row in $(echo '$(vnetOutputs)' | jq -c '. | to_entries[]'); do
+          outputName=$(echo ${row} | jq -r ".key")
+          outputValue=$(echo ${row} | jq -r ".value.value")
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+        done
+
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Deploy AKS Cluster'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksResourceGroup)
+      deploymentMode: 'Incremental'
+      location: 'UK South'
+      templateLocation: 'Linked artifact'
+      csmFile: 'rpe/arm-aks-template.json'
+      csmParametersFile: 'rpe/arm-aks-parameters.json'
+      overrideParameters: '-aksClusterName $(aksClusterName) -aksVnetSubnetId $(aksSubnetId) -aksServiceCidr $(aksServiceCidr) -aksDnsServiceIp $(aksDnsServiceIp) -servicePrincipalSecret $(aksServicePrincipalSecret) -serverAppSecret $(aksServerAppSecret)'
+
+  - task: AzureCLI@1
+    displayName: 'Bind admin role to "aks-cluster-admin" group'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        CLUSTER_GLOBAL_ADMINS_GROUP=$(az ad group list --query  "[?displayName=='aks-cluster-admins'].objectId" -o tsv)
+        
+        CLUSTER_ADMINS_GROUP_NAME="$(aksClusterName)-cluster-admins"
+        CLUSTER_ADMIN_GROUP=$(az ad group list --query  "[?displayName=='${CLUSTER_ADMINS_GROUP_NAME}'].objectId" -o tsv)
+        if [ -z "${CLUSTER_ADMIN_GROUP}" ]; then 
+            echo "Cluster admin group doesn't exist, creating"
+            CLUSTER_ADMIN_GROUP=$(az ad group create  --display-name ${CLUSTER_ADMINS_GROUP_NAME} --mail-nickname ${CLUSTER_ADMINS_GROUP_NAME} --query objectId -o tsv)
+        fi
+
+        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+        
+        cat rpe/roles/cluster-admin-role-binding.yml | \
+          sed -e 's@${CLUSTER_ADMIN_GROUP}@'"$CLUSTER_ADMIN_GROUP"'@' | \
+          sed -e 's@${CLUSTER_GLOBAL_ADMINS_GROUP}@'"$CLUSTER_GLOBAL_ADMINS_GROUP"'@' | \
+          kubectl apply -f -
+
+  - task: AzureCLI@1
+    displayName: 'Bind developers roles'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        kubectl apply -f rpe/roles/developers-log-reader-role.yml
+        DEVELOPERS_GROUP=$(az ad group list --query  "[?displayName=='developers'].objectId" -o tsv)
+        if [ ! -z "${DEVELOPERS_GROUP}" ]; then
+          az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+          cat rpe/roles/developers-log-reader-binding.yml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
+        fi
+
+- job: RunTests
+  dependsOn: DeployAKS
+  pool:
+    name: 'Hosted VS2017'
+  steps:
+  - task: AzurePowerShell@3
+    displayName: 'Run tests'
+    condition: always()
+    inputs:
+      azureSubscription: $(serviceConnection)
+      azurePowerShellVersion: latestVersion
+      scriptType: 'inlineScript'
+      inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/rpe/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)'}} -OutputFile $(Build.SourcesDirectory)/rpe/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
+      timeoutInMinutes: 1
+      
+  - task: PublishTestResults@2
+    displayName: 'Publish Environment Test Results **/TEST-*.xml'
+    condition: always()
+    inputs:
+      testResultsFormat: NUnit
+      timeoutInMinutes: 1
