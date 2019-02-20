@@ -1,0 +1,35 @@
+# Default values for pod-aad-identity-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+rbac:
+  enabled: false
+
+azureIdentity:
+  enabled: true # enabled/disable deployment of azure identity and binding
+  name: "azure-identity"
+  type: 0 # type 0: MSI, type 1: Service Principal
+  resourceID: "/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourcegroups/MC_aks-identity2-rg_aksmsitest_northeurope/providers/Microsoft.ManagedIdentity/userAssignedIdentities/aks-default-mi"
+  clientID: "0990e021-dcf6-479f-9706-aecd98dda0d4"
+
+azureIdentityBinding:
+  name: "azure-identity-binding"
+  selector: "msi"
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
