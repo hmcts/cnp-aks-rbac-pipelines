@@ -152,7 +152,7 @@ jobs:
         var='$(location)'
         param=$(echo -n "${var//[[:space:]]/}" | tr '[:upper:]' '[:lower:]')
         AKS_RG="MC_$(aksResourceGroup)_$(aksClusterName)_${param}"
-        MI=$(az identity list -g $AKS_RG --query "[?name=='$(aksClusterName)'].clientId" -o tsv)
+        MI=$(az identity list -g ${AKS_RG} --query "[?name=='$(aksClusterName)'].clientId" -o tsv)
         
         if [ ! -z "${MI}" ]; then          
           az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
