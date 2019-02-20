@@ -137,16 +137,25 @@ jobs:
         checkLatestHelmVersion: false
         installKubectl: false
 
-  - task: HelmDeploy@0
+  - task: AzureCLI@1
     displayName: 'Install Tiller $(helmVersion)'
-    enabled: true
     inputs:
-      connectionType: 'Azure Resource Manager'
       azureSubscription: $(serviceConnection)
-      azureResourceGroup: $(aksResourceGroup)
-      kubernetesCluster: $(aksClusterName)
-      command: 'init'
-      arguments: '--service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion)'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+        helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context $(aksClusterName)
+
+  # - task: HelmDeploy@0
+  #   displayName: 'Install Tiller $(helmVersion)'
+  #   enabled: true
+  #   inputs:
+  #     connectionType: 'Azure Resource Manager'
+  #     azureSubscription: $(serviceConnection)
+  #     azureResourceGroup: $(aksResourceGroup)
+  #     kubernetesCluster: $(aksClusterName)
+  #     command: 'init'
+  #     arguments: '--service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion)'
 
 # - job: RunTests
 #   dependsOn: DeployAKS
