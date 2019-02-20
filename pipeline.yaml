@@ -155,11 +155,12 @@ jobs:
         echo $param
         AKS_RG="MC_$(aksResourceGroup)_$(aksClusterName)_${param}"
         echo $AKS_RG
+        echo az "identity list -g ${AKS_RG} --query "[?name=='$(aksClusterName)'].clientId" -o tsv"
         MI=$(az identity list -g ${AKS_RG} --query "[?name=='$(aksClusterName)'].clientId" -o tsv)
         echo $MI
         
-        if [ -z "${MI}" ]; then          
-          echo 'Creating MI'
+        if [ -z "${MI}" ]; then
+          echo "Managed Identity doesn't exists, creating"
           az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
         fi
 
