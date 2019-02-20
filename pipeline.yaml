@@ -154,7 +154,7 @@ jobs:
   #       echo $param
   #       az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
 
- - task: AzureCLI@1
+  - task: AzureCLI@1
     displayName: 'Deploy AAD Pod Identity chart'
     inputs:
       azureSubscription: $(serviceConnection)
