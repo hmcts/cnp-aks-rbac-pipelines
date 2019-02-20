@@ -143,25 +143,38 @@ jobs:
   #       kubectl apply -f roles/helm-rbac-config.yml
   #       helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
-  # - task: AzureCLI@1
-  #   displayName: 'Create Managed Identity for AKS'
-  #   inputs:
-  #     azureSubscription: $(serviceConnection)
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       var='$(location)'
-  #       param=$(echo -n "${var//[[:space:]]/}" | tr '[:upper:]' '[:lower:]')
-  #       echo $param
-  #       az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
-
   - task: AzureCLI@1
-    displayName: 'Deploy AAD Pod Identity chart'
+    displayName: 'Create Managed Identity for AKS'
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        cd deployments/aad-pod-identity
-        helm upgrade aad-pod-identity . --install --namespace kube-system --values values.yaml --kube-context '$(aksClusterName)-admin' --wait --force --timeout 600
+        var='$(location)'
+        param=$(echo -n "${var//[[:space:]]/}" | tr '[:upper:]' '[:lower:]')
+        AKS_RG="MC_$(aksResourceGroup)_$(aksClusterName)_${param}"
+        MI=$(az identity list -g $AKS_RG --query "[?name=='$(aksClusterName)'].clientId" -o tsv)
+        
+        if [ ! -z "${MI}" ]; then          
+          az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
+        fi
+
+  - task: AzureCLI@1
+    displayName: 'Deploy AAD Pod Identity'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        kubectl create -f deployments/aad-pod-identity-rbac.yml
+
+  # TODO: FIX HELM CHART https://github.com/Azure/aad-pod-identity/issues/164 
+  # - task: AzureCLI@1
+  #   displayName: 'Deploy AAD Pod Identity chart'
+  #   inputs:
+  #     azureSubscription: $(serviceConnection)
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       cd deployments/aad-pod-identity
+  #       helm upgrade aad-pod-identity . --install --namespace kube-system --values values.yaml --kube-context '$(aksClusterName)-admin' --wait --force --timeout 600
 
 # - job: RunTests
 #   dependsOn: DeployAKS
