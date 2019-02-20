@@ -146,7 +146,7 @@ jobs:
       azureResourceGroup: $(aksResourceGroup)
       kubernetesCluster: $(aksClusterName)
       command: 'init'
-      arguments: '--service-account tiller --wait --history-max=5 --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion)'
+      arguments: '--service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion)'
 
 # - job: RunTests
 #   dependsOn: DeployAKS
