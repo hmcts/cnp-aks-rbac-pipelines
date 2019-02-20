@@ -150,13 +150,9 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         var='$(location)'
-        echo $var
         param=$(echo -n "${var//[[:space:]]/}" | tr '[:upper:]' '[:lower:]')
-        echo $param
         AKS_RG="MC_$(aksResourceGroup)_$(aksClusterName)_${param}"
-        echo $AKS_RG
         MI=$(az identity list -g ${AKS_RG} --query "[?name=='$(aksClusterName)-mi'].clientId" -o tsv)
-        echo $MI
         
         if [ -z "${MI}" ]; then
           echo "Managed Identity doesn't exists, creating"
@@ -169,7 +165,11 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        kubectl create -f deployments/aad-pod-identity-rbac.yml
+        CR=$(kubectl get customresourcedefinitions -o jsonpath='{.items[*].metadata.name}')
+        if [[ ! $CR == *"azureidentitybindings.aadpodidentity.k8s.io"* ]]; then
+          echo "AAD Pod Identity is not installed, deploying."
+          kubectl create -f deployments/aad-pod-identity-rbac.yml
+        fi
 
   # TODO: FIX HELM CHART https://github.com/Azure/aad-pod-identity/issues/164 
   # - task: AzureCLI@1
