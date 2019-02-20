@@ -12,6 +12,7 @@ variables:
   keyvaultName: rpe-infra
   serviceConnection: azurerm-rpetemp
   helmVersion: '2.12.0'
+  location: 'UK South'
 
 jobs:
 - job: Keyvault
@@ -54,7 +55,7 @@ jobs:
       action: 'Create Or Update Resource Group'
       resourceGroupName: $(aksResourceGroup)
       deploymentMode: 'Incremental'
-      location: 'UK South'
+      location: $(location)
       templateLocation: 'Linked artifact'
       csmFile: 'arm-vnet-template.json'
       overrideParameters: '-aksVnetName $(aksClusterName) -aksVnetPrefix $(aksVnetCidr) -aksSubnetName default -aksSubnetPrefix $(aksSubnetCidr)'
@@ -142,14 +143,14 @@ jobs:
         kubectl apply -f roles/helm-rbac-config.yml
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
-  # - task: AzureCLI@1
-  #   displayName: 'Create Managed Identity for AKS'
-  #   inputs:
-  #     azureSubscription: $(serviceConnection)
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       az identity create -g 'MC_$(aksResourceGroup)_$(aksClusterName)_northeurope' -n '$(aksClusterName)-mi'
-  #       helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
+  - task: AzureCLI@1
+    displayName: 'Create Managed Identity for AKS'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        param=$(echo -n "${$(location)//[[:space:]]/}" | tr '[:upper:]' '[:lower:]')
+        az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
 
 # - job: RunTests
 #   dependsOn: DeployAKS
