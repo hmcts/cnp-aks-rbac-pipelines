@@ -143,16 +143,25 @@ jobs:
   #       kubectl apply -f roles/helm-rbac-config.yml
   #       helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
-  - task: AzureCLI@1
-    displayName: 'Create Managed Identity for AKS'
+  # - task: AzureCLI@1
+  #   displayName: 'Create Managed Identity for AKS'
+  #   inputs:
+  #     azureSubscription: $(serviceConnection)
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       var='$(location)'
+  #       param=$(echo -n "${var//[[:space:]]/}" | tr '[:upper:]' '[:lower:]')
+  #       echo $param
+  #       az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
+
+ - task: AzureCLI@1
+    displayName: 'Deploy AAD Pod Identity chart'
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        var='$(location)'
-        param=$(echo -n "${var//[[:space:]]/}" | tr '[:upper:]' '[:lower:]')
-        echo $param
-        az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
+        cd deployments/aad-pod-identity
+        helm upgrade aad-pod-identity . --install --namespace kube-system --values values.yaml --kube-context '$(aksClusterName)-admin' --wait --force --timeout 600
 
 # - job: RunTests
 #   dependsOn: DeployAKS
