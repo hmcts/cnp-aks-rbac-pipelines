@@ -114,10 +114,10 @@ jobs:
   #     azureSubscription: $(serviceConnection)
   #     scriptLocation: 'inlineScript'
   #     inlineScript: |
+  #       az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
   #       kubectl apply -f rpe/roles/developers-log-reader-role.yml
   #       DEVELOPERS_GROUP=$(az ad group list --query  "[?displayName=='developers'].objectId" -o tsv)
-  #       if [ ! -z "${DEVELOPERS_GROUP}" ]; then
-  #         az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+  #       if [ ! -z "${DEVELOPERS_GROUP}" ]; then          
   #         cat rpe/roles/developers-log-reader-binding.yml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
   #       fi
 
@@ -128,7 +128,7 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
-        kubectl apply -f rpe/roles/helm-rbac-config.yaml
+        kubectl apply -f rpe/roles/helm-rbac-config.yml
 
   - task: HelmInstaller@0
     displayName: 'Install Helm $(helmVersion)'
