@@ -117,7 +117,7 @@ jobs:
         kubectl apply -f rpe/roles/developers-log-reader-role.yml
         DEVELOPERS_GROUP=$(az ad group list --query  "[?displayName=='developers'].objectId" -o tsv)
         if [ ! -z "${DEVELOPERS_GROUP}" ]; then
-          az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+          #az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
           cat rpe/roles/developers-log-reader-binding.yml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
         fi
 
