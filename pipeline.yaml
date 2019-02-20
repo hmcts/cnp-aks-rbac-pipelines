@@ -87,13 +87,13 @@ jobs:
   #     csmParametersFile: 'arm-aks-parameters.json'
   #     overrideParameters: '-aksClusterName $(aksClusterName) -aksVnetSubnetId $(aksSubnetId) -aksServiceCidr $(aksServiceCidr) -aksDnsServiceIp $(aksDnsServiceIp) -servicePrincipalSecret $(aksServicePrincipalSecret) -serverAppSecret $(aksServerAppSecret)'
 
-  # - task: AzureCLI@1
-  #   displayName: 'Obtain AKS Admin access token.'
-  #   inputs:
-  #     azureSubscription: $(serviceConnection)
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+  - task: AzureCLI@1
+    displayName: 'Obtain AKS Admin access token.'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
 
   # - task: AzureCLI@1
   #   displayName: 'Bind admin role to "aks-cluster-admin" group'
