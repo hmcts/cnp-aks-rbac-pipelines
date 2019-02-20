@@ -128,26 +128,14 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
-        kubectl apply -f https://raw.githubusercontent.com/Azure/helm-charts/master/docs/prerequisities/helm-rbac-config.yaml
+        kubectl apply -f rpe/roles/helm-rbac-config.yaml
 
-  # - task: Kubernetes@1
-  #   displayName: 'Configure RBAC for Helm'
-  #   enabled: true
-  #   inputs:
-  #     connectionType: 'Azure Resource Manager'
-  #     azureSubscriptionEndpoint: $(serviceConnection)
-  #     azureResourceGroup: $(aksResourceGroup)
-  #     kubernetesCluster: $(aksClusterName)
-  #     command: 'apply'
-  #     arguments: '-f https://raw.githubusercontent.com/Azure/helm-charts/master/docs/prerequisities/helm-rbac-config.yaml'
-  #     outputFormat: 'name'
-
-  # - task: HelmInstaller@0
-  #   displayName: 'Install Helm $(helmVersion)'
-  #   inputs:
-  #       helmVersion: $(helmVersion)
-  #       checkLatestHelmVersion: false
-  #       installKubectl: false
+  - task: HelmInstaller@0
+    displayName: 'Install Helm $(helmVersion)'
+    inputs:
+        helmVersion: $(helmVersion)
+        checkLatestHelmVersion: false
+        installKubectl: false
 
   # - task: HelmDeploy@0
   #   displayName: 'Install Tiller'
