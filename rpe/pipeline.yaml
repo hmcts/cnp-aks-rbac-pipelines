@@ -121,54 +121,63 @@ jobs:
   #         cat rpe/roles/developers-log-reader-binding.yml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
   #       fi
 
-  - task: Kubernetes@1
+  - task: AzureCLI@1
     displayName: 'Configure RBAC for Helm'
-    enabled: true
-    inputs:
-      connectionType: 'Azure Resource Manager'
-      azureSubscriptionEndpoint: $(serviceConnection)
-      azureResourceGroup: $(aksResourceGroup)
-      kubernetesCluster: $(aksClusterName)
-      command: 'apply'
-      arguments: '-f https://raw.githubusercontent.com/Azure/helm-charts/master/docs/prerequisities/helm-rbac-config.yaml'
-      outputFormat: 'name'
-
-  - task: HelmInstaller@0
-    displayName: 'Install Helm $(helmVersion)'
-    inputs:
-        helmVersion: $(helmVersion)
-        checkLatestHelmVersion: false
-        installKubectl: false
-
-  - task: HelmDeploy@0
-    displayName: 'Install Tiller'
-    enabled: true
-    inputs:
-      connectionType: 'Azure Resource Manager'
-      azureSubscription: $(serviceConnection)
-      azureResourceGroup: $(aksResourceGroup)
-      kubernetesCluster: $(aksClusterName)
-      command: 'init'
-      arguments: '--service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion)'
-
-- job: RunTests
-  dependsOn: DeployAKS
-  pool:
-    name: 'Hosted VS2017'
-  steps:
-  - task: AzurePowerShell@3
-    displayName: 'Run tests'
-    condition: always()
     inputs:
       azureSubscription: $(serviceConnection)
-      azurePowerShellVersion: latestVersion
-      scriptType: 'inlineScript'
-      inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/rpe/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)'}} -OutputFile $(Build.SourcesDirectory)/rpe/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
-      timeoutInMinutes: 1
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+        kubectl apply -f https://raw.githubusercontent.com/Azure/helm-charts/master/docs/prerequisities/helm-rbac-config.yaml
+
+  # - task: Kubernetes@1
+  #   displayName: 'Configure RBAC for Helm'
+  #   enabled: true
+  #   inputs:
+  #     connectionType: 'Azure Resource Manager'
+  #     azureSubscriptionEndpoint: $(serviceConnection)
+  #     azureResourceGroup: $(aksResourceGroup)
+  #     kubernetesCluster: $(aksClusterName)
+  #     command: 'apply'
+  #     arguments: '-f https://raw.githubusercontent.com/Azure/helm-charts/master/docs/prerequisities/helm-rbac-config.yaml'
+  #     outputFormat: 'name'
+
+  # - task: HelmInstaller@0
+  #   displayName: 'Install Helm $(helmVersion)'
+  #   inputs:
+  #       helmVersion: $(helmVersion)
+  #       checkLatestHelmVersion: false
+  #       installKubectl: false
+
+  # - task: HelmDeploy@0
+  #   displayName: 'Install Tiller'
+  #   enabled: true
+  #   inputs:
+  #     connectionType: 'Azure Resource Manager'
+  #     azureSubscription: $(serviceConnection)
+  #     azureResourceGroup: $(aksResourceGroup)
+  #     kubernetesCluster: $(aksClusterName)
+  #     command: 'init'
+  #     arguments: '--service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion)'
+
+# - job: RunTests
+#   dependsOn: DeployAKS
+#   pool:
+#     name: 'Hosted VS2017'
+#   steps:
+#   - task: AzurePowerShell@3
+#     displayName: 'Run tests'
+#     condition: always()
+#     inputs:
+#       azureSubscription: $(serviceConnection)
+#       azurePowerShellVersion: latestVersion
+#       scriptType: 'inlineScript'
+#       inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/rpe/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)'}} -OutputFile $(Build.SourcesDirectory)/rpe/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
+#       timeoutInMinutes: 1
       
-  - task: PublishTestResults@2
-    displayName: 'Publish Environment Test Results **/TEST-*.xml'
-    condition: always()
-    inputs:
-      testResultsFormat: NUnit
-      timeoutInMinutes: 1
+#   - task: PublishTestResults@2
+#     displayName: 'Publish Environment Test Results **/TEST-*.xml'
+#     condition: always()
+#     inputs:
+#       testResultsFormat: NUnit
+#       timeoutInMinutes: 1
