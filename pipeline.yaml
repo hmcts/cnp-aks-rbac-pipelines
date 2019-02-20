@@ -115,17 +115,17 @@ jobs:
           sed -e 's@${CLUSTER_GLOBAL_ADMINS_GROUP}@'"$CLUSTER_GLOBAL_ADMINS_GROUP"'@' | \
           kubectl apply -f -
 
-  # - task: AzureCLI@1
-  #   displayName: 'Bind developers roles'
-  #   inputs:
-  #     azureSubscription: $(serviceConnection)
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       kubectl apply -f roles/developers-log-reader-role.yml
-  #       DEVELOPERS_GROUP=$(az ad group list --query  "[?displayName=='developers'].objectId" -o tsv)
-  #       if [ ! -z "${DEVELOPERS_GROUP}" ]; then          
-  #         cat roles/developers-log-reader-binding.yml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
-  #       fi
+  - task: AzureCLI@1
+    displayName: 'Bind developers roles'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        kubectl apply -f roles/developers-log-reader-role.yml
+        DEVELOPERS_GROUP=$(az ad group list --query  "[?displayName=='developers'].objectId" -o tsv)
+        if [ ! -z "${DEVELOPERS_GROUP}" ]; then          
+          cat roles/developers-log-reader-binding.yml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
+        fi
 
   # - task: HelmInstaller@0
   #   displayName: 'Install Helm Client $(helmVersion)'
@@ -155,11 +155,11 @@ jobs:
         echo $param
         AKS_RG="MC_$(aksResourceGroup)_$(aksClusterName)_${param}"
         echo $AKS_RG
-        #MI=$(az identity list -g ${AKS_RG} --query "[?name=='$(aksClusterName)'].clientId" -o tsv)
+        MI=$(az identity list -g ${AKS_RG} --query "[?name=='$(aksClusterName)'].clientId" -o tsv)
         az identity list -g ${AKS_RG} --query "[?name=='$(aksClusterName)'].clientId" -o tsv
         echo $MI
         
-        if [ ! -z "${MI}" ]; then          
+        if [ -z "${MI}" ]; then          
           az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
         fi
 
