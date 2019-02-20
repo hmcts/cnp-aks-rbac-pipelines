@@ -149,7 +149,8 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        param=$(echo -n "${$(location)//[[:space:]]/}" | tr '[:upper:]' '[:lower:]')
+        var=$(location)
+        param=$(echo -n "${var//[[:space:]]/}" | tr '[:upper:]' '[:lower:]')
         echo $param
         az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
 
