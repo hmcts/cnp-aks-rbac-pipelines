@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 rbac:
-  enabled: false
+  enabled: true
 
 azureIdentity:
   enabled: true # enabled/disable deployment of azure identity and binding
