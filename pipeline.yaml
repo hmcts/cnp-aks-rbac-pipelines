@@ -151,7 +151,7 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         helm repo add weaveworks https://weaveworks.github.io/flux
-        helm upgrade flux weaveworks/flux --install --namespace flux -f deployments/helm-values.yaml \
+        helm upgrade flux weaveworks/flux --install --namespace flux -f deployments/weave-flux/values.yaml \
           --set git.path=$(aksResourceGroup)-cluster,git.label=$(aksResourceGroup)-cluster \
           --wait
 
