@@ -150,9 +150,20 @@ jobs:
       secureFile: $(aksResourceGroup)-cluster-sealed-secret.key
       
   - task: Bash@3
+    enabled: false
     displayName: 'Replace sealed secret key'
     inputs:
       script:
+        ls -la $(Agent.TempDirectory)
+        kubectl replace secret -n admin sealed-secrets-key -f $(Agent.TempDirectory)/$(aksResourceGroup)-cluster-sealed-secret.key
+        kubectl delete pod -n admin -l app.kubernetes.io/name=sealed-secrets || true
+
+  - task: AzureCLI@1
+    displayName: 'Replace sealed secret key'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
         ls -la $(Agent.TempDirectory)
         kubectl replace secret -n admin sealed-secrets-key -f $(Agent.TempDirectory)/$(aksResourceGroup)-cluster-sealed-secret.key
         kubectl delete pod -n admin -l app.kubernetes.io/name=sealed-secrets || true
