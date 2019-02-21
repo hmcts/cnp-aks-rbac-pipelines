@@ -86,7 +86,19 @@ jobs:
       csmFile: 'templates/arm-aks-template.json'
       csmParametersFile: 'templates/arm-aks-parameters.json'
       overrideParameters: '-aksClusterName $(aksClusterName) -aksVnetSubnetId $(aksSubnetId) -aksServiceCidr $(aksServiceCidr) -aksDnsServiceIp $(aksDnsServiceIp) -servicePrincipalSecret $(aksServicePrincipalSecret) -serverAppSecret $(aksServerAppSecret)'
-      deploymentOutputs: 'aksRGName'
+      deploymentOutputs: 'aksOutputs'
+
+  - task: AzureCLI@1
+    displayName: Parse ARM Outputs
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: inlineScript
+      inlineScript: |
+        for row in $(echo '$(aksOutputs)' | jq -c '. | to_entries[]'); do
+          outputName=$(echo ${row} | jq -r ".key")
+          outputValue=$(echo ${row} | jq -r ".value.value")
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+        done
 
   # - task: AzureCLI@1
   #   displayName: 'Obtain AKS Admin access token.'
