@@ -152,7 +152,8 @@ jobs:
   - task: Bash@3
     displayName: 'Replace sealed secret key'
     inputs:
-      script: 
+      script:
+        ls -la $(Agent.TempDirectory)
         kubectl replace secret -n admin sealed-secrets-key -f $(Agent.TempDirectory)/$(aksResourceGroup)-cluster-sealed-secret.key
         kubectl delete pod -n admin -l app.kubernetes.io/name=sealed-secrets || true
 
