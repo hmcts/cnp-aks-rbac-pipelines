@@ -35,7 +35,7 @@ jobs:
 - job: DeployAKS
   dependsOn: Keyvault
   pool:
-    vmImage: 'hmcts-agent-pool'
+    name: 'hmcts-agent-pool'
   variables:
     aksClusterName: $(aksResourceGroup)-cluster
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
