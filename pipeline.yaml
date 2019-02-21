@@ -35,7 +35,7 @@ jobs:
 - job: DeployAKS
   dependsOn: Keyvault
   pool:
-    vmImage: 'Ubuntu 16.04'
+    vmImage: 'hmcts-agent-pool'
   variables:
     aksClusterName: $(aksResourceGroup)-cluster
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
@@ -145,6 +145,7 @@ jobs:
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
   - task: DownloadSecureFile@1
+    displayName: 'Download cluster sealed secret key'
     inputs:
       secureFile: $(aksResourceGroup)-cluster-sealed-secret.key
       
