@@ -145,6 +145,17 @@ jobs:
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
   - task: AzureCLI@1
+    displayName: 'Install Sealed Secrets'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        helm upgrade sealed-secrets stable/sealed-secrets --install --namespace admin \
+          --set image.repository=quay.io/bitnami/sealed-secrets-controller,image.tag=0.7.0 \
+          --wait
+
+  - task: AzureCLI@1
+    enabled: false
     displayName: 'Install Weave Flux'
     inputs:
       azureSubscription: $(serviceConnection)
