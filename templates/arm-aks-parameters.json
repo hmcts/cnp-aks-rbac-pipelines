@@ -40,6 +40,9 @@
     },
     "tenantId": {
       "value": "a0d77fc4-df1e-4b0d-8e35-46750ca5a672"
+    },
+    "location": {
+      "value": "uksouth"
     }
   }
 }
