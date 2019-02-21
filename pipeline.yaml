@@ -166,8 +166,20 @@ jobs:
       location: $(location)
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-mi-template.json'
-      overrideParameters: '-resourceName $(resourceName)'
-      deploymentOutputs: 'resourceName'
+      overrideParameters: '-resourceName $(aksClusterName)-mi'
+      deploymentOutputs: 'miOutputs'
+
+  - task: AzureCLI@1
+    displayName: Parse ARM Outputs
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: inlineScript
+      inlineScript: |
+        for row in $(echo '$(miOutputs)' | jq -c '. | to_entries[]'); do
+          outputName=$(echo ${row} | jq -r ".key")
+          outputValue=$(echo ${row} | jq -r ".value.value")
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+        done
 
   - task: AzureCLI@1
     displayName: 'Testing output'
