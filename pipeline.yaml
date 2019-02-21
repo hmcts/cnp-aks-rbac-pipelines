@@ -192,35 +192,19 @@ jobs:
         var_two='$(miResourceID)'
         echo $var_two
 
-  # OLD -------------------------
-  # - task: AzureCLI@1
-  #   displayName: 'Create Managed Identity for AKS'
-  #   inputs:
-  #     azureSubscription: $(serviceConnection)
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       var='$(location)'
-  #       param=$(echo -n "${var//[[:space:]]/}" | tr '[:upper:]' '[:lower:]')
-  #       AKS_RG="MC_$(aksResourceGroup)_$(aksClusterName)_${param}"
-  #       MI=$(az identity list -g ${AKS_RG} --query "[?name=='$(aksClusterName)-mi'].clientId" -o tsv)
-  #       echo $MI
-  #       if [ -z "${MI}" ]; then
-  #         echo "Managed Identity doesn't exists, creating"
-  #         az identity create -g "MC_$(aksResourceGroup)_$(aksClusterName)_${param}" -n '$(aksClusterName)-mi'
-  #       fi
-
-  # - task: AzureCLI@1
-  #   displayName: 'Deploy AAD Pod Identity Operator'
-  #   inputs:
-  #     azureSubscription: $(serviceConnection)
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       CR=$(kubectl get customresourcedefinitions -o jsonpath='{.items[*].metadata.name}')
-  #       echo $CR
-  #       if [[ ! $CR == *"azureidentitybindings.aadpodidentity.k8s.io"* ]]; then
-  #         echo "AAD Pod Identity Operator is not installed, deploying."
-  #         kubectl create -f deployments/aad-pod-identity-rbac.yml
-  #       fi
+  - task: AzureCLI@1
+    displayName: 'Deploy AAD Pod Identity Operator'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        kubectl apply -f deployments/aad-pod-identity-rbac.yml
+        # CR=$(kubectl get customresourcedefinitions -o jsonpath='{.items[*].metadata.name}')
+        # echo $CR
+        # if [[ ! $CR == *"azureidentitybindings.aadpodidentity.k8s.io"* ]]; then
+        #   echo "AAD Pod Identity Operator is not installed, deploying."
+        #   kubectl apply -f deployments/aad-pod-identity-rbac.yml
+        # fi
 
 # - job: RunTests
 #   dependsOn: DeployAKS
