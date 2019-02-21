@@ -100,13 +100,13 @@ jobs:
           echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
         done
 
-  # - task: AzureCLI@1
-  #   displayName: 'Obtain AKS Admin access token.'
-  #   inputs:
-  #     azureSubscription: $(serviceConnection)
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+  - task: AzureCLI@1
+    displayName: 'Obtain AKS Admin access token.'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
 
   # - task: AzureCLI@1
   #   displayName: 'Bind admin role to "aks-cluster-admin" group'
