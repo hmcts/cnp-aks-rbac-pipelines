@@ -3,6 +3,7 @@
 #
 name: RPE AKS RBAC Enabled Pipeline
 trigger: none
+pr: none
 variables:
   aksResourceGroup: ''
   aksVnetCidr: ''
