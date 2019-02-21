@@ -144,6 +144,17 @@ jobs:
         kubectl apply -f roles/helm-rbac-config.yml
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
+  - task: DownloadSecureFile@1
+    inputs:
+      secureFile: $(aksResourceGroup)-cluster-sealed-secret.key
+      
+  - task: Bash@3
+    displayName: 'Replace sealed secret key'
+    inputs:
+      script: 
+        kubectl replace secret -n admin sealed-secrets-key -f $(Agent.TempDirectory)/$(aksResourceGroup)-cluster-sealed-secret.key
+        kubectl delete pod -n admin -l app.kubernetes.io/name=sealed-secrets || true
+
   - task: AzureCLI@1
     displayName: 'Install Sealed Secrets'
     inputs:
