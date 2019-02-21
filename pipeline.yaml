@@ -157,6 +157,15 @@ jobs:
   #     overrideParameters: '-resourceName $(resourceName)'
   #     deploymentOutputs: 'resourceName'
 
+  - task: AzureCLI@1
+    displayName: 'Testing output'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        var='$(aksRGName)'
+        echo $var
+
   # OLD -------------------------
   # - task: AzureCLI@1
   #   displayName: 'Create Managed Identity for AKS'
