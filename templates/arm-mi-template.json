@@ -18,9 +18,13 @@
     }
   ],
   "outputs": {
-      "identityName": {
+      "miClientID": {
           "type": "string",
-          "value": "[parameters('resourceName')]"
-      }
+          "value": "[resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('resourceName')).clientId]"
+      },
+      "miResourceID": {
+        "type": "string",
+        "value": "[resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('resourceName'))]"
+    }
   }
 }

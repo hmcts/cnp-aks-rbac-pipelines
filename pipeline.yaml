@@ -156,18 +156,18 @@ jobs:
   #       kubectl apply -f roles/helm-rbac-config.yml
   #       helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
-  # - task: AzureResourceGroupDeployment@2
-  #   displayName: 'Create Managed Identity for AKS'
-  #   inputs:
-  #     azureSubscription: $(serviceConnection)
-  #     action: 'Create Or Update Resource Group'
-  #     resourceGroupName: $(aksResourceGroup)
-  #     deploymentMode: 'Incremental'
-  #     location: $(location)
-  #     templateLocation: 'Linked artifact'
-  #     csmFile: 'templates/arm-mi-template.json'
-  #     overrideParameters: '-resourceName $(resourceName)'
-  #     deploymentOutputs: 'resourceName'
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Create Managed Identity for AKS'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksRGName)
+      deploymentMode: 'Incremental'
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: 'templates/arm-mi-template.json'
+      overrideParameters: '-resourceName $(resourceName)'
+      deploymentOutputs: 'resourceName'
 
   - task: AzureCLI@1
     displayName: 'Testing output'
@@ -175,8 +175,10 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        var='$(aksRGName)'
-        echo $var
+        var_one='$(miClientID)'
+        echo $var_one
+        var_two='$(miResourceID)'
+        echo $var_two
 
   # OLD -------------------------
   # - task: AzureCLI@1
