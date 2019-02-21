@@ -143,6 +143,17 @@ jobs:
         kubectl apply -f roles/helm-rbac-config.yml
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
+  - task: AzureCLI@1
+    displayName: 'Install Weave Flux'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        helm repo add weaveworks https://weaveworks.github.io/flux
+        helm upgrade flux weaveworks/flux --install --namespace flux -f deployments/helm-values.yaml \
+          --set git.path=$(aksResourceGroup)-cluster,git.label=$(aksResourceGroup)-cluster \
+          --wait
+
 - job: RunTests
   dependsOn: DeployAKS
   pool:
