@@ -46,9 +46,6 @@
     },
     "tenantId": {
       "type": "string"
-    },
-    "location": {
-      "type": "string"
     }
   },
   "variables": {},
@@ -57,7 +54,7 @@
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
       "apiVersion": "2018-03-31",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "tags": {
         "Team Name": "CNP"
       },
@@ -110,7 +107,7 @@
   "outputs": {
     "aksRGName": {
       "type": "string",
-      "value": "[concat('MC_', resourceGroup().name, '_', parameters('aksClusterName'), '_', toLower(parameters('location')))]"
+      "value": "[concat('MC_', resourceGroup().name, '_', parameters('aksClusterName'), '_', toLower(resourceGroup().location))]"
     }
   }
 }
