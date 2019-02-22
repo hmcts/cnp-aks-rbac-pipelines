@@ -202,8 +202,8 @@ jobs:
         echo $IDENTITY_RESOURCE_ID
         export IDENTITY_CLIENT_ID=$(miClientID)
         echo $IDENTITY_CLIENT_ID
-        envsubst < deployments/user-assigned-msi.template.yaml > deployments/substituted/user-assigned-msi.yaml
-        kubectl apply -f deployments/substituted/user-assigned-msi.yaml
+        envsubst < deployments/user-assigned-msi.template.yml > deployments/substituted/user-assigned-msi.yml
+        kubectl apply -f deployments/substituted/user-assigned-msi.yml
 
 # - job: RunTests
 #   dependsOn: DeployAKS
