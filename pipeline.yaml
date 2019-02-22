@@ -166,7 +166,8 @@ jobs:
                -e 's@${ACR_SERVICE_PRINCIPAL_SECRET}@'"$AKS_SP_SECRET"'@' \
           templates/repositories.yaml
 
-        kubectl replace secret generic flux-helm-repositories --from-file=templates/repositories.yaml --namespace=flux
+        kubectl -n flux delete secret flux-helm-repositories || true
+        kubectl -n flux create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
     env:
       AKS_SP_SECRET: $(aksServicePrincipalSecret)
 
