@@ -160,7 +160,17 @@ jobs:
     displayName: 'Download test developer'
     inputs:
       secureFile: test-developer.json
-        
+
+  - task: Bash@3
+    DisplayName: 'Launch Chromium Headless'
+    inputs:
+      targetType: inline
+      failOnStderr: true
+      script: |
+        alias chrome=./tests/interactive-login-bypasser/latest/chrome
+        chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com
+
+
   - task: AzureCLI@1
     displayName: 'Authenticating test-developer to cluster using Automated Interactive Login'
     inputs:
