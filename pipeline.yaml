@@ -183,14 +183,6 @@ jobs:
       script: |
         kubectl apply -f roles/helm-rbac-config.yaml
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
- 
-  - task: Bash@3
-    displayName: 'Create cluster resources'
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        kubectl apply -f manifests/namespaces.yaml
 
   - task: Bash@3
     displayName: 'Template repositories.yaml secret'
