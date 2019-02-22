@@ -1,7 +1,10 @@
 param(
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
-    [string]$ResourceGroupName
+    [string]$ResourceGroupName,
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]$AgentTempDirectory
 )
 
 #Invoke-Pester -script @{Path= './*.tests.ps1' ;Parameters = @{Environment = 'saat'}}
@@ -15,7 +18,8 @@ Describe 'RBAC Model' {
 
     Context 'Credentials' {
         It 'test-developer has credentials' {
-            Test-Path -Path  $(Agent.TempDirectory)/test-developer.json | Should Be $true
+            Write-Host "The agent temp directory is: $AgentTempDirectory"
+            Test-Path -Path  $AgentTempDirectory/test-developer.json | Should Be $true
         }
     }
 }
