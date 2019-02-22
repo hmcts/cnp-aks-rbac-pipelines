@@ -168,7 +168,7 @@ jobs:
       BYPASSER_DIRECTORY: $(Build.SourcesDirectory)/tests/interactive-login-bypasser
     inputs:
       targetType: inline
-      failOnStderr: true
+      failOnStderr: false
       script: |
         $BYPASSER_DIRECTORY/update.sh
 
@@ -186,19 +186,19 @@ jobs:
           $BYPASSER_DIRECTORY/latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com &
           npm install && node index.js $(Agent.TempDirectory)/test-developer.json
 
-  - task: AzurePowerShell@3
-    displayName: 'Run tests'
-    condition: always()
-    inputs:
-      azureSubscription: $(serviceConnection)
-      azurePowerShellVersion: latestVersion
-      scriptType: 'inlineScript'
-      inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
-      timeoutInMinutes: 1
+  # - task: AzurePowerShell@3
+  #   displayName: 'Run tests'
+  #   condition: always()
+  #   inputs:
+  #     azureSubscription: $(serviceConnection)
+  #     azurePowerShellVersion: latestVersion
+  #     scriptType: 'inlineScript'
+  #     inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
+  #     timeoutInMinutes: 1
       
-  - task: PublishTestResults@2
-    displayName: 'Publish Environment Test Results **/TEST-*.xml'
-    # condition: always()
-    inputs:
-      testResultsFormat: NUnit
-      timeoutInMinutes: 1
+  # - task: PublishTestResults@2
+  #   displayName: 'Publish Environment Test Results **/TEST-*.xml'
+  #   # condition: always()
+  #   inputs:
+  #     testResultsFormat: NUnit
+  #     timeoutInMinutes: 1
