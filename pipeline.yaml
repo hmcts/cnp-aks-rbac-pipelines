@@ -152,18 +152,24 @@ jobs:
     displayName: 'Download test developer'
     inputs:
       secureFile: test-developer.json
+
+  - task: AzureCLI@1
+    displayName: 'Obtain AKS Admin access token.'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
         
   - task: AzureCLI@1
     displayName: 'Authenticating test-developer to cluster using Automated Interactive Login'
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
-      inlineScript: |     
-          az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
+      inlineScript: |
           cd tests/interactive-login-bypasser
           npm install
           node index.js '$(Agent.TempDirectory)/test-developer.json'
-
 
   - task: AzurePowerShell@3
     displayName: 'Run tests'
