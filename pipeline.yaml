@@ -29,7 +29,7 @@ jobs:
       keyVaultName: $(keyvaultName)
       secretsFilter: 'aks-sp-secret,aks-sapp-secret'
   - script: |
-      echo "##vso[task.setvariable variable=aksServicePrincipalSecret;isOutput=true]$(aks-sp-secret)"
+      echo "##vso[task.setvariable variable=aksServicePrincipalSecret;isOutput=true;issecret=true]$(aks-sp-secret)"
       echo "##vso[task.setvariable variable=aksServerAppSecret;isOutput=true]$(aks-sapp-secret)"
     displayName: 'Export Keyvault Variables'
     name: exportKeyvault
