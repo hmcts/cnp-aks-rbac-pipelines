@@ -48,6 +48,7 @@ jobs:
     displayName: 'Create repositories.yaml secret'
     inputs:
       targetType: inline
+      failOnStderr: true
       script: |
         sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
                -e 's/${ACR_SERVICE_PRINCIPAL_ID}/$(aksServicePrincipalId)/g' \
