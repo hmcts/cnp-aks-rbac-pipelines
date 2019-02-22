@@ -148,13 +148,13 @@ jobs:
   pool:
     vmImage: 'Ubuntu 16.04'
   steps:
-  # - task: AzureCLI@1
-  #   displayName: 'Obtain AKS Admin access token.'
-  #   inputs:
-  #     azureSubscription: $(serviceConnection)
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
+  - task: AzureCLI@1
+    displayName: 'Obtain AKS Admin access token.'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
 
   - task: DownloadSecureFile@1
     displayName: 'Download test developer'

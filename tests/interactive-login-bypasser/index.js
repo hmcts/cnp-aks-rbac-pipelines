@@ -8,7 +8,6 @@ if (process.argv.length !== 3) {
 
 const credentialsPath = process.argv[2]
 const credentials = require(credentialsPath)
-console.log(credentials.email)
 
 const kubeCtl = spawn("kubectl", ["get", "pods"]);
 
