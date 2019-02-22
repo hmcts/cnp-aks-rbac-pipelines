@@ -119,7 +119,10 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        kubectl apply -f deployments/namespaces.yml
+        export NAMESPACE_NAME=$(adminNamespace)
+        NS_DEPLOYMENT_PATH='deployments/namespaces.yml'
+        envsubst < ${NS_DEPLOYMENT_PATH} > ${NS_DEPLOYMENT_PATH}.tmp && mv ${NS_DEPLOYMENT_PATH}.tmp ${NS_DEPLOYMENT_PATH}
+        kubectl apply -f ${NS_DEPLOYMENT_PATH}
 
   - task: AzureCLI@1
     displayName: 'Bind admin role to "aks-cluster-admin" group'
