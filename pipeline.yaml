@@ -207,8 +207,7 @@ jobs:
         ls -la
         cd deployments
         ls -la
-        cd deployments/substituted
-        ls -la
+        cat user-assigned-msi.yml
 
 # - job: RunTests
 #   dependsOn: DeployAKS
