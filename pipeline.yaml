@@ -190,23 +190,20 @@ jobs:
         done
 
   - task: AzureCLI@1
-    displayName: 'Testing output'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        var_one='$(miClientID)'
-        echo $var_one
-        var_two='$(miResourceID)'
-        echo $var_two
-
-  - task: AzureCLI@1
     displayName: 'Deploy AAD Pod Identity Operator'
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
         kubectl apply -f deployments/aad-pod-identity-rbac.yml
+        export IDENTITY_NAME=$(aksClusterName)-mi
+        echo $IDENTITY_NAME
+        export IDENTITY_RESOURCE_ID=$(miResourceID)
+        echo $IDENTITY_RESOURCE_ID
+        export IDENTITY_CLIENT_ID=$(miClientID)
+        echo $IDENTITY_CLIENT_ID
+        envsubst < deployments/user-assigned-msi.template.yaml > deployments/substituted/user-assigned-msi.yaml
+        kubectl apply -f deployments/substituted/user-assigned-msi.yaml
 
 # - job: RunTests
 #   dependsOn: DeployAKS
