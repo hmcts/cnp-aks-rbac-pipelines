@@ -148,46 +148,55 @@ jobs:
   pool:
     vmImage: 'Ubuntu 16.04'
   steps:
+  # - task: AzureCLI@1
+  #   displayName: 'Obtain AKS Admin access token.'
+  #   inputs:
+  #     azureSubscription: $(serviceConnection)
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
+
+  # - task: DownloadSecureFile@1
+  #   displayName: 'Download test developer'
+  #   inputs:
+  #     secureFile: test-developer.json
+
+  # - task: Bash@3
+  #   displayName: 'Launch Chromium Headless'
+  #   env:
+  #     BUILD_SOURCES_DIRECTORY: $(Build.SourcesDirectory)
+  #     BYPASSER_DIRECTORY: $(Build.SourcesDirectory)/tests/interactive-login-bypasser
+  #   inputs:
+  #     targetType: inline
+  #     failOnStderr: false
+  #     script: |
+  #       $BYPASSER_DIRECTORY/update.sh
+
+
+  # - task: AzureCLI@1
+  #   displayName: 'Authenticating test-developer to cluster using Automated Interactive Login'
+  #   env:
+  #     BUILD_SOURCES_DIRECTORY: $(Build.SourcesDirectory)
+  #     BYPASSER_DIRECTORY: $(Build.SourcesDirectory)/tests/interactive-login-bypasser
+  #   inputs:
+  #     azureSubscription: $(serviceConnection)
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #         cd $BYPASSER_DIRECTORY
+  #         $BYPASSER_DIRECTORY/latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com &
+  #         export CHROME_PID=$!
+  #         npm install && node index.js $(Agent.TempDirectory)/test-developer.json
+  #         kill -9 $CHROME_PID
+
   - task: AzureCLI@1
-    displayName: 'Obtain AKS Admin access token.'
+    displayName: 'Run tests'
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
-      inlineScript: |
-        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
-
-  - task: DownloadSecureFile@1
-    displayName: 'Download test developer'
-    inputs:
-      secureFile: test-developer.json
-
-  - task: Bash@3
-    displayName: 'Launch Chromium Headless'
-    env:
-      BUILD_SOURCES_DIRECTORY: $(Build.SourcesDirectory)
-      BYPASSER_DIRECTORY: $(Build.SourcesDirectory)/tests/interactive-login-bypasser
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        $BYPASSER_DIRECTORY/update.sh
-
-
-  - task: AzureCLI@1
-    displayName: 'Authenticating test-developer to cluster using Automated Interactive Login'
-    env:
-      BUILD_SOURCES_DIRECTORY: $(Build.SourcesDirectory)
-      BYPASSER_DIRECTORY: $(Build.SourcesDirectory)/tests/interactive-login-bypasser
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-          cd $BYPASSER_DIRECTORY
-          $BYPASSER_DIRECTORY/latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com &
-          export CHROME_PID=$!
-          npm install && node index.js $(Agent.TempDirectory)/test-developer.json
-          kill -9 $CHROME_PID
-
+      inlineScript: 
+        pwsh
+        Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit
+          
   # - task: AzurePowerShell@3
   #   displayName: 'Run tests'
   #   condition: always()
