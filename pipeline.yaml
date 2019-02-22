@@ -202,7 +202,7 @@ jobs:
         echo $IDENTITY_RESOURCE_ID
         export IDENTITY_CLIENT_ID=$(miClientID)
         echo $IDENTITY_CLIENT_ID
-        envsubst < deployments/user-assigned-msi.template.yml > deployments/substituted/user-assigned-msi.yml
+        envsubst < deployments/user-assigned-msi.yml > deployments/user-assigned-msi.yml.tmp && mv deployments/user-assigned-msi.yml.tmp deployments/user-assigned-msi.yml
         # kubectl apply -f deployments/substituted/user-assigned-msi.yml
         ls -la
         cd deployments
