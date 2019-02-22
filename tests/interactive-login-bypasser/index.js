@@ -46,13 +46,13 @@ kubeCtl.stderr.on("data", async data => {
 
     await page.click("#code");
     await page.keyboard.type(code);
-    await page.waitFor(1000);
+    await page.waitFor(2000);
     await page.click("#continueBtn");
-    await page.waitFor(1000);
+    await page.waitFor(2000);
     await page.click("#otherTileText");
-    await page.waitFor(1000);
+    await page.waitFor(2000);
     await page.click("input[type=email]");
-    await page.waitFor(1000);
+    await page.waitFor(2000);
     await page.keyboard.type(credentials.email);
     await page.waitFor(1000);
     await page.click("#idSIButton9");
@@ -69,4 +69,5 @@ kubeCtl.stderr.on("data", async data => {
 
 kubeCtl.on("close", code => {
   console.log(`child process exited with code ${code}`);
+  process.exit(code)
 });
