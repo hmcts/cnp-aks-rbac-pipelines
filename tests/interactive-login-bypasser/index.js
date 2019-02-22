@@ -49,8 +49,8 @@ kubeCtl.stderr.on("data", async data => {
     await page.waitFor(2000);
     await page.click("#continueBtn");
     await page.waitFor(2000);
-    await page.click("#otherTileText");
-    await page.waitFor(2000);
+    // await page.click("#otherTileText");
+    // await page.waitFor(2000);
     await page.click("input[type=email]");
     await page.waitFor(2000);
     await page.keyboard.type(credentials.email);
