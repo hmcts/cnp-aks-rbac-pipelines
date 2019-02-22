@@ -148,6 +148,11 @@ jobs:
   pool:
     name: 'Hosted VS2017'
   steps:
+  - task: DownloadSecureFile@1
+    displayName: 'Download test developer credentials'
+    inputs:
+      secureFile: test-developer.json
+
   - task: AzurePowerShell@3
     displayName: 'Run tests'
     condition: always()

@@ -12,4 +12,10 @@ Describe 'RBAC Model' {
             Get-AzureRMResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue  | Should Not BeNullOrEmpty
         }
     }
+
+    Context 'Credentials' {
+        It 'test-developer has credentials' {
+            Test-Path -Path  $(Agent.TempDirectory)/test-developer.json" | Should Be $true
+        }
+    }
 }
