@@ -168,8 +168,8 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
           cd tests/interactive-login-bypasser
-          npm install
-          node index.js '$(Agent.TempDirectory)/test-developer.json'
+          npm install && \
+             node index.js '$(Agent.TempDirectory)/test-developer.json'
 
   - task: AzurePowerShell@3
     displayName: 'Run tests'
