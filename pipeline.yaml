@@ -153,6 +153,16 @@ jobs:
     inputs:
       secureFile: test-developer.json
 
+  - task: Bash@3
+    displayName: 'Authenticating test-developer to cluster using Automated Interactive Login'
+    targetType: inline
+    failOnStderr: true
+    script:
+      cd tests/interactive-login-bypasser
+      node index.js '$(Agent.TempDirectory)/test-developer.json'
+
+
+
   - task: AzurePowerShell@3
     displayName: 'Run tests'
     condition: always()
