@@ -52,7 +52,7 @@ jobs:
       script: |
         sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
                -e 's/${ACR_SERVICE_PRINCIPAL_ID}/$(aksServicePrincipalId)/g' \
-               -e "s/${ACR_SERVICE_PRINCIPAL_SECRET}/$AKS_SP_SECRET/g" \
+               -e 's@${ACR_SERVICE_PRINCIPAL_SECRET}@"$AKS_SP_SECRET"'@' \
           templates/repositories.yaml
         cat templates/repositories.yaml
     env:
