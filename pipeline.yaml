@@ -152,17 +152,17 @@ jobs:
     displayName: 'Download test developer'
     inputs:
       secureFile: test-developer.json
-
-  - task: Bash@3
+        
+  - task: AzureCLI@1
     displayName: 'Authenticating test-developer to cluster using Automated Interactive Login'
     inputs:
-      targetType: inline
-      failOnStderr: true
-      script: |
-        cd tests/interactive-login-bypasser
-        npm install
-        node index.js '$(Agent.TempDirectory)/test-developer.json'
-
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |     
+          az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName)
+          cd tests/interactive-login-bypasser
+          npm install
+          node index.js '$(Agent.TempDirectory)/test-developer.json'
 
 
   - task: AzurePowerShell@3
