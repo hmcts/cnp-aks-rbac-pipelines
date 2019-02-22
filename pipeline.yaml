@@ -63,7 +63,10 @@ jobs:
       location: $(location)
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-vnet-template.json'
-      overrideParameters: '-aksVnetName $(aksClusterName) -aksVnetPrefix $(aksVnetCidr) -aksSubnetName default -aksSubnetPrefix $(aksSubnetCidr)'
+      overrideParameters: '-aksVnetName $(aksClusterName) 
+        -aksVnetPrefix $(aksVnetCidr) 
+        -aksSubnetName default 
+        -aksSubnetPrefix $(aksSubnetCidr)'
       deploymentOutputs: 'vnetOutputs'
 
   - task: AzureCLI@1
@@ -90,7 +93,12 @@ jobs:
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-aks-template.json'
       csmParametersFile: 'templates/arm-aks-parameters.json'
-      overrideParameters: '-aksClusterName $(aksClusterName) -aksVnetSubnetId $(aksSubnetId) -aksServiceCidr $(aksServiceCidr) -aksDnsServiceIp $(aksDnsServiceIp) -servicePrincipalSecret $(aksServicePrincipalSecret) -serverAppSecret $(aksServerAppSecret)'
+      overrideParameters: '-aksClusterName $(aksClusterName) 
+        -aksVnetSubnetId $(aksSubnetId) 
+        -aksServiceCidr $(aksServiceCidr) 
+        -aksDnsServiceIp $(aksDnsServiceIp) 
+        -servicePrincipalSecret $(aksServicePrincipalSecret) 
+        -serverAppSecret $(aksServerAppSecret)'
       deploymentOutputs: 'aksOutputs'
 
   - task: AzureCLI@1
@@ -198,7 +206,7 @@ jobs:
         done
 
   - task: AzureCLI@1
-    displayName: 'Deploy AAD Pod Identity Operator'
+    displayName: 'Deploy AAD Pod Identity Operator, MIC:$(aadMicVersion) NMI:$(aadNmiVersion)'
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
@@ -221,7 +229,7 @@ jobs:
         kubectl apply -f ${IDENTITY_BINDING_PATH}
 
   - task: AzureCLI@1
-    displayName: 'Deploy KeyVault-FlexVolume'
+    displayName: 'Deploy KeyVault-FlexVolume $(kvFlexVolumeVersion)'
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
