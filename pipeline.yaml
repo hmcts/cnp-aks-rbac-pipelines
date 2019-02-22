@@ -44,20 +44,6 @@ jobs:
     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
   steps:
 
-  - task: Bash@3
-    displayName: 'Create repositories.yaml secret'
-    inputs:
-      targetType: inline
-      failOnStderr: true
-      script: |
-        sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
-               -e 's/${ACR_SERVICE_PRINCIPAL_ID}/$(aksServicePrincipalId)/g' \
-               -e 's@${ACR_SERVICE_PRINCIPAL_SECRET}@'"$AKS_SP_SECRET"'@' \
-          templates/repositories.yaml
-        cat templates/repositories.yaml
-    env:
-      AKS_SP_SECRET: $(aksServicePrincipalSecret)
-
   - task: AzureCLI@1
     displayName: Check VNET prerequisites
     inputs:
@@ -160,40 +146,29 @@ jobs:
       inlineScript: |
         kubectl apply -f roles/helm-rbac-config.yml
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
-
-  - task: DownloadSecureFile@1
-    displayName: 'Download cluster sealed secret key'
-    inputs:
-      secureFile: $(aksResourceGroup)-cluster-sealed-secret.key
  
-  - task: AzureCLI@1
+   - task: Bash@3
+    displayName: 'Create cluster resources'
+    inputs:
+      targetType: inline
+      failOnStderr: true
+      script: |
+        kubectl apply -f manifests/namespaces.yaml
+
+  - task: Bash@3
     displayName: 'Create repositories.yaml secret'
     inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        sed -i -e 's/${ACR_NAME}/$(acrName)' templates/repositories.yaml
-        cat templates/repositories.yaml
+      targetType: inline
+      failOnStderr: true
+      script: |
+        sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
+               -e 's/${ACR_SERVICE_PRINCIPAL_ID}/$(aksServicePrincipalId)/g' \
+               -e 's@${ACR_SERVICE_PRINCIPAL_SECRET}@'"$AKS_SP_SECRET"'@' \
+          templates/repositories.yaml
 
-  - task: AzureCLI@1
-    displayName: 'Replace sealed secret key'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        ls -la $(Agent.TempDirectory)
-        kubectl replace secret -n admin sealed-secrets-key -f $(Agent.TempDirectory)/$(aksResourceGroup)-cluster-sealed-secret.key
-        kubectl delete pod -n admin -l app.kubernetes.io/name=sealed-secrets || true
-
-  - task: AzureCLI@1
-    displayName: 'Install Sealed Secrets'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        helm upgrade sealed-secrets stable/sealed-secrets --install --namespace admin \
-          --set image.repository=quay.io/bitnami/sealed-secrets-controller,image.tag=v0.7.0 \
-          --wait
+        kubectl replace secret generic flux-helm-repositories --from-file=templates/repositories.yaml --namespace=flux
+    env:
+      AKS_SP_SECRET: $(aksServicePrincipalSecret)
 
   - task: AzureCLI@1
     enabled: false
