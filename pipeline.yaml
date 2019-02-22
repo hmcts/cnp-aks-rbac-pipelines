@@ -52,7 +52,7 @@ jobs:
       inlineScript: |
         sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
                -e 's/${ACR_SERVICE_PRINCIPAL_ID}/$(aksServicePrincipalId)/g' \
-               -e 's/${ACR_SERVICE_PRINCIPAL_SECRET}/$(aks-sp-secret)/g' \
+               -e 's/${ACR_SERVICE_PRINCIPAL_SECRET}/$(aksServicePrincipalSecret)/g' \
           templates/repositories.yaml
         cat templates/repositories.yaml
 
