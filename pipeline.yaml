@@ -44,12 +44,11 @@ jobs:
     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
   steps:
 
-  - task: AzureCLI@1
+  - task: Bash@3
     displayName: 'Create repositories.yaml secret'
     inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
+      targetType: inline
+      script: |
         sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
                -e 's/${ACR_SERVICE_PRINCIPAL_ID}/$(aksServicePrincipalId)/g' \
                -e 's/${ACR_SERVICE_PRINCIPAL_SECRET}/$(aksServicePrincipalSecret)/g' \
