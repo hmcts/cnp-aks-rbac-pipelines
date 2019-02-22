@@ -171,7 +171,6 @@ jobs:
       failOnStderr: true
       script: |
         $BYPASSER_DIRECTORY/update.sh
-        $BYPASSER_DIRECTORY/latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com &
 
 
   - task: AzureCLI@1
@@ -183,7 +182,8 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-          cd tests/interactive-login-bypasser
+          cd $BYPASSER_DIRECTORY
+          $BYPASSER_DIRECTORY/latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com &
           npm install && node index.js $(Agent.TempDirectory)/test-developer.json
 
   - task: AzurePowerShell@3
