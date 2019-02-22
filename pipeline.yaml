@@ -14,7 +14,7 @@ variables:
   helmVersion: '2.12.0'
   location: 'UK South'
   aadSelector: 'mi'
-  aadMicVersion: '1.3'
+  aadMicVersion: '1.2'
   aadNmiVersion: '1.4'
 
 jobs:
