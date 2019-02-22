@@ -13,6 +13,9 @@ variables:
   serviceConnection: azurerm-rpetemp
   helmVersion: '2.12.0'
   location: 'UK South'
+  aadSelector: 'msi'
+  aadMicVersion: '1.3'
+  aadNmiVersion: '1.4'
 
 jobs:
 - job: Keyvault
@@ -198,12 +201,18 @@ jobs:
         export IDENTITY_NAME=$(aksClusterName)-mi
         export IDENTITY_RESOURCE_ID=$(miResourceID)
         export IDENTITY_CLIENT_ID=$(miClientID)
+        export IDENTITY_SELECTOR=$(aadSelector)
+        export NMI_VERSION=$(aadNmiVersion)
+        export MIC_VERSION=$(aadMicVersion)
+        AAD_DEPLOYMENT_PATH='deployments/aad-pod-identity-rbac.yml'
         IDENTITY_PATH='deployments/aad-azure-identity.yml'
-        IDENTITY_BINDING_PATH='deployments/aad-azure-Identity-binding.yml'
-        kubectl apply -f deployments/aad-pod-identity-rbac.yml
+        IDENTITY_BINDING_PATH='deployments/aad-azure-Identity-binding.yml'      
+        envsubst < ${AAD_DEPLOYMENT_PATH} > ${AAD_DEPLOYMENT_PATH}.tmp && mv ${AAD_DEPLOYMENT_PATH}.tmp ${AAD_DEPLOYMENT_PATH}
+        kubectl apply -f ${AAD_DEPLOYMENT_PATH}
         envsubst < ${IDENTITY_PATH} > ${IDENTITY_PATH}.tmp && mv ${IDENTITY_PATH}.tmp ${IDENTITY_PATH}
-        kubectl apply -f deployments/aad-azure-identity.yml
+        kubectl apply -f ${IDENTITY_PATH}
         envsubst < ${IDENTITY_BINDING_PATH} > ${IDENTITY_BINDING_PATH}.tmp && mv ${IDENTITY_BINDING_PATH}.tmp ${IDENTITY_BINDING_PATH}
+        kubectl apply -f ${IDENTITY_BINDING_PATH}
 
 # - job: RunTests
 #   dependsOn: DeployAKS
