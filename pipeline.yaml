@@ -159,6 +159,7 @@ jobs:
     failOnStderr: true
     script:
       cd tests/interactive-login-bypasser
+      npm install
       node index.js '$(Agent.TempDirectory)/test-developer.json'
 
 
