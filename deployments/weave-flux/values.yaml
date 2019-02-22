@@ -7,5 +7,5 @@ registry:
   acr:
     enabled: true
 git:
-  url: git@github.com:hmcts/flux-demo
+  url: git@github.com:hmcts/cnp-flux-config
   pollInterval: 1m
