@@ -159,7 +159,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |     
-          az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName)
+          az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
           cd tests/interactive-login-bypasser
           npm install
           node index.js '$(Agent.TempDirectory)/test-developer.json'
