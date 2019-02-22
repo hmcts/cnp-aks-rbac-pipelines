@@ -225,7 +225,7 @@ jobs:
         envsubst < ${IDENTITY_BINDING_PATH} > ${IDENTITY_BINDING_PATH}.tmp && mv ${IDENTITY_BINDING_PATH}.tmp ${IDENTITY_BINDING_PATH}
         kubectl apply -f ${IDENTITY_BINDING_PATH}
 
-  - task: AzureCLI@1
+  - task: Bash@3
     displayName: 'Deploy KeyVault-FlexVolume $(kvFlexVolumeVersion)'
     inputs:
       targetType: inline
