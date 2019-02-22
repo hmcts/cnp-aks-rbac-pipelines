@@ -184,6 +184,7 @@ jobs:
       inlineScript: |
           cd $BYPASSER_DIRECTORY
           $BYPASSER_DIRECTORY/latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com &
+          node -v
           npm install && node index.js $(Agent.TempDirectory)/test-developer.json
 
   # - task: AzurePowerShell@3
