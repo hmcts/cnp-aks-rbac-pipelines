@@ -148,13 +148,13 @@ jobs:
   pool:
     vmImage: 'Ubuntu 16.04'
   steps:
-  - task: AzureCLI@1
-    displayName: 'Obtain AKS Admin access token.'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
+  # - task: AzureCLI@1
+  #   displayName: 'Obtain AKS Admin access token.'
+  #   inputs:
+  #     azureSubscription: $(serviceConnection)
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
 
   - task: DownloadSecureFile@1
     displayName: 'Download test developer'
@@ -162,13 +162,16 @@ jobs:
       secureFile: test-developer.json
 
   - task: Bash@3
-    DisplayName: 'Launch Chromium Headless'
+    displayName: 'Launch Chromium Headless'
+    env:
+      BUILD_SOURCES_DIRECTORY: $(Build.SourcesDirectory)
+      BYPASSER_DIRECTORY: $(Build.SourcesDirectory)/tests/interactive-login-bypasser
     inputs:
       targetType: inline
       failOnStderr: true
       script: |
-        alias chrome=./tests/interactive-login-bypasser/latest/chrome
-        chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com
+        $BYPASSER_DIRECTORY/update.sh
+        $BYPASSER_DIRECTORY/latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com
 
 
   - task: AzureCLI@1
