@@ -13,9 +13,11 @@ variables:
   serviceConnection: azurerm-rpetemp
   helmVersion: '2.12.0'
   location: 'UK South'
+  adminNamespace: 'admin'
   aadSelector: 'mi'
-  aadMicVersion: '1.2'
+  aadMicVersion: '1.3'
   aadNmiVersion: '1.4'
+  kvFlexVolumeVersion: 'v0.0.8'
 
 jobs:
 - job: Keyvault
@@ -204,6 +206,7 @@ jobs:
         export IDENTITY_SELECTOR=$(aadSelector)
         export NMI_VERSION=$(aadNmiVersion)
         export MIC_VERSION=$(aadMicVersion)
+        export NAMESPACE_NAME=$(adminNamespace)
         AAD_DEPLOYMENT_PATH='deployments/aad-pod-identity-rbac.yml'
         IDENTITY_PATH='deployments/aad-azure-identity.yml'
         IDENTITY_BINDING_PATH='deployments/aad-azure-Identity-binding.yml'      
@@ -213,6 +216,18 @@ jobs:
         kubectl apply -f ${IDENTITY_PATH}
         envsubst < ${IDENTITY_BINDING_PATH} > ${IDENTITY_BINDING_PATH}.tmp && mv ${IDENTITY_BINDING_PATH}.tmp ${IDENTITY_BINDING_PATH}
         kubectl apply -f ${IDENTITY_BINDING_PATH}
+
+  - task: AzureCLI@1
+    displayName: 'Deploy KeyVault-FlexVolume'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        export KV_VERSION=$(kvFlexVolumeVersion)
+        export NAMESPACE_NAME=$(adminNamespace)
+        KV_DEPLOYMENT_PATH='deployments/kv-flexvol-installer.yml'
+        envsubst < ${KV_DEPLOYMENT_PATH} > ${KV_DEPLOYMENT_PATH}.tmp && mv ${KV_DEPLOYMENT_PATH}.tmp ${KV_DEPLOYMENT_PATH}
+        kubectl apply -f ${KV_DEPLOYMENT_PATH}
 
 # - job: RunTests
 #   dependsOn: DeployAKS
