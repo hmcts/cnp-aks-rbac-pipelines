@@ -156,7 +156,7 @@ jobs:
         kubectl apply -f manifests/namespaces.yaml
 
   - task: Bash@3
-    displayName: 'Create repositories.yaml secret'
+    displayName: 'Template repositories.yaml secret'
     inputs:
       targetType: inline
       failOnStderr: true
@@ -165,11 +165,17 @@ jobs:
                -e 's/${ACR_SERVICE_PRINCIPAL_ID}/$(aksServicePrincipalId)/g' \
                -e 's@${ACR_SERVICE_PRINCIPAL_SECRET}@'"$AKS_SP_SECRET"'@' \
           templates/repositories.yaml
-
-        kubectl -n flux delete secret flux-helm-repositories || true
-        kubectl -n flux create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
     env:
       AKS_SP_SECRET: $(aksServicePrincipalSecret)
+
+  - task: Bash@3
+    displayName: 'Create repositories.yaml secret'
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        kubectl -n flux delete secret flux-helm-repositories || true
+        kubectl -n flux create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
 
   - task: AzureCLI@1
     enabled: false
