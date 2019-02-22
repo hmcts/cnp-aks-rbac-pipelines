@@ -1,4 +1,4 @@
-# AKS RBAC Enabled Cluster Pipeliens
+# AKS RBAC Enabled Cluster Pipelines
 
 ## Introduction
 
