@@ -207,12 +207,6 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         kubectl apply -f deployments/aad-pod-identity-rbac.yml
-        # CR=$(kubectl get customresourcedefinitions -o jsonpath='{.items[*].metadata.name}')
-        # echo $CR
-        # if [[ ! $CR == *"azureidentitybindings.aadpodidentity.k8s.io"* ]]; then
-        #   echo "AAD Pod Identity Operator is not installed, deploying."
-        #   kubectl apply -f deployments/aad-pod-identity-rbac.yml
-        # fi
 
 # - job: RunTests
 #   dependsOn: DeployAKS
