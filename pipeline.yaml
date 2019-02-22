@@ -108,6 +108,14 @@ jobs:
       inlineScript: |
         az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
 
+  - task: AzureCLI@1
+    displayName: 'Create Custom Namespaces'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        kubectl apply -f deployments/namespaces.yml
+
   # - task: AzureCLI@1
   #   displayName: 'Bind admin role to "aks-cluster-admin" group'
   #   inputs:
