@@ -1,0 +1,18 @@
+apiVersion: v1
+repositories:
+- caFile: ""
+  cache: stable-index.yaml
+  certFile: ""
+  keyFile: ""
+  name: stable
+  password: ""
+  url: https://kubernetes-charts.storage.googleapis.com
+  username: ""
+- caFile: ""
+  cache: hmcts-index.yaml
+  certFile: ""
+  keyFile: ""
+  name: hmcts
+  url: https://${ACR_NAME}.azurecr.io/helm/v1/repo
+  username: $(ACR_SERVICE_PRINCIPAL_ID)
+  password: $(ACR_SERVICE_PRINCIPAL_SECRET)

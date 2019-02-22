@@ -10,10 +10,12 @@ variables:
   aksSubnetCidr: ''
   aksServiceCidr: ''
   aksDnsServiceIp: ''
+  aksServicePrincipalId: b31d1a08-b9c7-44de-9a17-181313364d51
   keyvaultName: rpe-infra
   serviceConnection: azurerm-rpetemp
   helmVersion: '2.12.0'
   location: 'UK South'
+  acrName: rpedev
 
 jobs:
 - job: Keyvault
@@ -41,6 +43,16 @@ jobs:
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
   steps:
+
+  - task: AzureCLI@1
+    displayName: 'Create repositories.yaml secret'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        sed -i -e 's/${ACR_NAME}/$(acrName)' templates/repositories.yaml
+        cat templates/repositories.yaml
+
   - task: AzureCLI@1
     displayName: Check VNET prerequisites
     inputs:
@@ -148,15 +160,15 @@ jobs:
     displayName: 'Download cluster sealed secret key'
     inputs:
       secureFile: $(aksResourceGroup)-cluster-sealed-secret.key
-      
-  - task: Bash@3
-    enabled: false
-    displayName: 'Replace sealed secret key'
+ 
+  - task: AzureCLI@1
+    displayName: 'Create repositories.yaml secret'
     inputs:
-      script:
-        ls -la $(Agent.TempDirectory)
-        kubectl replace secret -n admin sealed-secrets-key -f $(Agent.TempDirectory)/$(aksResourceGroup)-cluster-sealed-secret.key
-        kubectl delete pod -n admin -l app.kubernetes.io/name=sealed-secrets || true
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        sed -i -e 's/${ACR_NAME}/$(acrName)' templates/repositories.yaml
+        cat templates/repositories.yaml
 
   - task: AzureCLI@1
     displayName: 'Replace sealed secret key'
