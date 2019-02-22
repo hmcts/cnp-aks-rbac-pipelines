@@ -197,17 +197,15 @@ jobs:
       inlineScript: |
         kubectl apply -f deployments/aad-pod-identity-rbac.yml
         export IDENTITY_NAME=$(aksClusterName)-mi
-        echo $IDENTITY_NAME
         export IDENTITY_RESOURCE_ID=$(miResourceID)
-        echo $IDENTITY_RESOURCE_ID
         export IDENTITY_CLIENT_ID=$(miClientID)
-        echo $IDENTITY_CLIENT_ID
-        envsubst < deployments/user-assigned-msi.yml > deployments/user-assigned-msi.yml.tmp && mv deployments/user-assigned-msi.yml.tmp deployments/user-assigned-msi.yml
-        # kubectl apply -f deployments/substituted/user-assigned-msi.yml
-        ls -la
+        IDENTITY_PATH='deployments/aad-azure-identity.yml'
+        IDENTITY_BINDING_PATH='deployments/aad-azure-Identity-binding.yml'
+        envsubst < ${IDENTITY_PATH} > ${IDENTITY_PATH}.tmp && mv ${IDENTITY_PATH}.tmp ${IDENTITY_PATH}
+        #kubectl apply -f deployments/aad-azure-identity.yml
+        #envsubst < deployments/aad-azure-Identity-binding.yml > deployments/aad-azure-Identity-binding.yml.tmp && mv deployments/aad-azure-Identity-binding.yml.tmp deployments/aad-azure-Identity-binding.yml
         cd deployments
-        ls -la
-        cat user-assigned-msi.yml
+        cat aad-azure-identity.yml
 
 # - job: RunTests
 #   dependsOn: DeployAKS
