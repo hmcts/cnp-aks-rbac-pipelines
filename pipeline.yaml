@@ -148,11 +148,6 @@ jobs:
   pool:
     name: 'Hosted VS2017'
   steps:
-  - task: DownloadSecureFile@1
-    displayName: 'Download test developer'
-    inputs:
-      secureFile: test-developer.json
-
   - task: AzureCLI@1
     displayName: 'Obtain AKS Admin access token.'
     inputs:
@@ -160,6 +155,11 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
+
+  - task: DownloadSecureFile@1
+    displayName: 'Download test developer'
+    inputs:
+      secureFile: test-developer.json
         
   - task: AzureCLI@1
     displayName: 'Authenticating test-developer to cluster using Automated Interactive Login'
@@ -168,7 +168,7 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
           cd tests/interactive-login-bypasser
-          npm install && node index.js '$(Agent.TempDirectory)/test-developer.json'
+          npm install && node index.js $(Agent.TempDirectory)/test-developer.json
 
   - task: AzurePowerShell@3
     displayName: 'Run tests'
@@ -182,7 +182,7 @@ jobs:
       
   - task: PublishTestResults@2
     displayName: 'Publish Environment Test Results **/TEST-*.xml'
-    condition: always()
+    # condition: always()
     inputs:
       testResultsFormat: NUnit
       timeoutInMinutes: 1
