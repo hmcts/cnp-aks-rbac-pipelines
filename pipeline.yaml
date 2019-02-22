@@ -26,11 +26,12 @@ jobs:
     inputs:
       azureSubscription: $(serviceConnection)
       keyVaultName: $(keyvaultName)
-      secretsFilter: 'aks-sp-id,aks-sp-secret,aks-sapp-secret'
+      secretsFilter: 'aks-sp-id,aks-sp-secret,aks-sapp-secret,slack-webhook-url'
   - script: |
       echo "##vso[task.setvariable variable=aksServicePrincipalId;isOutput=true]$(aks-sp-id)"
       echo "##vso[task.setvariable variable=aksServicePrincipalSecret;isOutput=true]$(aks-sp-secret)"
       echo "##vso[task.setvariable variable=aksServerAppSecret;isOutput=true]$(aks-sapp-secret)"
+      echo "##vso[task.setvariable variable=slackWebhookUrl;isOutput=true]$(slack-webhook-url)"
     displayName: 'Export Keyvault Variables'
     name: exportKeyvault
 
@@ -43,6 +44,7 @@ jobs:
     aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
+    slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
   steps:
 
   - task: AzureCLI@1
@@ -189,6 +191,29 @@ jobs:
         helm upgrade flux weaveworks/flux --install --namespace flux -f deployments/weave-flux/values.yaml \
           --set git.path=k8s/$(aksResourceGroup)-cluster,git.label=$(aksResourceGroup)-cluster \
           --wait
+
+  - task: Bash@3
+    displayName: 'Template Kured secret'
+    inputs:
+      targetType: inline
+      failOnStderr: true
+      script: |
+        sed -i -e 's/${SLACK_USERNAME}/$(aksResourceGroup)-cluster/g' \
+               -e 's@${SLACK_WEBHOOK_URL}@'"$SLACK_WEBHOOK_URL"'@' \
+          templates/kured/values.yaml
+
+          cat templates/kured/values.yaml
+    env:
+      SLACK_WEBHOOK_URL: $(slackWebhookUrl)
+
+  - task: Bash@3
+    displayName: 'Create Kured secret'
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        kubectl -n kured delete secret kured-values || true
+        kubectl -n flux create secret generic kured-values --from-file=templates/kured/values.yaml
 
 - job: RunTests
   dependsOn: DeployAKS
