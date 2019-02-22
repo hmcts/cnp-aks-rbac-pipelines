@@ -20,7 +20,7 @@ variables:
 jobs:
 - job: Keyvault
   pool:
-    name: 'hmcts-agent-pool'
+    vmImage: 'Ubuntu 16.04'
   steps:
   - task: AzureKeyVault@1
     displayName: 'Get secrets from Keyvault'
@@ -37,7 +37,7 @@ jobs:
 - job: DeployAKS
   dependsOn: Keyvault
   pool:
-    name: 'hmcts-agent-pool'
+    vmImage: 'Ubuntu 16.04'
   variables:
     aksClusterName: $(aksResourceGroup)-cluster
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
@@ -50,7 +50,9 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        sed -i -e 's/${ACR_NAME}/$(acrName)/g' templates/repositories.yaml
+        sed -i -e 's/${ACR_NAME}/$(acrName)/g; \
+                   s/${ACR_SERVICE_PRINCIPAL_ID}/$(aksServicePrincipalId)/g; \
+                   s/${ACR_SERVICE_PRINCIPAL_SECRET}/$(aks-sp-secret)/g' templates/repositories.yaml
         cat templates/repositories.yaml
 
   - task: AzureCLI@1
