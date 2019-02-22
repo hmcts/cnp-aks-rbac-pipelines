@@ -15,7 +15,7 @@ Describe 'RBAC Model' {
 
     Context 'Credentials' {
         It 'test-developer has credentials' {
-            Test-Path -Path  $(Agent.TempDirectory)/test-developer.json" | Should Be $true
+            Test-Path -Path  $(Agent.TempDirectory)/test-developer.json | Should Be $true
         }
     }
 }
