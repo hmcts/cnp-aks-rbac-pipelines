@@ -13,7 +13,7 @@ variables:
   serviceConnection: azurerm-rpetemp
   helmVersion: '2.12.0'
   location: 'UK South'
-  aadSelector: 'msi'
+  aadSelector: 'mi'
   aadMicVersion: '1.3'
   aadNmiVersion: '1.4'
 
