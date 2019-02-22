@@ -155,12 +155,13 @@ jobs:
 
   - task: Bash@3
     displayName: 'Authenticating test-developer to cluster using Automated Interactive Login'
-    targetType: inline
-    failOnStderr: true
-    script:
-      cd tests/interactive-login-bypasser
-      npm install
-      node index.js '$(Agent.TempDirectory)/test-developer.json'
+    inputs:
+      targetType: inline
+      failOnStderr: true
+      script: |
+        cd tests/interactive-login-bypasser
+        npm install
+        node index.js '$(Agent.TempDirectory)/test-developer.json'
 
 
 
