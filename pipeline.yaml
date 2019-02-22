@@ -171,11 +171,14 @@ jobs:
       failOnStderr: true
       script: |
         $BYPASSER_DIRECTORY/update.sh
-        $BYPASSER_DIRECTORY/latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com
+        $BYPASSER_DIRECTORY/latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com &
 
 
   - task: AzureCLI@1
     displayName: 'Authenticating test-developer to cluster using Automated Interactive Login'
+    env:
+      BUILD_SOURCES_DIRECTORY: $(Build.SourcesDirectory)
+      BYPASSER_DIRECTORY: $(Build.SourcesDirectory)/tests/interactive-login-bypasser
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
