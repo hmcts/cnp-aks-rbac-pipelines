@@ -166,8 +166,6 @@ jobs:
                -e 's@${ACR_SERVICE_PRINCIPAL_ID}@'"$AKS_SP_ID"'@' \
                -e 's@${ACR_SERVICE_PRINCIPAL_SECRET}@'"$AKS_SP_SECRET"'@' \
           templates/repositories.yaml
-
-          cat templates/repositories.yaml
     env:
       AKS_SP_ID: $(aksServicePrincipalId)
       AKS_SP_SECRET: $(aksServicePrincipalSecret)
