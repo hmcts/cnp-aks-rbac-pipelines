@@ -178,7 +178,7 @@ jobs:
         kubectl -n flux create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
 
   - task: AzureCLI@1
-    enabled: false
+    enabled: true
     displayName: 'Install Weave Flux'
     inputs:
       azureSubscription: $(serviceConnection)
