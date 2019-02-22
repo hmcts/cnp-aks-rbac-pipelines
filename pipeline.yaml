@@ -48,10 +48,12 @@ jobs:
     displayName: 'Create repositories.yaml secret'
     inputs:
       targetType: inline
+      env:
+        AKS_SP_SECRET: $(aksServicePrincipalSecret)
       script: |
         sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
                -e 's/${ACR_SERVICE_PRINCIPAL_ID}/$(aksServicePrincipalId)/g' \
-               -e 's/${ACR_SERVICE_PRINCIPAL_SECRET}/$(aksServicePrincipalSecret)/g' \
+               -e 's/${ACR_SERVICE_PRINCIPAL_SECRET}/$AKS_SP_SECRET/g' \
           templates/repositories.yaml
         cat templates/repositories.yaml
 
