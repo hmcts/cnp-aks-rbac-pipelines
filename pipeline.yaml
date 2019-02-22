@@ -184,7 +184,9 @@ jobs:
       inlineScript: |
           cd $BYPASSER_DIRECTORY
           $BYPASSER_DIRECTORY/latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com &
+          export CHROME_PID=$!
           npm install && node index.js $(Agent.TempDirectory)/test-developer.json
+          kill -9 $CHROME_PID
 
   # - task: AzurePowerShell@3
   #   displayName: 'Run tests'
