@@ -15,6 +15,11 @@ variables:
   helmVersion: '2.12.0'
   location: 'UK South'
   acrName: rpedev
+  adminNamespace: 'admin'
+  aadSelector: 'mi'
+  aadMicVersion: '1.3'
+  aadNmiVersion: '1.4'
+  kvFlexVolumeVersion: 'v0.0.8'
 
 jobs:
 - job: Keyvault
@@ -64,17 +69,20 @@ jobs:
       deploymentMode: 'Incremental'
       location: $(location)
       templateLocation: 'Linked artifact'
-      csmFile: 'arm-vnet-template.json'
-      overrideParameters: '-aksVnetName $(aksClusterName) -aksVnetPrefix $(aksVnetCidr) -aksSubnetName default -aksSubnetPrefix $(aksSubnetCidr)'
+      csmFile: 'templates/arm-vnet-template.json'
+      overrideParameters: '-aksVnetName $(aksClusterName) 
+        -aksVnetPrefix $(aksVnetCidr) 
+        -aksSubnetName default 
+        -aksSubnetPrefix $(aksSubnetCidr)'
       deploymentOutputs: 'vnetOutputs'
 
-  - task: AzureCLI@1
+  - task: Bash@3
     displayName: Parse ARM Outputs
     condition: not(variables['aksSubnetId'])
     inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: inlineScript
-      inlineScript: |
+      targetType: inline
+      failOnStderr: false
+      script: |
         for row in $(echo '$(vnetOutputs)' | jq -c '. | to_entries[]'); do
           outputName=$(echo ${row} | jq -r ".key")
           outputValue=$(echo ${row} | jq -r ".value.value")
@@ -88,11 +96,29 @@ jobs:
       action: 'Create Or Update Resource Group'
       resourceGroupName: $(aksResourceGroup)
       deploymentMode: 'Incremental'
-      location: 'UK South'
+      location: $(location)
       templateLocation: 'Linked artifact'
-      csmFile: 'arm-aks-template.json'
-      csmParametersFile: 'arm-aks-parameters.json'
-      overrideParameters: '-aksClusterName $(aksClusterName) -aksVnetSubnetId $(aksSubnetId) -aksServiceCidr $(aksServiceCidr) -aksDnsServiceIp $(aksDnsServiceIp) -servicePrincipalSecret $(aksServicePrincipalSecret) -serverAppSecret $(aksServerAppSecret)'
+      csmFile: 'templates/arm-aks-template.json'
+      csmParametersFile: 'templates/arm-aks-parameters.json'
+      overrideParameters: '-aksClusterName $(aksClusterName) 
+        -aksVnetSubnetId $(aksSubnetId) 
+        -aksServiceCidr $(aksServiceCidr) 
+        -aksDnsServiceIp $(aksDnsServiceIp) 
+        -servicePrincipalSecret $(aksServicePrincipalSecret) 
+        -serverAppSecret $(aksServerAppSecret)'
+      deploymentOutputs: 'aksOutputs'
+
+  - task: Bash@3
+    displayName: Parse ARM Outputs
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        for row in $(echo '$(aksOutputs)' | jq -c '. | to_entries[]'); do
+          outputName=$(echo ${row} | jq -r ".key")
+          outputValue=$(echo ${row} | jq -r ".value.value")
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+        done
 
   - task: AzureCLI@1
     displayName: 'Obtain AKS Admin access token.'
@@ -101,6 +127,14 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+
+  - task: Bash@3
+    displayName: 'Create Custom Namespaces'
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        kubectl apply -f deployments/namespaces.yaml
 
   - task: AzureCLI@1
     displayName: 'Bind admin role to "aks-cluster-admin" group'
@@ -117,7 +151,7 @@ jobs:
             CLUSTER_ADMIN_GROUP=$(az ad group create  --display-name ${CLUSTER_ADMINS_GROUP_NAME} --mail-nickname ${CLUSTER_ADMINS_GROUP_NAME} --query objectId -o tsv)
         fi
         
-        cat roles/cluster-admin-role-binding.yml | \
+        cat roles/cluster-admin-role-binding.yaml | \
           sed -e 's@${CLUSTER_ADMIN_GROUP}@'"$CLUSTER_ADMIN_GROUP"'@' | \
           sed -e 's@${CLUSTER_GLOBAL_ADMINS_GROUP}@'"$CLUSTER_GLOBAL_ADMINS_GROUP"'@' | \
           kubectl apply -f -
@@ -128,10 +162,10 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        kubectl apply -f roles/developers-log-reader-role.yml
+        kubectl apply -f roles/developers-log-reader-role.yaml
         DEVELOPERS_GROUP=$(az ad group list --query  "[?displayName=='developers'].objectId" -o tsv)
         if [ ! -z "${DEVELOPERS_GROUP}" ]; then          
-          cat roles/developers-log-reader-binding.yml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
+          cat roles/developers-log-reader-binding.yaml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
         fi
 
   - task: HelmInstaller@0
@@ -146,8 +180,8 @@ jobs:
     inputs:
       targetType: inline
       failOnStderr: false
-      inlineScript: |
-        kubectl apply -f roles/helm-rbac-config.yml
+      script: |
+        kubectl apply -f roles/helm-rbac-config.yaml
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
  
   - task: Bash@3
@@ -210,6 +244,66 @@ jobs:
       script: |
         kubectl -n kured delete secret kured-values || true
         kubectl -n kured create secret generic kured-values --from-file=templates/kured/values.yaml
+
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Create Managed Identity for AKS'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksRGName)
+      deploymentMode: 'Incremental'
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: 'templates/arm-mi-template.json'
+      overrideParameters: '-resourceName $(aksClusterName)-mi'
+      deploymentOutputs: 'miOutputs'
+
+  - task: Bash@3
+    displayName: Parse ARM Outputs
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        for row in $(echo '$(miOutputs)' | jq -c '. | to_entries[]'); do
+          outputName=$(echo ${row} | jq -r ".key")
+          outputValue=$(echo ${row} | jq -r ".value.value")
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+        done
+
+  - task: Bash@3
+    displayName: 'Deploy AAD Pod Identity Operator, MIC:$(aadMicVersion) NMI:$(aadNmiVersion)'
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        export IDENTITY_NAME=$(aksClusterName)-mi
+        export IDENTITY_RESOURCE_ID=$(miResourceID)
+        export IDENTITY_CLIENT_ID=$(miClientID)
+        export IDENTITY_SELECTOR=$(aadSelector)
+        export NMI_VERSION=$(aadNmiVersion)
+        export MIC_VERSION=$(aadMicVersion)
+        export NAMESPACE_NAME=$(adminNamespace)
+        AAD_DEPLOYMENT_PATH='deployments/aad-pod-identity-rbac.yaml'
+        IDENTITY_PATH='deployments/aad-azure-identity.yaml'
+        IDENTITY_BINDING_PATH='deployments/aad-azure-Identity-binding.yaml'      
+        envsubst < ${AAD_DEPLOYMENT_PATH} > ${AAD_DEPLOYMENT_PATH}.tmp && mv ${AAD_DEPLOYMENT_PATH}.tmp ${AAD_DEPLOYMENT_PATH}
+        kubectl apply -f ${AAD_DEPLOYMENT_PATH}
+        envsubst < ${IDENTITY_PATH} > ${IDENTITY_PATH}.tmp && mv ${IDENTITY_PATH}.tmp ${IDENTITY_PATH}
+        kubectl apply -f ${IDENTITY_PATH}
+        envsubst < ${IDENTITY_BINDING_PATH} > ${IDENTITY_BINDING_PATH}.tmp && mv ${IDENTITY_BINDING_PATH}.tmp ${IDENTITY_BINDING_PATH}
+        kubectl apply -f ${IDENTITY_BINDING_PATH}
+
+  - task: Bash@3
+    displayName: 'Deploy KeyVault-FlexVolume $(kvFlexVolumeVersion)'
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        export KV_VERSION=$(kvFlexVolumeVersion)
+        export NAMESPACE_NAME=$(adminNamespace)
+        KV_DEPLOYMENT_PATH='deployments/kv-flexvol-installer.yaml'
+        envsubst < ${KV_DEPLOYMENT_PATH} > ${KV_DEPLOYMENT_PATH}.tmp && mv ${KV_DEPLOYMENT_PATH}.tmp ${KV_DEPLOYMENT_PATH}
+        kubectl apply -f ${KV_DEPLOYMENT_PATH}
 
 - job: RunTests
   dependsOn: DeployAKS
