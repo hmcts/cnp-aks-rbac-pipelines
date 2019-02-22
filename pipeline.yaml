@@ -160,7 +160,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       azurePowerShellVersion: latestVersion
       scriptType: 'inlineScript'
-      inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}}  -OutputFormat NUnitXML -EnableExit"
+      inline: "Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
       timeoutInMinutes: 1
       
   - task: PublishTestResults@2
