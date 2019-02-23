@@ -194,8 +194,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: 
-        # pwsh -Command "Get-Module -ListAvailable; Install-Module -Name az -Force  -Scope CurrentUser -Repository PSGallery;Get-Module -ListAvailable;"
-        pwsh -Command "Install-Module Az -Force  -Scope CurrentUser;"
+        pwsh -Command "Install-Module Az -Force  -Scope CurrentUser; Enable-AzureRmAlias; Install-Module Pester -Force -Scope CurrentUser; Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
            
   # - task: AzurePowerShell@3
   #   displayName: 'Run tests'
