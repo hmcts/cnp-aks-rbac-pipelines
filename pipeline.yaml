@@ -24,7 +24,8 @@ variables:
 jobs:
 - job: Keyvault
   pool:
-    vmImage: 'Ubuntu 16.04'
+    #vmImage: 'Ubuntu 16.04'
+    name: hmcts-agent-pool
   steps:
   - task: AzureKeyVault@1
     displayName: 'Get secrets from Keyvault'
@@ -43,7 +44,8 @@ jobs:
 - job: DeployAKS
   dependsOn: Keyvault
   pool:
-    vmImage: 'Ubuntu 16.04'
+    #vmImage: 'Ubuntu 16.04'
+    name: hmcts-agent-pool
   variables:
     aksClusterName: $(aksResourceGroup)-cluster
     aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
