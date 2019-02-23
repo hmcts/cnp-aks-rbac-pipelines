@@ -195,7 +195,7 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: 
         # pwsh -Command "Get-Module -ListAvailable; Install-Module -Name az -Force  -Scope CurrentUser -Repository PSGallery;Get-Module -ListAvailable;"
-        pwsh -Command "Install-Module AzureRM.Netcore -Force  -Scope CurrentUser;"
+        pwsh -Command "Install-Module Az -Force  -Scope CurrentUser;"
            
   # - task: AzurePowerShell@3
   #   displayName: 'Run tests'
