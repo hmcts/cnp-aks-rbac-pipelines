@@ -194,7 +194,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: 
-        pwsh -Command "Install-Module AzureRM -Force  -Scope CurrentUser; Install-Module Pester -Force -Scope CurrentUser; Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
+        pwsh -Command "Install-Module AzureRM -Force  -Scope CurrentUser; Import-Module AzureRM; Install-Module Pester -Force -Scope CurrentUser; Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
           
   # - task: AzurePowerShell@3
   #   displayName: 'Run tests'
