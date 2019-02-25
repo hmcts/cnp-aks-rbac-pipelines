@@ -103,11 +103,5 @@
         }
       }
     }
-  ],
-  "outputs": {
-    "aksRGName": {
-      "type": "string",
-      "value": "[concat('MC_', resourceGroup().name, '_', parameters('aksClusterName'), '_', toLower(resourceGroup().location))]"
-    }
-  }
+  ]
 }
