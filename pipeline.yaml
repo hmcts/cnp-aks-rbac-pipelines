@@ -157,6 +157,18 @@ jobs:
   #         cat roles/developers-log-reader-binding.yaml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
   #       fi
 
+  # - task: AzureResourceGroupDeployment@2
+  #   displayName: 'Create Managed Identity for AKS'
+  #   inputs:
+  #     azureSubscription: $(serviceConnection)
+  #     action: 'Create Or Update Resource Group'
+  #     resourceGroupName: $(aksResourceGroup)
+  #     deploymentMode: 'Incremental'
+  #     location: $(location)
+  #     templateLocation: 'Linked artifact'
+  #     csmFile: 'templates/arm-mi-template.json'
+  #     overrideParameters: '-resourceName $(aksClusterName)-mi'
+
   # - task: HelmInstaller@0
   #   displayName: 'Install Helm Client $(helmVersion)'
   #   inputs:
@@ -225,31 +237,6 @@ jobs:
   #     script: |
   #       kubectl -n kured delete secret kured-values || true
   #       kubectl -n kured create secret generic kured-values --from-file=templates/kured/values.yaml
-
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Create Managed Identity for AKS'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      action: 'Create Or Update Resource Group'
-      resourceGroupName: $(aksResourceGroup)
-      deploymentMode: 'Incremental'
-      location: $(location)
-      templateLocation: 'Linked artifact'
-      csmFile: 'templates/arm-mi-template.json'
-      overrideParameters: '-resourceName $(aksClusterName)-mi'
-      deploymentOutputs: 'miOutputs'
-
-  - task: Bash@3
-    displayName: Parse ARM Outputs
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        for row in $(echo '$(miOutputs)' | jq -c '. | to_entries[]'); do
-          outputName=$(echo ${row} | jq -r ".key")
-          outputValue=$(echo ${row} | jq -r ".value.value")
-          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
-        done
 
   # - task: Bash@3
   #   displayName: 'Deploy AAD Pod Identity Operator, MIC:$(aadMicVersion) NMI:$(aadNmiVersion)'
