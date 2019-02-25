@@ -24,9 +24,8 @@ Describe 'RBAC Model' {
 
     Context 'Develeloper' {
         It 'It should run in PWSH' {
-            ls
-            Write-Host (Get-Location)
-            $chrome_process = Start-Process -FilePath  "latest/chrome" -ArgumentList "--headless","--disable-gpu","--remote-debugging-port=9222" -PassThru
+            $chromePath = Join-Path ([Environment]::CurrentDirectory) /latest/chrome
+            $chrome_process = Start-Process -FilePath $chromePath -ArgumentList "--headless","--disable-gpu","--remote-debugging-port=9222" -PassThru
             npm install
             node index.js $AgentTempDirectory/test-developer.json
             $chrome_process.Kill()
