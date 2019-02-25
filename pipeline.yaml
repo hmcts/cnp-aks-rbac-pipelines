@@ -3,6 +3,7 @@
 #
 name: RPE AKS RBAC Enabled Pipeline
 trigger: none
+pr: none
 variables:
   aksResourceGroup: ''
   aksVnetCidr: ''
@@ -13,6 +14,7 @@ variables:
   serviceConnection: azurerm-rpetemp
   helmVersion: '2.12.0'
   location: 'UK South'
+  acrName: rpedev
   adminNamespace: 'admin'
   aadSelector: 'mi'
   aadMicVersion: '1.3'
@@ -23,16 +25,19 @@ jobs:
 - job: Keyvault
   pool:
     vmImage: 'Ubuntu 16.04'
+    #name: hmcts-agent-pool
   steps:
   - task: AzureKeyVault@1
     displayName: 'Get secrets from Keyvault'
     inputs:
       azureSubscription: $(serviceConnection)
       keyVaultName: $(keyvaultName)
-      secretsFilter: 'aks-sp-secret,aks-sapp-secret'
+      secretsFilter: 'aks-sp-id,aks-sp-secret,aks-sapp-secret,slack-webhook-url'
   - script: |
+      echo "##vso[task.setvariable variable=aksServicePrincipalId;isOutput=true]$(aks-sp-id)"
       echo "##vso[task.setvariable variable=aksServicePrincipalSecret;isOutput=true]$(aks-sp-secret)"
       echo "##vso[task.setvariable variable=aksServerAppSecret;isOutput=true]$(aks-sapp-secret)"
+      echo "##vso[task.setvariable variable=slackWebhookUrl;isOutput=true]$(slack-webhook-url)"
     displayName: 'Export Keyvault Variables'
     name: exportKeyvault
 
@@ -40,11 +45,15 @@ jobs:
   dependsOn: Keyvault
   pool:
     vmImage: 'Ubuntu 16.04'
+    #name: hmcts-agent-pool
   variables:
     aksClusterName: $(aksResourceGroup)-cluster
+    aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
+    slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
   steps:
+
   - task: AzureCLI@1
     displayName: Check VNET prerequisites
     inputs:
@@ -176,6 +185,59 @@ jobs:
       script: |
         kubectl apply -f roles/helm-rbac-config.yaml
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
+
+  - task: Bash@3
+    displayName: 'Template repositories.yaml secret'
+    inputs:
+      targetType: inline
+      failOnStderr: true
+      script: |
+        sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
+               -e 's@${ACR_SERVICE_PRINCIPAL_ID}@'"$AKS_SP_ID"'@' \
+               -e 's@${ACR_SERVICE_PRINCIPAL_SECRET}@'"$AKS_SP_SECRET"'@' \
+          templates/repositories.yaml
+    env:
+      AKS_SP_ID: $(aksServicePrincipalId)
+      AKS_SP_SECRET: $(aksServicePrincipalSecret)
+
+  - task: Bash@3
+    displayName: 'Create repositories.yaml secret'
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        kubectl -n flux delete secret flux-helm-repositories || true
+        kubectl -n flux create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
+
+  - task: Bash@3
+    displayName: 'Install Weave Flux'
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        helm repo add weaveworks https://weaveworks.github.io/flux
+        helm upgrade flux weaveworks/flux --install --namespace flux -f deployments/weave-flux/values.yaml \
+          --set git.path=k8s/$(aksResourceGroup)-cluster,git.label=$(aksResourceGroup)-cluster \
+          --wait
+
+  - task: Bash@3
+    displayName: 'Template Kured secret'
+    inputs:
+      targetType: inline
+      failOnStderr: true
+      script: |
+        sed -i -e 's@${SLACK_WEBHOOK_URL}@'"$SLACK_WEBHOOK_URL"'@' templates/kured/values.yaml
+    env:
+      SLACK_WEBHOOK_URL: $(slackWebhookUrl)
+
+  - task: Bash@3
+    displayName: 'Create Kured secret'
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        kubectl -n kured delete secret kured-values || true
+        kubectl -n kured create secret generic kured-values --from-file=templates/kured/values.yaml
 
   - task: AzureResourceGroupDeployment@2
     displayName: 'Create Managed Identity for AKS'
