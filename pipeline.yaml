@@ -189,7 +189,8 @@ jobs:
       scriptLocation: 'inlineScript'
       addSpnToEnvironment: true
       inlineScript:
-        pwsh -Command "\$userPwd = ConvertTo-SecureString -String \$env:servicePrincipalKey -AsPlainText -Force; Write-Host \$usrPwd; \$cred = New-Object System.Management.Automation.PSCredential (\$env:servicePrincipalId, \$userPwd); Install-Module Az -Force  -Scope CurrentUser; Enable-AzureRmAlias; Connect-AzAccount -ServicePrincipal -Credential \$cred -TenantId a0d77fc4-df1e-4b0d-8e35-46750ca5a672; Install-Module Pester -Force -Scope CurrentUser; Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
+        ls $(Build.SourcesDirectory)/tests/interactive-login-bypasser/
+        # pwsh -Command "\$userPwd = ConvertTo-SecureString -String \$env:servicePrincipalKey -AsPlainText -Force; Write-Host \$usrPwd; \$cred = New-Object System.Management.Automation.PSCredential (\$env:servicePrincipalId, \$userPwd); Install-Module Az -Force  -Scope CurrentUser; Enable-AzureRmAlias; Connect-AzAccount -ServicePrincipal -Credential \$cred -TenantId a0d77fc4-df1e-4b0d-8e35-46750ca5a672; Install-Module Pester -Force -Scope CurrentUser; Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/TEST-Peering.xml -OutputFormat NUnitXML -EnableExit"
       
   - task: PublishTestResults@2
     displayName: 'Publish Environment Test Results **/TEST-*.xml'
