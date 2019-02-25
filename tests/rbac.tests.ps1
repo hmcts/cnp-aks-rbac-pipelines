@@ -24,7 +24,8 @@ Describe 'RBAC Model' {
 
     Context 'Developer' {
         It 'It should not have access to services' {
-            $chromePath = Join-Path ([Environment]::CurrentDirectory) /tests/interactive-login-bypasser/latest/chrome
+            Set-Location ./tests/interactive-login-bypasser/
+            $chromePath = Join-Path ([Environment]::CurrentDirectory) /latest/chrome
             $chrome_process = Start-Process -FilePath $chromePath -ArgumentList "--headless","--disable-gpu","--remote-debugging-port=9222" -PassThru
             npm install
             node index.js $AgentTempDirectory/test-developer.json
