@@ -169,12 +169,12 @@ jobs:
   #     csmFile: 'templates/arm-mi-template.json'
   #     overrideParameters: '-resourceName $(aksClusterName)-mi'
 
-  # - task: HelmInstaller@0
-  #   displayName: 'Install Helm Client $(helmVersion)'
-  #   inputs:
-  #       helmVersion: $(helmVersion)
-  #       checkLatestHelmVersion: false
-  #       installKubectl: false
+  - task: HelmInstaller@0
+    displayName: 'Install Helm Client $(helmVersion)'
+    inputs:
+        helmVersion: $(helmVersion)
+        checkLatestHelmVersion: false
+        installKubectl: false
 
   # - task: Bash@3
   #   displayName: 'Install Tiller $(helmVersion)'
@@ -216,7 +216,7 @@ jobs:
       script: |
         helm repo add weaveworks https://weaveworks.github.io/flux
         helm upgrade flux weaveworks/flux --install --namespace admin -f deployments/weave-flux/values.yaml \
-          --set "git.path=k8s/$(aksResourceGroup)-cluster,common",git.label=$(aksResourceGroup)-cluster \
+          --set "git.path=k8s/$(aksResourceGroup)-cluster,k8s/common",git.label=$(aksResourceGroup)-cluster \
           --wait
 
   # - task: Bash@3
