@@ -30,7 +30,7 @@ Describe 'RBAC Model' {
             node index.js $AgentTempDirectory/test-developer.json
             $chrome_process.Kill()
 
-            kubectl get services | Should -Throw
+            { kubectl get services } | Should -Throw
         }
     }
 }
