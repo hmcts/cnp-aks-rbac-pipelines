@@ -24,11 +24,10 @@ Describe 'RBAC Model' {
 
     Context 'Develeloper' {
         It 'It should run in PWSH' {
-            ./latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com &
-            $chrome_pid=$!
+            $chrome_process = Start-Process -FilePath "./latest/chrome" -ArgumentList "--headless","--disable-gpu","--remote-debugging-port=9222" -PassThru
             npm install
             node index.js $AgentTempDirectory/test-developer.json
-            Stop-Process -9 $chrome_pid
+            $chrome_process.Kill()
 
             kubectl get namespaces
         }
