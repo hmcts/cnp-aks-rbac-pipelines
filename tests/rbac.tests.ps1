@@ -18,8 +18,18 @@ Describe 'RBAC Model' {
 
     Context 'Credentials' {
         It 'test-developer has credentials' {
-            Write-Host "The agent temp directory is: $AgentTempDirectory"
             Test-Path -Path  $AgentTempDirectory/test-developer.json | Should Be $true
+        }
+    }
+
+    Context 'Develeloper' {
+        It 'It should run in PWSH' {
+            ./latest/chrome --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com &
+            export CHROME_PID=$!
+            npm install && node index.js $(Agent.TempDirectory)/test-developer.json
+            kill -9 $CHROME_PID
+
+            kubectl get namespaces
         }
     }
 }
