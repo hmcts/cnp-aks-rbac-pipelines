@@ -12,9 +12,9 @@ Describe 'RBAC Model' {
 
     Context 'Test Run' {
         It 'Deployment Target Resource Group Exists' {
-            Write-Host $ResourceGroupName
-            Get-AzureRMResourceGroup -Name $ResourceGroupName
-            # Get-AzureRMResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue  | Should Not BeNullOrEmpty
+            # Write-Host $ResourceGroupName
+            # Get-AzureRMResourceGroup -Name $ResourceGroupName
+            Get-AzureRMResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue  | Should Not BeNullOrEmpty
         }
     }
 
