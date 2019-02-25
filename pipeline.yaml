@@ -193,9 +193,9 @@ jobs:
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
-      inlineScript: 
-        az account show
-        pwsh -Command "Install-Module Az -Force  -Scope CurrentUser; Enable-AzureRmAlias; Get-AzContext;"
+      addSpnToEnvironment: true
+      inlineScript:      
+        pwsh -Command "Install-Module Az -Force  -Scope CurrentUser; Enable-AzureRmAlias; $userPwd = ConvertTo-SecureString -String $env:servicePrincipalKey -AsPlainText -Force;$cred = New-Object System.Management.Automation.PSCredential ($env:servicePrincipalId, $userPwd); Connect-AzAccount -ServicePrincipal -ApplicationId  "http://rpetemp-aks" -Credential $pscredential -TenantId a0d77fc4-df1e-4b0d-8e35-46750ca5a672"
            
   # - task: AzurePowerShell@3
   #   displayName: 'Run tests'
