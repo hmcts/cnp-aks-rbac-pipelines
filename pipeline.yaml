@@ -21,7 +21,7 @@ jobs:
 - job: Keyvault
   pool:
     vmImage: 'Ubuntu 16.04'
-    #name: hmcts-agent-pool #TODO: change to hosted when merged
+    name: hmcts-agent-pool #TODO: change to hosted when merged
   steps:
   - task: AzureKeyVault@1
     displayName: 'Get secrets from Keyvault'
@@ -41,7 +41,7 @@ jobs:
   dependsOn: Keyvault
   pool:
     vmImage: 'Ubuntu 16.04'
-    #name: hmcts-agent-pool #TODO: change to hosted when merged
+    name: hmcts-agent-pool #TODO: change to hosted when merged
   variables:
     aksClusterName: $(aksResourceGroup)-cluster
     aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
@@ -238,7 +238,7 @@ jobs:
   dependsOn: DeployAKS
   pool:
     vmImage: 'Ubuntu 16.04'
-    #name: hmcts-agent-pool #TODO: change to hosted when merged
+    name: hmcts-agent-pool #TODO: change to hosted when merged
   steps:
   - task: AzureCLI@1
     displayName: 'Obtain AKS Admin access token.'
