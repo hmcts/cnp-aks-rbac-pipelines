@@ -16,6 +16,8 @@ kubeCtl.stdout.on("data", data => {
 });
 
 kubeCtl.stderr.on("data", async data => {
+  console.log(data)
+  console.error(data)
   let page, browser;
 
   console.log(`stderr: ${data}`);
