@@ -21,8 +21,6 @@ kubeCtl.stderr.on("data", async data => {
   let page, browser;
   
   if (!data.toString().includes(signInMessage)) {
-    console.log(data.toString())
-    console.error(data.toString())  
     return
   }
 

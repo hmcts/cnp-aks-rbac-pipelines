@@ -336,7 +336,7 @@ jobs:
       
   - task: PublishTestResults@2
     displayName: 'Publish Environment Test Results **/TEST-*.xml'
-    # condition: always()
+    condition: always()
     inputs:
       testResultsFormat: NUnit
       timeoutInMinutes: 1
