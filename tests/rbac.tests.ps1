@@ -33,11 +33,11 @@ Describe 'RBAC Model' {
         }
 
         It 'It should not have access to services' {
-            kubectl get services | Should BeNullOrEmpty
+            kubectl get services --all-namespaces | Should BeNullOrEmpty
         }
 
         It 'It should have access to pods' {
-            kubectl get pods | Should Not BeNullOrEmpty
+            kubectl get pods --all-namespaces | Should Not BeNullOrEmpty
         }
     }
 }
