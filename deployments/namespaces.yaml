@@ -6,10 +6,5 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: flux
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: kured
 ---
