@@ -32,11 +32,11 @@ Describe 'RBAC Model' {
             $chrome_process.Kill()
         }
 
-        It 'It should not have access to services' {
+        It 'should not have access to services' {
             kubectl get services --all-namespaces | Should BeNullOrEmpty
         }
 
-        It 'It should have access to pods' {
+        It 'should have access to pods' {
             kubectl get pods --all-namespaces | Should Not BeNullOrEmpty
         }
     }
