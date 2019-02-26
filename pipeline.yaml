@@ -225,7 +225,7 @@ jobs:
         sed -i -e 's@${SLACK_USERNAME}@'"$SLACK_USERNAME"'@' templates/kured/values.yaml
     env:
       SLACK_WEBHOOK_URL: $(slackWebhookUrl)
-      SLACK_USERNAME_URL: $(aksResourceGroup)
+      SLACK_USERNAME_URL: $(aksClusterName)
 
   - task: Bash@3
     displayName: 'Create Kured secret'
