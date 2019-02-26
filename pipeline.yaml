@@ -311,7 +311,6 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
-        kubectl get pods
 
   - task: DownloadSecureFile@1
     displayName: 'Download test developer'
