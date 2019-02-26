@@ -111,7 +111,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin --overwrite-existing
 
   - task: Bash@3
     displayName: 'Create Custom Namespaces'
