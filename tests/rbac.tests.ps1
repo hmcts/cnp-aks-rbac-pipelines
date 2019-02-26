@@ -22,7 +22,7 @@ Describe 'RBAC Model' {
         }
     }
 
-    Context 'Developer' {
+    Context 'Developer Role' {
 
         BeforeAll {
             Set-Location ./tests/interactive-login-bypasser/
