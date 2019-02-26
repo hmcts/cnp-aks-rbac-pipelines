@@ -16,22 +16,20 @@ kubeCtl.stdout.on("data", data => {
 });
 
 kubeCtl.stderr.on("data", async data => {
-  console.log(data)
-  console.error(data)
+  console.log(data.toString())
+  console.error(data.toString())
   let page, browser;
 
-  console.log(`stderr: ${data}`);
-
-  const code = data
+  const codeWithoutTrimming = data
     .toString()
     .split("code")[1]
-    .substring(1, 10);
 
 
   if (!code) {
-    return process.exit(1)
+    return 
   }
 
+  const code = codeWithoutTrimming.substring(1, 10)
 
   try {
     const cdpVersion = await CDP.Version();
