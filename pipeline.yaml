@@ -205,8 +205,8 @@ jobs:
       targetType: inline
       failOnStderr: false
       script: |
-        kubectl -n flux delete secret flux-helm-repositories || true
-        kubectl -n flux create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
+        kubectl -n admin delete secret flux-helm-repositories || true
+        kubectl -n admin create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
 
   - task: Bash@3
     displayName: 'Install Weave Flux'
