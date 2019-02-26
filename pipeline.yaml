@@ -25,7 +25,7 @@ jobs:
 - job: Keyvault
   pool:
     vmImage: 'Ubuntu 16.04'
-    #name: hmcts-agent-pool
+    name: hmcts-agent-pool #TODO: change to hosted when merged
   steps:
   - task: AzureKeyVault@1
     displayName: 'Get secrets from Keyvault'
@@ -45,7 +45,7 @@ jobs:
   dependsOn: Keyvault
   pool:
     vmImage: 'Ubuntu 16.04'
-    #name: hmcts-agent-pool
+    name: hmcts-agent-pool #TODO: change to hosted when merged
   variables:
     aksClusterName: $(aksResourceGroup)-cluster
     aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
