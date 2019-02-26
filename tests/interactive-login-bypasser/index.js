@@ -19,17 +19,16 @@ kubeCtl.stderr.on("data", async data => {
   console.log(data.toString())
   console.error(data.toString())
   let page, browser;
-
-  const codeWithoutTrimming = data
-    .toString()
-    .split("code")[1]
-
-
-  if (!code) {
-    return 
+  
+  if (!data.toString().contains('code')) {
+    return
   }
 
-  const code = codeWithoutTrimming.substring(1, 10)
+  const code = data
+    .toString()
+    .split("code")[1]
+    .substring(1, 10);
+
 
   try {
     const cdpVersion = await CDP.Version();
