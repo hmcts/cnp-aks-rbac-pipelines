@@ -22,7 +22,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('aksVnetName')]",
       "apiVersion": "2018-10-01",
-      "location": "uksouth",
+      "location": "[resourceGroup().location]",
       "tags": {},
       "scale": null,
       "properties": {
@@ -36,7 +36,7 @@
         {
           "apiVersion": "2018-10-01",
           "type": "subnets",
-          "location": "uksouth",
+          "location": "[resourceGroup().location]",
           "name": "[parameters('aksSubnetName')]",
           "dependsOn": [
              "[parameters('aksVnetName')]"

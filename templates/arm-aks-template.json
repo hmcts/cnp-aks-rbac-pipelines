@@ -3,49 +3,49 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "aksClusterName": {
-      "type": "String"
+      "type": "string"
     },
     "kubernetesVersion": {
-      "type": "String"
+      "type": "string"
     },
     "vmSize": {
-      "type": "String"
+      "type": "string"
     },
     "nodeCount": {
       "type": "int"
     },
     "aksVnetSubnetId": {
-      "type": "String"
+      "type": "string"
     },
     "aksServiceCidr": {
-      "type": "String"
+      "type": "string"
     },
     "aksDnsServiceIp": {
-      "type": "String"
+      "type": "string"
     },
     "dnsPrefix": {
-      "type": "String"
+      "type": "string"
     },
     "sshPublicKey": {
-      "type": "String"
+      "type": "string"
     },
     "servicePrincipalId": {
-      "type": "String"
+      "type": "string"
     },
     "servicePrincipalSecret": {
-      "type": "String"
+      "type": "string"
     },
     "clientAppId": {
-      "type": "String"
+      "type": "string"
     },
     "serverAppId": {
-      "type": "String"
+      "type": "string"
     },
     "serverAppSecret": {
-      "type": "String"
+      "type": "string"
     },
     "tenantId": {
-      "type": "String"
+      "type": "string"
     }
   },
   "variables": {},
@@ -54,7 +54,7 @@
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
       "apiVersion": "2018-03-31",
-      "location": "uksouth",
+      "location": "[resourceGroup().location]",
       "tags": {
         "Team Name": "CNP"
       },
@@ -103,5 +103,11 @@
         }
       }
     }
-  ]
+  ],
+  "outputs": {
+    "aksRGName": {
+      "type": "string",
+      "value": "[concat('MC_', resourceGroup().name, '_', parameters('aksClusterName'), '_', toLower(resourceGroup().location))]"
+    }
+  }
 }
