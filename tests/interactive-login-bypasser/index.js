@@ -18,12 +18,13 @@ kubeCtl.stdout.on("data", data => {
 kubeCtl.stderr.on("data", async data => {
   let page, browser;
 
+  console.log(`stderr: ${data}`);
+
   const code = data
     .toString()
     .split("code")[1]
     .substring(1, 10);
 
-  console.log(code);
 
   if (!code) {
     return process.exit(1)
