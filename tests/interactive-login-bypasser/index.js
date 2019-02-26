@@ -11,16 +11,18 @@ const credentials = require(credentialsPath)
 
 const kubeCtl = spawn("kubectl", ["get", "pods"]);
 
+const signInMessage = 'To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code'
+
 kubeCtl.stdout.on("data", data => {
   console.log(`stdout: ${data}`);
 });
 
 kubeCtl.stderr.on("data", async data => {
-  console.log(data.toString())
-  console.error(data.toString())
   let page, browser;
   
-  if (!data.toString().contains('code')) {
+  if (!data.toString().includes(signInMessage)) {
+    console.log(data.toString())
+    console.error(data.toString())  
     return
   }
 
