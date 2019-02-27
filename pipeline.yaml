@@ -233,8 +233,8 @@ jobs:
       targetType: inline
       failOnStderr: false
       script: |
-        kubectl -n kured delete secret kured-values || true
-        kubectl -n kured create secret generic kured-values --from-file=templates/kured/values.yaml
+        kubectl -n admin delete secret kured-values || true
+        kubectl -n admin create secret generic kured-values --from-file=templates/kured/values.yaml
 
 - job: RunTests
   dependsOn: DeployAKS
