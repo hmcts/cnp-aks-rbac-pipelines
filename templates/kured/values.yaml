@@ -1,1 +1,2 @@
 slackWebhookUrl: ${SLACK_WEBHOOK_URL}
+slackUsername: ${SLACK_USERNAME}

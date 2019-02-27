@@ -16,16 +16,12 @@ variables:
   location: 'UK South'
   acrName: rpedev
   adminNamespace: 'admin'
-  aadSelector: 'mi'
-  aadMicVersion: '1.3'
-  aadNmiVersion: '1.4'
-  kvFlexVolumeVersion: 'v0.0.8'
 
 jobs:
 - job: Keyvault
   pool:
     vmImage: 'Ubuntu 16.04'
-    #name: hmcts-agent-pool
+    #name: hmcts-agent-pool #TODO: change to hosted when merged
   steps:
   - task: AzureKeyVault@1
     displayName: 'Get secrets from Keyvault'
@@ -45,7 +41,7 @@ jobs:
   dependsOn: Keyvault
   pool:
     vmImage: 'Ubuntu 16.04'
-    #name: hmcts-agent-pool
+    #name: hmcts-agent-pool #TODO: change to hosted when merged
   variables:
     aksClusterName: $(aksResourceGroup)-cluster
     aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
@@ -108,19 +104,6 @@ jobs:
         -aksDnsServiceIp $(aksDnsServiceIp) 
         -servicePrincipalSecret $(aksServicePrincipalSecret) 
         -serverAppSecret $(aksServerAppSecret)'
-      deploymentOutputs: 'aksOutputs'
-
-  - task: Bash@3
-    displayName: Parse ARM Outputs
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        for row in $(echo '$(aksOutputs)' | jq -c '. | to_entries[]'); do
-          outputName=$(echo ${row} | jq -r ".key")
-          outputValue=$(echo ${row} | jq -r ".value.value")
-          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
-        done
 
   - task: AzureCLI@1
     displayName: 'Obtain AKS Admin access token.'
@@ -128,7 +111,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin
+        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin --overwrite-existing
 
   - task: Bash@3
     displayName: 'Create Custom Namespaces'
@@ -170,6 +153,18 @@ jobs:
           cat roles/developers-log-reader-binding.yaml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
         fi
 
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Create Managed Identity for AKS'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksResourceGroup)
+      deploymentMode: 'Incremental'
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: 'templates/arm-mi-template.json'
+      overrideParameters: '-resourceName $(aksClusterName)-mi'
+
   - task: HelmInstaller@0
     displayName: 'Install Helm Client $(helmVersion)'
     inputs:
@@ -206,8 +201,8 @@ jobs:
       targetType: inline
       failOnStderr: false
       script: |
-        kubectl -n flux delete secret flux-helm-repositories || true
-        kubectl -n flux create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
+        kubectl -n admin delete secret flux-helm-repositories || true
+        kubectl -n admin create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
 
   - task: Bash@3
     displayName: 'Install Weave Flux'
@@ -216,8 +211,8 @@ jobs:
       failOnStderr: false
       script: |
         helm repo add weaveworks https://weaveworks.github.io/flux
-        helm upgrade flux weaveworks/flux --install --namespace flux -f deployments/weave-flux/values.yaml \
-          --set git.path=k8s/$(aksResourceGroup)-cluster,git.label=$(aksResourceGroup)-cluster \
+        helm upgrade flux weaveworks/flux --install --namespace admin -f deployments/weave-flux/values.yaml \
+          --set "git.path=k8s/$(aksResourceGroup)-cluster\,k8s/common",git.label=$(aksResourceGroup)-cluster \
           --wait
 
   - task: Bash@3
@@ -227,8 +222,10 @@ jobs:
       failOnStderr: true
       script: |
         sed -i -e 's@${SLACK_WEBHOOK_URL}@'"$SLACK_WEBHOOK_URL"'@' templates/kured/values.yaml
+        sed -i -e 's@${SLACK_USERNAME}@'"$SLACK_USERNAME"'@' templates/kured/values.yaml
     env:
       SLACK_WEBHOOK_URL: $(slackWebhookUrl)
+      SLACK_USERNAME: $(aksClusterName)
 
   - task: Bash@3
     displayName: 'Create Kured secret'
@@ -236,73 +233,14 @@ jobs:
       targetType: inline
       failOnStderr: false
       script: |
-        kubectl -n kured delete secret kured-values || true
-        kubectl -n kured create secret generic kured-values --from-file=templates/kured/values.yaml
-
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Create Managed Identity for AKS'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      action: 'Create Or Update Resource Group'
-      resourceGroupName: $(aksRGName)
-      deploymentMode: 'Incremental'
-      location: $(location)
-      templateLocation: 'Linked artifact'
-      csmFile: 'templates/arm-mi-template.json'
-      overrideParameters: '-resourceName $(aksClusterName)-mi'
-      deploymentOutputs: 'miOutputs'
-
-  - task: Bash@3
-    displayName: Parse ARM Outputs
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        for row in $(echo '$(miOutputs)' | jq -c '. | to_entries[]'); do
-          outputName=$(echo ${row} | jq -r ".key")
-          outputValue=$(echo ${row} | jq -r ".value.value")
-          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
-        done
-
-  - task: Bash@3
-    displayName: 'Deploy AAD Pod Identity Operator, MIC:$(aadMicVersion) NMI:$(aadNmiVersion)'
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        export IDENTITY_NAME=$(aksClusterName)-mi
-        export IDENTITY_RESOURCE_ID=$(miResourceID)
-        export IDENTITY_CLIENT_ID=$(miClientID)
-        export IDENTITY_SELECTOR=$(aadSelector)
-        export NMI_VERSION=$(aadNmiVersion)
-        export MIC_VERSION=$(aadMicVersion)
-        export NAMESPACE_NAME=$(adminNamespace)
-        AAD_DEPLOYMENT_PATH='deployments/aad-pod-identity-rbac.yaml'
-        IDENTITY_PATH='deployments/aad-azure-identity.yaml'
-        IDENTITY_BINDING_PATH='deployments/aad-azure-Identity-binding.yaml'      
-        envsubst < ${AAD_DEPLOYMENT_PATH} > ${AAD_DEPLOYMENT_PATH}.tmp && mv ${AAD_DEPLOYMENT_PATH}.tmp ${AAD_DEPLOYMENT_PATH}
-        kubectl apply -f ${AAD_DEPLOYMENT_PATH}
-        envsubst < ${IDENTITY_PATH} > ${IDENTITY_PATH}.tmp && mv ${IDENTITY_PATH}.tmp ${IDENTITY_PATH}
-        kubectl apply -f ${IDENTITY_PATH}
-        envsubst < ${IDENTITY_BINDING_PATH} > ${IDENTITY_BINDING_PATH}.tmp && mv ${IDENTITY_BINDING_PATH}.tmp ${IDENTITY_BINDING_PATH}
-        kubectl apply -f ${IDENTITY_BINDING_PATH}
-
-  - task: Bash@3
-    displayName: 'Deploy KeyVault-FlexVolume $(kvFlexVolumeVersion)'
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        export KV_VERSION=$(kvFlexVolumeVersion)
-        export NAMESPACE_NAME=$(adminNamespace)
-        KV_DEPLOYMENT_PATH='deployments/kv-flexvol-installer.yaml'
-        envsubst < ${KV_DEPLOYMENT_PATH} > ${KV_DEPLOYMENT_PATH}.tmp && mv ${KV_DEPLOYMENT_PATH}.tmp ${KV_DEPLOYMENT_PATH}
-        kubectl apply -f ${KV_DEPLOYMENT_PATH}
+        kubectl -n admin delete secret kured-values || true
+        kubectl -n admin create secret generic kured-values --from-file=templates/kured/values.yaml
 
 - job: RunTests
   dependsOn: DeployAKS
   pool:
     vmImage: 'Ubuntu 16.04'
+    #name: hmcts-agent-pool #TODO: change to hosted when merged
   steps:
   - task: AzureCLI@1
     displayName: 'Obtain AKS Admin access token.'
