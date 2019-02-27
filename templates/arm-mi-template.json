@@ -25,6 +25,10 @@
       "miClientID": {
         "type": "string",
         "value": "[reference(parameters('resourceName')).clientId]"
-    }
+    },      
+    "miPrincipalID": {
+      "type": "string",
+      "value": "[reference(parameters('resourceName')).principalId]"
+  }
   }
 }
