@@ -16,6 +16,11 @@ variables:
   location: 'UK South'
   acrName: rpedev
   adminNamespace: 'admin'
+  aadSelector: 'mi'
+  aadMicVersion: '1.3'
+  aadNmiVersion: '1.4'
+  kvFlexVolumeVersion: 'v0.0.8'
+  tenantId: 'a0d77fc4-df1e-4b0d-8e35-46750ca5a672'
 
 jobs:
 - job: Keyvault
@@ -270,7 +275,7 @@ jobs:
       scriptLocation: 'inlineScript'
       addSpnToEnvironment: true
       inlineScript:
-        pwsh -Command "\$userPwd = ConvertTo-SecureString -String \$env:servicePrincipalKey -AsPlainText -Force; Write-Host \$usrPwd; \$cred = New-Object System.Management.Automation.PSCredential (\$env:servicePrincipalId, \$userPwd); Install-Module Az -Force  -Scope CurrentUser; Enable-AzureRmAlias; Connect-AzAccount -ServicePrincipal -Credential \$cred -TenantId a0d77fc4-df1e-4b0d-8e35-46750ca5a672; Install-Module Pester -Force -Scope CurrentUser; Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/Tests-RESULTS.xml -OutputFormat NUnitXML -EnableExit"
+        pwsh -Command "\$userPwd = ConvertTo-SecureString -String \$env:servicePrincipalKey -AsPlainText -Force; \$cred = New-Object System.Management.Automation.PSCredential (\$env:servicePrincipalId, \$userPwd); Install-Module Az -Force  -Scope CurrentUser; Enable-AzureRmAlias; Connect-AzAccount -ServicePrincipal -Credential \$cred -TenantId '$(tenantId)'; Install-Module Pester -Force -Scope CurrentUser; Invoke-Pester @{Path= '$(Build.SourcesDirectory)/tests/*.tests.ps1' ;Parameters = @{ResourceGroupName='$(aksResourceGroup)';AgentTempDirectory='$(Agent.TempDirectory)'}} -OutputFile $(Build.SourcesDirectory)/Tests-RESULTS.xml -OutputFormat NUnitXML -EnableExit"
       
   - task: PublishTestResults@2
     displayName: 'Publish Environment Test Results **/TEST-*.xml'
