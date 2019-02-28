@@ -204,6 +204,27 @@ jobs:
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
   - task: Bash@3
+    displayName: 'Kured - Template secret'
+    inputs:
+      targetType: inline
+      failOnStderr: true
+      script: |
+        sed -i -e 's@${SLACK_WEBHOOK_URL}@'"$SLACK_WEBHOOK_URL"'@' templates/kured/values.yaml
+        sed -i -e 's@${SLACK_USERNAME}@'"$SLACK_USERNAME"'@' templates/kured/values.yaml
+    env:
+      SLACK_WEBHOOK_URL: $(slackWebhookUrl)
+      SLACK_USERNAME: $(aksClusterName)
+
+  - task: Bash@3
+    displayName: 'Kured - Create secret'
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        kubectl -n admin delete secret kured-values || true
+        kubectl -n admin create secret generic kured-values --from-file=templates/kured/values.yaml
+
+  - task: Bash@3
     displayName: 'Flux - Template repositories.yaml secret'
     inputs:
       targetType: inline
@@ -250,27 +271,6 @@ jobs:
       script: |
         kubectl apply -f $(Agent.TempDirectory)/$(fluxGithubKeySecureFileName)
         kubectl -n admin delete $(kubectl get pod -o name -l app=flux -n admin)
-
-  - task: Bash@3
-    displayName: 'Kured - Template secret'
-    inputs:
-      targetType: inline
-      failOnStderr: true
-      script: |
-        sed -i -e 's@${SLACK_WEBHOOK_URL}@'"$SLACK_WEBHOOK_URL"'@' templates/kured/values.yaml
-        sed -i -e 's@${SLACK_USERNAME}@'"$SLACK_USERNAME"'@' templates/kured/values.yaml
-    env:
-      SLACK_WEBHOOK_URL: $(slackWebhookUrl)
-      SLACK_USERNAME: $(aksClusterName)
-
-  - task: Bash@3
-    displayName: 'Kured - Create secret'
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        kubectl -n admin delete secret kured-values || true
-        kubectl -n admin create secret generic kured-values --from-file=templates/kured/values.yaml
 
 - job: RunTests
   dependsOn: DeployAKS
