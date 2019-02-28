@@ -179,7 +179,7 @@ jobs:
         done
 
   - task: AzureCLI@1
-    displayName: 'Permissions MI $(aksClusterName)-mi to Key Vault $(keyvaultName)'
+    displayName: 'Permissions MI "$(aksClusterName)-mi" to Key Vault $(keyvaultName)'
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
