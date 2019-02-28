@@ -269,6 +269,7 @@ jobs:
       targetType: inline
       failOnStderr: false
       script: |
+        kubectl -n admin delete secret flux-git-deploy || true
         kubectl apply -f $(Agent.TempDirectory)/$(fluxGithubKeySecureFileName)
         kubectl -n admin delete $(kubectl get pod -o name -l app=flux -n admin)
 
