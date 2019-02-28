@@ -16,6 +16,7 @@ variables:
   location: 'UK South'
   acrName: rpedev
   adminNamespace: 'admin'
+  fluxGithubKeySecureFileName: 'cnp-flux-github-key.yaml'
 
 jobs:
 - job: Keyvault
@@ -187,14 +188,14 @@ jobs:
         az keyvault set-policy -n $(keyvaultName) --object-id $(miPrincipalID) --secret-permissions get list --certificate-permissions get list --key-permissions get list
 
   - task: HelmInstaller@0
-    displayName: 'Install Helm Client $(helmVersion)'
+    displayName: 'Helm - Install Client $(helmVersion)'
     inputs:
         helmVersion: $(helmVersion)
         checkLatestHelmVersion: false
         installKubectl: false
 
   - task: Bash@3
-    displayName: 'Install Tiller $(helmVersion)'
+    displayName: 'Helm - Install Tiller $(helmVersion)'
     inputs:
       targetType: inline
       failOnStderr: false
@@ -203,7 +204,7 @@ jobs:
         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
   - task: Bash@3
-    displayName: 'Template repositories.yaml secret'
+    displayName: 'Flux - Template repositories.yaml secret'
     inputs:
       targetType: inline
       failOnStderr: true
@@ -217,7 +218,7 @@ jobs:
       AKS_SP_SECRET: $(aksServicePrincipalSecret)
 
   - task: Bash@3
-    displayName: 'Create repositories.yaml secret'
+    displayName: 'Flux - Create repositories.yaml secret'
     inputs:
       targetType: inline
       failOnStderr: false
@@ -226,7 +227,7 @@ jobs:
         kubectl -n admin create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
 
   - task: Bash@3
-    displayName: 'Install Weave Flux'
+    displayName: 'Flux - Install'
     inputs:
       targetType: inline
       failOnStderr: false
@@ -236,8 +237,22 @@ jobs:
           --set "git.path=k8s/$(aksResourceGroup)-cluster\,k8s/common",git.label=$(aksResourceGroup)-cluster \
           --wait
 
+  - task: DownloadSecureFile@1
+    displayName: 'Flux - Download Github Key'
+    inputs:
+      secureFile: $(fluxGithubKeySecureFileName)
+
   - task: Bash@3
-    displayName: 'Template Kured secret'
+    displayName: 'Flux - Create Github Key Secret'
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        kubectl apply -f $(Agent.TempDirectory)/$(fluxGithubKeySecureFileName)
+        kubectl -n admin delete $(kubectl get pod -o name -l app=flux -n admin)
+
+  - task: Bash@3
+    displayName: 'Kured - Template secret'
     inputs:
       targetType: inline
       failOnStderr: true
@@ -249,7 +264,7 @@ jobs:
       SLACK_USERNAME: $(aksClusterName)
 
   - task: Bash@3
-    displayName: 'Create Kured secret'
+    displayName: 'Kured - Create secret'
     inputs:
       targetType: inline
       failOnStderr: false
