@@ -196,7 +196,7 @@ jobs:
         echo $var_one
         var_two='$(miResourceID)'
         echo $var_two
-        var_two='$(miPrincipalID)'
+        var_three='$(miPrincipalID)'
         echo $var_three
 
   - task: HelmInstaller@0
