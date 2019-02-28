@@ -177,27 +177,14 @@ jobs:
           outputValue=$(echo ${row} | jq -r ".value.value")
           echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
         done
-  # TODO: Should AKS go live this will be replaced by key vault module which will be used to provide permissions for each KV
-  # - task: AzureCLI@1
-  #   displayName: 'Permissions MI to KV'
-  #   inputs:
-  #     azureSubscription: $(serviceConnection)
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       az keyvault set-policy -n $(keyvaultName) --object-id 9ce2d587-29bd-47b3-8043-65d6852c9f47 --secret-permissions get list --certificate-permissions get list --key-permissions get list
 
   - task: AzureCLI@1
-    displayName: 'Testing output'
+    displayName: 'Permissions MI $(aksClusterName)-mi to Key Vault $(keyvaultName)'
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        var_one='$(miClientID)'
-        echo $var_one
-        var_two='$(miResourceID)'
-        echo $var_two
-        var_three='$(miPrincipalID)'
-        echo $var_three
+        az keyvault set-policy -n $(keyvaultName) --object-id $(miPrincipalID) --secret-permissions get list --certificate-permissions get list --key-permissions get list
 
   - task: HelmInstaller@0
     displayName: 'Install Helm Client $(helmVersion)'
