@@ -8,8 +8,3 @@ kind: Namespace
 metadata:
   name: kured
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: istio-system
----
