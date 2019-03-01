@@ -217,7 +217,7 @@ jobs:
       script: |
         helm repo add weaveworks https://weaveworks.github.io/flux
         helm upgrade flux weaveworks/flux --install --namespace admin -f deployments/weave-flux/values.yaml \
-          --set "git.path=k8s/$(aksResourceGroup)-cluster\,k8s/common",git.label=$(aksResourceGroup)-cluster \
+          --set "git.path=k8s/$(aksResourceGroup)-cluster\,k8s/common",git.label=$(aksResourceGroup)-cluster,git.timeout=120s \
           --wait
 
   - task: Bash@3
