@@ -17,6 +17,7 @@ variables:
   acrName: rpedev
   adminNamespace: 'admin'
   fluxGithubKeySecureFileName: 'cnp-flux-github-key.yaml'
+  slackUriSecureVariable: ''
 
 jobs:
 - job: Keyvault
@@ -37,6 +38,38 @@ jobs:
       echo "##vso[task.setvariable variable=slackWebhookUrl;isOutput=true]$(slack-webhook-url)"
     displayName: 'Export Keyvault Variables'
     name: exportKeyvault
+
+- job: DeployMonitoring
+  pool:
+    vmImage: 'Ubuntu 16.04'
+    #name: hmcts-agent-pool #TODO: change to hosted when merged
+  variables:
+    - group: aks-variable-group
+    - name: aksResourceGroup
+      value: $(aksResourceGroup)
+  steps:
+  # - task: AzureResourceGroupDeployment@2
+  #   displayName: 'Deploy Alert Notifications Logic App'
+  #   inputs:
+  #     azureSubscription: $(serviceConnection)
+  #     action: 'Create Or Update Resource Group'
+  #     resourceGroupName: $(aksResourceGroup)
+  #     deploymentMode: 'Incremental'
+  #     location: $(location)
+  #     templateLocation: 'Linked artifact'
+  #     csmFile: 'templates/arm-vnet-template.json'
+  #     overrideParameters: '-logicAppName $(logicAppName) 
+  #       -slackUri $(slackUri)'
+  #     deploymentOutputs: 'logicAppOutputs'
+
+  - task: AzureCLI@1
+    displayName: 'Testing output'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        var_one='$(slackUriSecureVariable)'
+        echo $var_one
 
 # - job: DeployAKS
 #   dependsOn: Keyvault
