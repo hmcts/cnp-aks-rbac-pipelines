@@ -299,9 +299,9 @@
         }
     ],
     "outputs": {
-        "webHookURI": {
+        "actionGroupID": {
             "type": "string",
-            "value": "[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', parameters('logicAppName')), '/triggers/manual'), '2016-06-01').value]"
+            "value": "[resourceId('Microsoft.Insights/actionGroups/', parameters('agName'))]"
         }
     }
 }

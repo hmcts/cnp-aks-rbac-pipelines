@@ -51,7 +51,7 @@ jobs:
     - group: aks-variable-group
   steps:
   - task: AzureResourceGroupDeployment@2
-    displayName: 'Deploy Alert Notifications Logic App'
+    displayName: 'Deploy Monitoring Infrastructure'
     inputs:
       azureSubscription: $(serviceConnection)
       action: 'Create Or Update Resource Group'
@@ -68,6 +68,7 @@ jobs:
         -agEmailReceivers "$(monInfraAgEmailReceivers)"'
       deploymentOutputs: 'monInfraOutputs'
 
+  # TEMP -----------------------------------------------------------
   - task: Bash@3
     displayName: Parse ARM Outputs
     #condition: not(variables['aksSubnetId'])
@@ -78,31 +79,31 @@ jobs:
         for row in $(echo '$(monInfraOutputs)' | jq -c '. | to_entries[]'); do
           outputName=$(echo ${row} | jq -r ".key")
           outputValue=$(echo ${row} | jq -r ".value.value")
-          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+          echo "##vso[task.setvariable variable=${outputName};isOutput=true]${outputValue}"
         done
 
-  # TEMP -----------------------------------------------------------
+- job: DeployAKS
+  dependsOn: Keyvault
+  pool:
+    vmImage: 'Ubuntu 16.04'
+    #name: hmcts-agent-pool #TODO: change to hosted when merged
+  variables:
+    aksClusterName: $(aksResourceGroup)-cluster
+    aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
+    aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
+    aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
+    slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
+  steps:
+
+  #TEMP -----------------------------------------------------------
   - task: AzureCLI@1
     displayName: 'Testing output'
     inputs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        var_one='$(webHookURI)'
+        var_one='$(actionGroupID)'
         echo $var_one
-
-# - job: DeployAKS
-#   dependsOn: Keyvault
-#   pool:
-#     vmImage: 'Ubuntu 16.04'
-#     #name: hmcts-agent-pool #TODO: change to hosted when merged
-#   variables:
-#     aksClusterName: $(aksResourceGroup)-cluster
-#     aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
-#     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
-#     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
-#     slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
-#   steps:
 
 #   - task: AzureCLI@1
 #     displayName: Check VNET prerequisites
