@@ -21,7 +21,7 @@ variables:
   monInfraSlackChannel: '#rhollins'
   monInfraAgName: 'aks_action_group'
   monInfraAgShortName: 'aksag'
-  monInfraAgEmailReceivers: '"receivers":[{"name":"rhollins","emailAddress":"rafal.hollins@hmcts.net"}]'
+  monInfraAgEmailReceivers: '"receivers":[{\"name\":\"rhollins\",\"emailAddress\":\"rafal.hollins@hmcts.net\"}]'
 
 jobs:
 - job: Keyvault
