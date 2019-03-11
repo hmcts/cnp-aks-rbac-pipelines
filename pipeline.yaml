@@ -79,8 +79,14 @@ jobs:
         for row in $(echo '$(monInfraOutputs)' | jq -c '. | to_entries[]'); do
           outputName=$(echo ${row} | jq -r ".key")
           outputValue=$(echo ${row} | jq -r ".value.value")
-          echo "##vso[task.setvariable variable=${outputName};isOutput=true]${outputValue}"
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
         done
+
+  # TEMP ----------------------------------------------------------------
+  - script: |
+      echo "##vso[task.setvariable variable=actionGroupID_VAR;isOutput=true]$(actionGroupID)"
+    displayName: 'Export Monitoring Infrastructure Variables'
+    name: exportmonInfraValues
 
 - job: DeployAKS
   dependsOn: Keyvault
@@ -102,7 +108,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        var_one='$(actionGroupID)'
+        var_one='$[dependencies.DeployMonitoring.outputs['exportmonInfraValues.actionGroupID_VAR']]'
         echo $var_one
 
 #   - task: AzureCLI@1
