@@ -109,7 +109,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        var_one='$[dependencies.DeployMonitoring.outputs['exportmonInfraValues.actionGroupID_VAR']]'
+        var_one='$(actionGroupID_VAR)'
         echo $var_one
 
 #   - task: AzureCLI@1
