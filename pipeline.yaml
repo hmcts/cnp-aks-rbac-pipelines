@@ -18,7 +18,7 @@ variables:
   adminNamespace: 'admin'
   fluxGithubKeySecureFileName: 'cnp-flux-github-key.yaml'
   logicAppName: 'aks-monitoring-la'
-  logicAppSlackChannel: '#cnp-monitoring'
+  logicAppSlackChannel: '#rhollins'
 
 jobs:
 - job: Keyvault
