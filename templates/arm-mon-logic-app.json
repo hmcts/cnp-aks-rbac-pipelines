@@ -11,9 +11,16 @@
         "slackUri": {
             "type": "string",
             "metadata": {
-                "description": "URI to slack webhook"
+                "description": "URI to Slack Webhook"
+            }
+        },
+        "slackChannel": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Slack Channel to send alerts"
             }
         }
+
     },
     "resources": [
         {
@@ -154,7 +161,7 @@
                                             "title": "<@{body('HTTP_2')['id']}|Alert> - @{triggerBody()?['AlertRuleName']}"
                                         }
                                     ],
-                                    "channel": "#cnp-monitoring",
+                                    "channel": "[parameters('slackChannel')]",
                                     "username": "Azure Monitoring"
                                 },
                                 "headers": {

@@ -18,6 +18,7 @@ variables:
   adminNamespace: 'admin'
   fluxGithubKeySecureFileName: 'cnp-flux-github-key.yaml'
   logicAppName: 'aks-monitoring-la'
+  logicAppSlackChannel: '#cnp-monitoring'
 
 jobs:
 - job: Keyvault
@@ -57,7 +58,8 @@ jobs:
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-mon-logic-app.json'
       overrideParameters: '-logicAppName $(logicAppName) 
-        -slackUri $(slackUriSecureVariable)'
+        -slackUri $(slackUriSecureVariable)
+        -slackChannel $(logicAppSlackChannel)'
       deploymentOutputs: 'logicAppOutputs'
 
   - task: Bash@3
