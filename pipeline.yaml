@@ -35,6 +35,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       keyVaultName: $(keyvaultName)
       secretsFilter: 'aks-sp-id,aks-sp-secret,aks-sapp-secret,slack-webhook-url'
+
   - script: |
       echo "##vso[task.setvariable variable=aksServicePrincipalId;isOutput=true]$(aks-sp-id)"
       echo "##vso[task.setvariable variable=aksServicePrincipalSecret;isOutput=true]$(aks-sp-secret)"
@@ -79,14 +80,24 @@ jobs:
         for row in $(echo '$(monInfraOutputs)' | jq -c '. | to_entries[]'); do
           outputName=$(echo ${row} | jq -r ".key")
           outputValue=$(echo ${row} | jq -r ".value.value")
-          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+          echo "##vso[task.setvariable variable=${outputName;isOutput=true}]${outputValue}"
         done
 
   # TEMP ----------------------------------------------------------------
-  - script: |
-      echo "##vso[task.setvariable variable=actionGroupID_VAR;isOutput=true]$(actionGroupID)"
-    displayName: 'Export Monitoring Infrastructure Variables'
-    name: exportmonInfraValues
+  # - script: |
+  #     echo "##vso[task.setvariable variable=actionGroupID_VAR;isOutput=true]$(actionGroupID)"
+  #   displayName: 'Export Monitoring Infrastructure Variables'
+  #   name: exportmonInfraValues
+
+  #TEMP -----------------------------------------------------------
+  - task: AzureCLI@1
+    displayName: 'Testing output'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        var_one='$(actionGroupID)'
+        echo $var_one
 
 - job: DeployAKS
   dependsOn: Keyvault
@@ -101,16 +112,6 @@ jobs:
     slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
     actionGroupID_VAR: $[dependencies.DeployMonitoring.outputs['exportmonInfraValues.actionGroupID_VAR']]
   steps:
-
-  #TEMP -----------------------------------------------------------
-  - task: AzureCLI@1
-    displayName: 'Testing output'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        var_one='$(actionGroupID_VAR)'
-        echo $var_one
 
 #   - task: AzureCLI@1
 #     displayName: Check VNET prerequisites
