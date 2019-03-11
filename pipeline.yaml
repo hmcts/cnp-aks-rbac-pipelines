@@ -83,6 +83,7 @@ jobs:
         done
   - script: |
       echo "##vso[task.setvariable variable=outActionGroupID;isOutput=true]$(actionGroupID)"
+    displayName: 'Export Action Group ID'
     name: exportActionGroupID
 
   #TEMP -----------------------------------------------------------
@@ -106,7 +107,7 @@ jobs:
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
     slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
-    myVarFromJobA: $[ dependencies.DeployMonitoring.outputs['exportActionGroupID.outActionGroupID'] ] 
+    outActionGroupID: $[ dependencies.DeployMonitoring.outputs['exportActionGroupID.outActionGroupID'] ] 
   steps:
 
   #TEMP -----------------------------------------------------------
@@ -116,7 +117,7 @@ jobs:
       azureSubscription: $(serviceConnection)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        var_one='$(myVarFromJobA)'
+        var_one='$(outActionGroupID)'
         echo $var_one
 
 #   - task: AzureCLI@1
