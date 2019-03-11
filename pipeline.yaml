@@ -38,242 +38,242 @@ jobs:
     displayName: 'Export Keyvault Variables'
     name: exportKeyvault
 
-- job: DeployAKS
-  dependsOn: Keyvault
-  pool:
-    vmImage: 'Ubuntu 16.04'
-    #name: hmcts-agent-pool #TODO: change to hosted when merged
-  variables:
-    aksClusterName: $(aksResourceGroup)-cluster
-    aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
-    aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
-    aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
-    slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
-  steps:
+# - job: DeployAKS
+#   dependsOn: Keyvault
+#   pool:
+#     vmImage: 'Ubuntu 16.04'
+#     #name: hmcts-agent-pool #TODO: change to hosted when merged
+#   variables:
+#     aksClusterName: $(aksResourceGroup)-cluster
+#     aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
+#     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
+#     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
+#     slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
+#   steps:
 
-  - task: AzureCLI@1
-    displayName: Check VNET prerequisites
-    inputs:
-      azureSubscription: $(serviceConnection)
-      arguments: $(aksResourceGroup) $(aksVnetCidr) $(aksSubnetCidr)
-      scriptPath: scripts/check-vnet-prerequisites.sh
+#   - task: AzureCLI@1
+#     displayName: Check VNET prerequisites
+#     inputs:
+#       azureSubscription: $(serviceConnection)
+#       arguments: $(aksResourceGroup) $(aksVnetCidr) $(aksSubnetCidr)
+#       scriptPath: scripts/check-vnet-prerequisites.sh
 
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Deploy VNET'
-    condition: not(variables['aksSubnetId'])
-    inputs:
-      azureSubscription: $(serviceConnection)
-      action: 'Create Or Update Resource Group'
-      resourceGroupName: $(aksResourceGroup)
-      deploymentMode: 'Incremental'
-      location: $(location)
-      templateLocation: 'Linked artifact'
-      csmFile: 'templates/arm-vnet-template.json'
-      overrideParameters: '-aksVnetName $(aksClusterName) 
-        -aksVnetPrefix $(aksVnetCidr) 
-        -aksSubnetName default 
-        -aksSubnetPrefix $(aksSubnetCidr)'
-      deploymentOutputs: 'vnetOutputs'
+#   - task: AzureResourceGroupDeployment@2
+#     displayName: 'Deploy VNET'
+#     condition: not(variables['aksSubnetId'])
+#     inputs:
+#       azureSubscription: $(serviceConnection)
+#       action: 'Create Or Update Resource Group'
+#       resourceGroupName: $(aksResourceGroup)
+#       deploymentMode: 'Incremental'
+#       location: $(location)
+#       templateLocation: 'Linked artifact'
+#       csmFile: 'templates/arm-vnet-template.json'
+#       overrideParameters: '-aksVnetName $(aksClusterName) 
+#         -aksVnetPrefix $(aksVnetCidr) 
+#         -aksSubnetName default 
+#         -aksSubnetPrefix $(aksSubnetCidr)'
+#       deploymentOutputs: 'vnetOutputs'
 
-  - task: Bash@3
-    displayName: Parse ARM Outputs
-    condition: not(variables['aksSubnetId'])
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        for row in $(echo '$(vnetOutputs)' | jq -c '. | to_entries[]'); do
-          outputName=$(echo ${row} | jq -r ".key")
-          outputValue=$(echo ${row} | jq -r ".value.value")
-          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
-        done
+#   - task: Bash@3
+#     displayName: Parse ARM Outputs
+#     condition: not(variables['aksSubnetId'])
+#     inputs:
+#       targetType: inline
+#       failOnStderr: false
+#       script: |
+#         for row in $(echo '$(vnetOutputs)' | jq -c '. | to_entries[]'); do
+#           outputName=$(echo ${row} | jq -r ".key")
+#           outputValue=$(echo ${row} | jq -r ".value.value")
+#           echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+#         done
 
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Deploy AKS Cluster'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      action: 'Create Or Update Resource Group'
-      resourceGroupName: $(aksResourceGroup)
-      deploymentMode: 'Incremental'
-      location: $(location)
-      templateLocation: 'Linked artifact'
-      csmFile: 'templates/arm-aks-template.json'
-      csmParametersFile: 'templates/arm-aks-parameters.json'
-      overrideParameters: '-aksClusterName $(aksClusterName) 
-        -aksVnetSubnetId $(aksSubnetId) 
-        -aksServiceCidr $(aksServiceCidr) 
-        -aksDnsServiceIp $(aksDnsServiceIp) 
-        -servicePrincipalSecret $(aksServicePrincipalSecret) 
-        -serverAppSecret $(aksServerAppSecret)'
+#   - task: AzureResourceGroupDeployment@2
+#     displayName: 'Deploy AKS Cluster'
+#     inputs:
+#       azureSubscription: $(serviceConnection)
+#       action: 'Create Or Update Resource Group'
+#       resourceGroupName: $(aksResourceGroup)
+#       deploymentMode: 'Incremental'
+#       location: $(location)
+#       templateLocation: 'Linked artifact'
+#       csmFile: 'templates/arm-aks-template.json'
+#       csmParametersFile: 'templates/arm-aks-parameters.json'
+#       overrideParameters: '-aksClusterName $(aksClusterName) 
+#         -aksVnetSubnetId $(aksSubnetId) 
+#         -aksServiceCidr $(aksServiceCidr) 
+#         -aksDnsServiceIp $(aksDnsServiceIp) 
+#         -servicePrincipalSecret $(aksServicePrincipalSecret) 
+#         -serverAppSecret $(aksServerAppSecret)'
 
-  - task: AzureCLI@1
-    displayName: 'Obtain AKS Admin access token.'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin --overwrite-existing
+#   - task: AzureCLI@1
+#     displayName: 'Obtain AKS Admin access token.'
+#     inputs:
+#       azureSubscription: $(serviceConnection)
+#       scriptLocation: 'inlineScript'
+#       inlineScript: |
+#         az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin --overwrite-existing
 
-  - task: Bash@3
-    displayName: 'Create Custom Namespaces'
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        kubectl apply -f deployments/namespaces.yaml
+#   - task: Bash@3
+#     displayName: 'Create Custom Namespaces'
+#     inputs:
+#       targetType: inline
+#       failOnStderr: false
+#       script: |
+#         kubectl apply -f deployments/namespaces.yaml
 
-  - task: AzureCLI@1
-    displayName: 'Bind admin role to "aks-cluster-admin" group'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        CLUSTER_GLOBAL_ADMINS_GROUP=$(az ad group list --query  "[?displayName=='aks-cluster-admins'].objectId" -o tsv)
+#   - task: AzureCLI@1
+#     displayName: 'Bind admin role to "aks-cluster-admin" group'
+#     inputs:
+#       azureSubscription: $(serviceConnection)
+#       scriptLocation: 'inlineScript'
+#       inlineScript: |
+#         CLUSTER_GLOBAL_ADMINS_GROUP=$(az ad group list --query  "[?displayName=='aks-cluster-admins'].objectId" -o tsv)
         
-        CLUSTER_ADMINS_GROUP_NAME="$(aksClusterName)-cluster-admins"
-        CLUSTER_ADMIN_GROUP=$(az ad group list --query  "[?displayName=='${CLUSTER_ADMINS_GROUP_NAME}'].objectId" -o tsv)
-        if [ -z "${CLUSTER_ADMIN_GROUP}" ]; then 
-            echo "Cluster admin group doesn't exist, creating"
-            CLUSTER_ADMIN_GROUP=$(az ad group create  --display-name ${CLUSTER_ADMINS_GROUP_NAME} --mail-nickname ${CLUSTER_ADMINS_GROUP_NAME} --query objectId -o tsv)
-        fi
+#         CLUSTER_ADMINS_GROUP_NAME="$(aksClusterName)-cluster-admins"
+#         CLUSTER_ADMIN_GROUP=$(az ad group list --query  "[?displayName=='${CLUSTER_ADMINS_GROUP_NAME}'].objectId" -o tsv)
+#         if [ -z "${CLUSTER_ADMIN_GROUP}" ]; then 
+#             echo "Cluster admin group doesn't exist, creating"
+#             CLUSTER_ADMIN_GROUP=$(az ad group create  --display-name ${CLUSTER_ADMINS_GROUP_NAME} --mail-nickname ${CLUSTER_ADMINS_GROUP_NAME} --query objectId -o tsv)
+#         fi
         
-        cat roles/cluster-admin-role-binding.yaml | \
-          sed -e 's@${CLUSTER_ADMIN_GROUP}@'"$CLUSTER_ADMIN_GROUP"'@' | \
-          sed -e 's@${CLUSTER_GLOBAL_ADMINS_GROUP}@'"$CLUSTER_GLOBAL_ADMINS_GROUP"'@' | \
-          kubectl apply -f -
+#         cat roles/cluster-admin-role-binding.yaml | \
+#           sed -e 's@${CLUSTER_ADMIN_GROUP}@'"$CLUSTER_ADMIN_GROUP"'@' | \
+#           sed -e 's@${CLUSTER_GLOBAL_ADMINS_GROUP}@'"$CLUSTER_GLOBAL_ADMINS_GROUP"'@' | \
+#           kubectl apply -f -
 
-  - task: AzureCLI@1
-    displayName: 'Bind developers roles'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        kubectl apply -f roles/developers-log-reader-role.yaml
-        DEVELOPERS_GROUP=$(az ad group list --query  "[?displayName=='developers'].objectId" -o tsv)
-        if [ ! -z "${DEVELOPERS_GROUP}" ]; then          
-          cat roles/developers-log-reader-binding.yaml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
-        fi
+#   - task: AzureCLI@1
+#     displayName: 'Bind developers roles'
+#     inputs:
+#       azureSubscription: $(serviceConnection)
+#       scriptLocation: 'inlineScript'
+#       inlineScript: |
+#         kubectl apply -f roles/developers-log-reader-role.yaml
+#         DEVELOPERS_GROUP=$(az ad group list --query  "[?displayName=='developers'].objectId" -o tsv)
+#         if [ ! -z "${DEVELOPERS_GROUP}" ]; then          
+#           cat roles/developers-log-reader-binding.yaml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
+#         fi
 
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Create Managed Identity for AKS'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      action: 'Create Or Update Resource Group'
-      resourceGroupName: $(aksResourceGroup)
-      deploymentMode: 'Incremental'
-      location: $(location)
-      templateLocation: 'Linked artifact'
-      csmFile: 'templates/arm-mi-template.json'
-      overrideParameters: '-resourceName $(aksClusterName)-mi'
-      deploymentOutputs: 'miOutputs'
+#   - task: AzureResourceGroupDeployment@2
+#     displayName: 'Create Managed Identity for AKS'
+#     inputs:
+#       azureSubscription: $(serviceConnection)
+#       action: 'Create Or Update Resource Group'
+#       resourceGroupName: $(aksResourceGroup)
+#       deploymentMode: 'Incremental'
+#       location: $(location)
+#       templateLocation: 'Linked artifact'
+#       csmFile: 'templates/arm-mi-template.json'
+#       overrideParameters: '-resourceName $(aksClusterName)-mi'
+#       deploymentOutputs: 'miOutputs'
 
-  - task: Bash@3
-    displayName: Parse ARM Outputs
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        for row in $(echo '$(miOutputs)' | jq -c '. | to_entries[]'); do
-          outputName=$(echo ${row} | jq -r ".key")
-          outputValue=$(echo ${row} | jq -r ".value.value")
-          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
-        done
+#   - task: Bash@3
+#     displayName: Parse ARM Outputs
+#     inputs:
+#       targetType: inline
+#       failOnStderr: false
+#       script: |
+#         for row in $(echo '$(miOutputs)' | jq -c '. | to_entries[]'); do
+#           outputName=$(echo ${row} | jq -r ".key")
+#           outputValue=$(echo ${row} | jq -r ".value.value")
+#           echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+#         done
 
-  - task: AzureCLI@1
-    displayName: 'Permissions MI to Key Vault $(keyvaultName)'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az keyvault set-policy -n $(keyvaultName) --object-id $(miPrincipalID) --secret-permissions get list --certificate-permissions get list --key-permissions get list
+#   - task: AzureCLI@1
+#     displayName: 'Permissions MI to Key Vault $(keyvaultName)'
+#     inputs:
+#       azureSubscription: $(serviceConnection)
+#       scriptLocation: 'inlineScript'
+#       inlineScript: |
+#         az keyvault set-policy -n $(keyvaultName) --object-id $(miPrincipalID) --secret-permissions get list --certificate-permissions get list --key-permissions get list
 
-  - task: HelmInstaller@0
-    displayName: 'Helm - Install Client $(helmVersion)'
-    inputs:
-        helmVersion: $(helmVersion)
-        checkLatestHelmVersion: false
-        installKubectl: false
+#   - task: HelmInstaller@0
+#     displayName: 'Helm - Install Client $(helmVersion)'
+#     inputs:
+#         helmVersion: $(helmVersion)
+#         checkLatestHelmVersion: false
+#         installKubectl: false
 
-  - task: Bash@3
-    displayName: 'Helm - Install Tiller $(helmVersion)'
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        kubectl apply -f roles/helm-rbac-config.yaml
-        helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
+#   - task: Bash@3
+#     displayName: 'Helm - Install Tiller $(helmVersion)'
+#     inputs:
+#       targetType: inline
+#       failOnStderr: false
+#       script: |
+#         kubectl apply -f roles/helm-rbac-config.yaml
+#         helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
 
-  - task: Bash@3
-    displayName: 'Kured - Template secret'
-    inputs:
-      targetType: inline
-      failOnStderr: true
-      script: |
-        sed -i -e 's@${SLACK_WEBHOOK_URL}@'"$SLACK_WEBHOOK_URL"'@' templates/kured/values.yaml
-        sed -i -e 's@${SLACK_USERNAME}@'"$SLACK_USERNAME"'@' templates/kured/values.yaml
-    env:
-      SLACK_WEBHOOK_URL: $(slackWebhookUrl)
-      SLACK_USERNAME: $(aksClusterName)
+#   - task: Bash@3
+#     displayName: 'Kured - Template secret'
+#     inputs:
+#       targetType: inline
+#       failOnStderr: true
+#       script: |
+#         sed -i -e 's@${SLACK_WEBHOOK_URL}@'"$SLACK_WEBHOOK_URL"'@' templates/kured/values.yaml
+#         sed -i -e 's@${SLACK_USERNAME}@'"$SLACK_USERNAME"'@' templates/kured/values.yaml
+#     env:
+#       SLACK_WEBHOOK_URL: $(slackWebhookUrl)
+#       SLACK_USERNAME: $(aksClusterName)
 
-  - task: Bash@3
-    displayName: 'Kured - Create secret'
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        kubectl -n admin delete secret kured-values || true
-        kubectl -n admin create secret generic kured-values --from-file=templates/kured/values.yaml
+#   - task: Bash@3
+#     displayName: 'Kured - Create secret'
+#     inputs:
+#       targetType: inline
+#       failOnStderr: false
+#       script: |
+#         kubectl -n admin delete secret kured-values || true
+#         kubectl -n admin create secret generic kured-values --from-file=templates/kured/values.yaml
 
-  - task: Bash@3
-    displayName: 'Flux - Template repositories.yaml secret'
-    inputs:
-      targetType: inline
-      failOnStderr: true
-      script: |
-        sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
-               -e 's@${ACR_SERVICE_PRINCIPAL_ID}@'"$AKS_SP_ID"'@' \
-               -e 's@${ACR_SERVICE_PRINCIPAL_SECRET}@'"$AKS_SP_SECRET"'@' \
-          templates/repositories.yaml
-    env:
-      AKS_SP_ID: $(aksServicePrincipalId)
-      AKS_SP_SECRET: $(aksServicePrincipalSecret)
+#   - task: Bash@3
+#     displayName: 'Flux - Template repositories.yaml secret'
+#     inputs:
+#       targetType: inline
+#       failOnStderr: true
+#       script: |
+#         sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
+#                -e 's@${ACR_SERVICE_PRINCIPAL_ID}@'"$AKS_SP_ID"'@' \
+#                -e 's@${ACR_SERVICE_PRINCIPAL_SECRET}@'"$AKS_SP_SECRET"'@' \
+#           templates/repositories.yaml
+#     env:
+#       AKS_SP_ID: $(aksServicePrincipalId)
+#       AKS_SP_SECRET: $(aksServicePrincipalSecret)
 
-  - task: Bash@3
-    displayName: 'Flux - Create repositories.yaml secret'
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        kubectl -n admin delete secret flux-helm-repositories || true
-        kubectl -n admin create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
+#   - task: Bash@3
+#     displayName: 'Flux - Create repositories.yaml secret'
+#     inputs:
+#       targetType: inline
+#       failOnStderr: false
+#       script: |
+#         kubectl -n admin delete secret flux-helm-repositories || true
+#         kubectl -n admin create secret generic flux-helm-repositories --from-file=templates/repositories.yaml
 
-  - task: Bash@3
-    displayName: 'Flux - Install'
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        helm repo add weaveworks https://weaveworks.github.io/flux
-        helm upgrade flux weaveworks/flux --install --namespace admin -f deployments/weave-flux/values.yaml \
-          --set "git.path=k8s/$(aksResourceGroup)-cluster\,k8s/common",git.label=$(aksResourceGroup)-cluster \
-          --wait
+#   - task: Bash@3
+#     displayName: 'Flux - Install'
+#     inputs:
+#       targetType: inline
+#       failOnStderr: false
+#       script: |
+#         helm repo add weaveworks https://weaveworks.github.io/flux
+#         helm upgrade flux weaveworks/flux --install --namespace admin -f deployments/weave-flux/values.yaml \
+#           --set "git.path=k8s/$(aksResourceGroup)-cluster\,k8s/common",git.label=$(aksResourceGroup)-cluster \
+#           --wait
 
-  - task: DownloadSecureFile@1
-    displayName: 'Flux - Download Github Key'
-    inputs:
-      secureFile: $(fluxGithubKeySecureFileName)
+#   - task: DownloadSecureFile@1
+#     displayName: 'Flux - Download Github Key'
+#     inputs:
+#       secureFile: $(fluxGithubKeySecureFileName)
 
-  - task: Bash@3
-    displayName: 'Flux - Create Github Key Secret'
-    inputs:
-      targetType: inline
-      failOnStderr: false
-      script: |
-        kubectl -n admin delete secret flux-git-deploy || true
-        kubectl apply -f $(Agent.TempDirectory)/$(fluxGithubKeySecureFileName)
-        kubectl -n admin delete $(kubectl get pod -o name -l app=flux -n admin)
+#   - task: Bash@3
+#     displayName: 'Flux - Create Github Key Secret'
+#     inputs:
+#       targetType: inline
+#       failOnStderr: false
+#       script: |
+#         kubectl -n admin delete secret flux-git-deploy || true
+#         kubectl apply -f $(Agent.TempDirectory)/$(fluxGithubKeySecureFileName)
+#         kubectl -n admin delete $(kubectl get pod -o name -l app=flux -n admin)
 
-- job: RunTests
+# - job: RunTests
   dependsOn: DeployAKS
   pool:
     vmImage: 'Ubuntu 16.04'
