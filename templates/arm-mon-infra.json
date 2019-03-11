@@ -15,15 +15,7 @@
             }
         },        
         "agEmailReceivers":{
-            "type": "object",
-            "defaultvalue":{
-                "receivers": [
-                    {
-                        "name": "rhollins",
-                        "emailAddress": "rafal.hollins@hmcts.net"
-                    }
-                ]
-            }
+            "type": "object"
         },
         "logicAppName": {
             "type": "string",
