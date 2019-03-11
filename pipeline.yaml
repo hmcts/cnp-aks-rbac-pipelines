@@ -106,7 +106,7 @@ jobs:
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
     slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
-    myVarFromJobA: $[ dependencies.DeployMonitoring.outputs['exportActionGroupID.actionGroupID'] ] 
+    myVarFromJobA: $[ dependencies.DeployMonitoring.outputs['exportActionGroupID.outActionGroupID'] ] 
   steps:
 
   #TEMP -----------------------------------------------------------
