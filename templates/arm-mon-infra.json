@@ -14,12 +14,17 @@
                 "description": "Short name of the Action Group (maximum 12 characters)"
             }
         },        
-        "agEmailReceivers": {
-            "type":"object",
-            "metadata": {
-                "description": "Email addresses for alert notifications"
+        "agEmailReceivers":{
+            "type": "object",
+            "defaultvalue":{
+                "receivers": [
+                    {
+                        "name": "rhollins",
+                        "emailAddress": "rafal.hollins@hmcts.net"
+                    }
+                ]
             }
-        }, 
+        },
         "logicAppName": {
             "type": "string",
             "metadata": {
@@ -49,7 +54,7 @@
                 "groupShortName": "[parameters('agShortName')]",
                 "enabled": true,
                 "smsReceivers": [],
-                "emailReceivers": "[parameters('agEmailReceivers')]",
+                "emailReceivers": "[parameters('agEmailReceivers').receivers]",
                 "webhookReceivers": [
                     {
                         "name": "contosoHook",

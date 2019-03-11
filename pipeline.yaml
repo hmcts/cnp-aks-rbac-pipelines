@@ -21,7 +21,7 @@ variables:
   monInfraSlackChannel: '#rhollins'
   monInfraAgName: 'aks_action_group'
   monInfraAgShortName: 'aksag'
-  monInfraAgEmailReceivers: '[{"name":"rhollins","emailAddress":"rafal.hollins@hmcts.net"}]'
+  #monInfraAgEmailReceivers: '[{"name":"rhollins","emailAddress":"rafal.hollins@hmcts.net"}]'
 
 jobs:
 - job: Keyvault
@@ -64,8 +64,7 @@ jobs:
         -slackUri "$(slackUriSecureVariable)"
         -slackChannel "$(monInfraSlackChannel)"
         -agName "$(monInfraAgName)"
-        -agShortName "$(monInfraAgShortName)"
-        -agEmailReceivers "$(monInfraAgEmailReceivers)"'
+        -agShortName "$(monInfraAgShortName)"'
       deploymentOutputs: 'monInfraOutputs'
 
   - task: Bash@3
