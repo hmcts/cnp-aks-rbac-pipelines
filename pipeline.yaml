@@ -17,7 +17,7 @@ variables:
   acrName: rpedev
   adminNamespace: 'admin'
   fluxGithubKeySecureFileName: 'cnp-flux-github-key.yaml'
-  slackUriSecureVariable: ''
+  logicAppName: 'aks-monitoring-la'
 
 jobs:
 - job: Keyvault
