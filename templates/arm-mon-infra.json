@@ -2,6 +2,24 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "agName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Action Group"
+            }
+        },
+        "agShortName": {
+            "type": "string",
+            "metadata": {
+                "description": "Short name of the Action Group (maximum 12 characters)"
+            }
+        },        
+        "agEmailReceivers": {
+            "type":"object",
+            "metadata": {
+                "description": "Email addresses for alert notifications"
+            }
+        }, 
         "logicAppName": {
             "type": "string",
             "metadata": {
@@ -20,9 +38,30 @@
                 "description": "Name of the Slack Channel to send alerts"
             }
         }
-
     },
     "resources": [
+        {
+            "type": "Microsoft.Insights/actionGroups",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('agName')]",
+            "location": "Global",
+            "properties": {
+                "groupShortName": "[parameters('agShortName')]",
+                "enabled": true,
+                "smsReceivers": [],
+                "emailReceivers": "[parameters('agEmailReceivers')]",
+                "webhookReceivers": [
+                    {
+                        "name": "contosoHook",
+                        "serviceUri": "http://requestb.in/1bq62iu1"
+                    },
+                    {
+                        "name": "contosoHook2",
+                        "serviceUri": "http://requestb.in/1bq62iu2"
+                    }
+                ]
+            }
+        },
         {
             "type": "Microsoft.Logic/workflows",
             "name": "[parameters('logicAppName')]",

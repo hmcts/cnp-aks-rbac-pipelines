@@ -17,8 +17,11 @@ variables:
   acrName: rpedev
   adminNamespace: 'admin'
   fluxGithubKeySecureFileName: 'cnp-flux-github-key.yaml'
-  logicAppName: 'aks-monitoring-la'
-  logicAppSlackChannel: '#rhollins'
+  monInfraAppName: 'aks-monitoring-la'
+  monInfraSlackChannel: '#rhollins'
+  monInfraAgName: 'aks_action_group'
+  monInfraAgShortName: 'aksag'
+  monInfraAgEmailReceivers: '[{"name": "rhollins","emailAddress": "rafal.hollins@hmcts.net"}]'
 
 jobs:
 - job: Keyvault
@@ -56,11 +59,14 @@ jobs:
       deploymentMode: 'Incremental'
       location: $(location)
       templateLocation: 'Linked artifact'
-      csmFile: 'templates/arm-mon-logic-app.json'
-      overrideParameters: '-logicAppName $(logicAppName) 
-        -slackUri $(slackUriSecureVariable)
-        -slackChannel $(logicAppSlackChannel)'
-      deploymentOutputs: 'logicAppOutputs'
+      csmFile: 'templates/arm-mon-infra.json'
+      overrideParameters: '-logicAppName "$(monInfraAppName)"
+        -slackUri "$(slackUriSecureVariable)"
+        -slackChannel "$(monInfraSlackChannel)"
+        -agName "$(monInfraAgName)"
+        -agShortName "$(monInfraAgShortName)"
+        -agEmailReceivers "$(monInfraAgEmailReceivers)"'
+      deploymentOutputs: 'monInfraOutputs'
 
   - task: Bash@3
     displayName: Parse ARM Outputs
@@ -69,7 +75,7 @@ jobs:
       targetType: inline
       failOnStderr: false
       script: |
-        for row in $(echo '$(logicAppOutputs)' | jq -c '. | to_entries[]'); do
+        for row in $(echo '$(monInfraOutputs)' | jq -c '. | to_entries[]'); do
           outputName=$(echo ${row} | jq -r ".key")
           outputValue=$(echo ${row} | jq -r ".value.value")
           echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
