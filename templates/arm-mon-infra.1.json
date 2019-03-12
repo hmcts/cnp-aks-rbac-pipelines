@@ -1,0 +1,307 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "agName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Action Group"
+            }
+        },
+        "agShortName": {
+            "type": "string",
+            "metadata": {
+                "description": "Short name of the Action Group (maximum 12 characters)"
+            }
+        },
+        "agEmailReceivers": {
+            "type": "object"
+        },
+        "logicAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Logic App"
+            }
+        },
+        "slackUri": {
+            "type": "string",
+            "metadata": {
+                "description": "URI to Slack Webhook"
+            }
+        },
+        "slackChannel": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Slack Channel to send alerts"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "name": "[parameters('logicAppName')]",
+            "apiVersion": "2017-07-01",
+            "location": "[resourceGroup().location]",
+            "scale": null,
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "schema": {
+                                    "properties": {
+                                        "AlertRuleName": {
+                                            "type": "string"
+                                        },
+                                        "AlertThresholdOperator": {
+                                            "type": "string"
+                                        },
+                                        "AlertThresholdValue": {
+                                            "type": "integer"
+                                        },
+                                        "Description": {
+                                            "type": "string"
+                                        },
+                                        "LinkToSearchResults": {
+                                            "type": "string"
+                                        },
+                                        "ResultCount": {
+                                            "type": "integer"
+                                        },
+                                        "SearchIntervalEndtimeUtc": {
+                                            "type": "string"
+                                        },
+                                        "SearchIntervalInSeconds": {
+                                            "type": "integer"
+                                        },
+                                        "SearchIntervalStartTimeUtc": {
+                                            "type": "string"
+                                        },
+                                        "SearchQuery": {
+                                            "type": "string"
+                                        },
+                                        "SearchResult": {
+                                            "properties": {
+                                                "tables": {
+                                                    "items": {
+                                                        "properties": {
+                                                            "columns": {
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "name": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "type": {
+                                                                            "type": "string"
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "name",
+                                                                        "type"
+                                                                    ],
+                                                                    "type": "object"
+                                                                },
+                                                                "type": "array"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "rows": {
+                                                                "items": {
+                                                                    "type": "array"
+                                                                },
+                                                                "type": "array"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "name",
+                                                            "columns",
+                                                            "rows"
+                                                        ],
+                                                        "type": "object"
+                                                    },
+                                                    "type": "array"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "Severity": {
+                                            "type": "string"
+                                        },
+                                        "SubscriptionId": {
+                                            "type": "string"
+                                        },
+                                        "WorkspaceId": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "HTTP": {
+                            "runAfter": {
+                                "Switch": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http",
+                            "inputs": {
+                                "body": {
+                                    "attachments": [
+                                        {
+                                            "color": "@{variables('color')}",
+                                            "fields": [
+                                                {
+                                                    "short": true,
+                                                    "title": "Results",
+                                                    "value": "@{triggerBody()?['ResultCount']}"
+                                                },
+                                                {
+                                                    "short": true,
+                                                    "title": "Severity",
+                                                    "value": "@{triggerBody()?['Severity']}"
+                                                }
+                                            ],
+                                            "text": "Description: _@{triggerBody()?['Description']}_",
+                                            "title": "<@{body('HTTP_2')['id']}|Alert> - @{triggerBody()?['AlertRuleName']}"
+                                        }
+                                    ],
+                                    "channel": "[parameters('slackChannel')]",
+                                    "username": "Azure Monitoring"
+                                },
+                                "headers": {
+                                    "Content-Type": "application/json"
+                                },
+                                "method": "POST",
+                                "uri": "[parameters('slackUri')]"
+                            }
+                        },
+                        "HTTP_2": {
+                            "runAfter": {
+                                "Initialize_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http",
+                            "inputs": {
+                                "body": {
+                                    "longUrl": "@{triggerBody()?['LinkToSearchResults']}"
+                                },
+                                "headers": {
+                                    "Content-Type": "application/json"
+                                },
+                                "method": "POST",
+                                "uri": "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBkT1BRbA-uULHz8HMUAi0ywJtpNLXHShI"
+                            }
+                        },
+                        "Initialize_variable": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "color",
+                                        "type": "String",
+                                        "value": "#E3E4E6"
+                                    }
+                                ]
+                            }
+                        },
+                        "Switch": {
+                            "runAfter": {
+                                "HTTP_2": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "cases": {
+                                "Case": {
+                                    "case": "Critical",
+                                    "actions": {
+                                        "Set_variable": {
+                                            "runAfter": {},
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                                "name": "color",
+                                                "value": "#D50200"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Case_2": {
+                                    "case": "Informational",
+                                    "actions": {
+                                        "Set_variable_2": {
+                                            "runAfter": {},
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                                "name": "color",
+                                                "value": "#28D7E5"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Case_3": {
+                                    "case": "Warning",
+                                    "actions": {
+                                        "Set_variable_3": {
+                                            "runAfter": {},
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                                "name": "color",
+                                                "value": "#DE9E31"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "default": {
+                                "actions": {}
+                            },
+                            "expression": "@triggerBody()?['Severity']",
+                            "type": "Switch"
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {}
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Insights/actionGroups",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('agName')]",
+            "location": "Global",
+            "dependsOn": [
+                "[concat('Microsoft.Logic/workflows/', parameters('logicAppName'))]"
+            ],
+            "properties": {
+                "groupShortName": "[parameters('agShortName')]",
+                "enabled": true,
+                "smsReceivers": [],
+                "emailReceivers": "[parameters('agEmailReceivers').receivers]",
+                "webhookReceivers": [
+                    {
+                        "name": "slackHook",
+                        "serviceUri": "[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', parameters('logicAppName')), '/triggers/manual'), '2016-06-01').value]"
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "actionGroupID": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Insights/actionGroups/', parameters('agName'))]"
+        }
+    }
+}
