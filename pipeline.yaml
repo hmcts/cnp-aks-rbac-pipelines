@@ -380,6 +380,21 @@ jobs:
         -resourceId $(outAksID) 
         -actionGroupId $(outActionGroupID)'
 
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Add Custom Search Alerts'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksResourceGroup)
+      deploymentMode: 'Incremental'
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: 'templates/arm-mon-custom-alerts.json'
+      # overrideParameters: '-aksName $(aksClusterName) 
+      #   -isEnabled $(metricAlertsEnabled) 
+      #   -resourceId $(outAksID) 
+      #   -actionGroupId $(outActionGroupID)'
+
 # - job: RunTests
   # dependsOn: DeployAKS
   # pool:
