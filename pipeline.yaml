@@ -97,7 +97,9 @@ jobs:
         echo $var_one
 
 - job: DeployAKS
-  dependsOn: Keyvault
+  dependsOn: 
+    - Keyvault
+    - DeployMonitoring
   pool:
     vmImage: 'Ubuntu 16.04'
     #name: hmcts-agent-pool #TODO: change to hosted when merged
