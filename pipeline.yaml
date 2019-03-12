@@ -157,7 +157,6 @@ jobs:
 
   - task: Bash@3
     displayName: Parse ARM Outputs
-    condition: not(variables['aksSubnetId'])
     inputs:
       targetType: inline
       failOnStderr: false
