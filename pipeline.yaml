@@ -44,7 +44,7 @@ jobs:
     name: exportKeyvault
 
 - job: MonitoringDeploy
-  displayName: Monitoring - Deploy Monitoring Infrastructure
+  displayName: Deploy Monitoring Infra
   pool:
     vmImage: 'Ubuntu 16.04'
     #name: hmcts-agent-pool #TODO: change to hosted when merged
@@ -83,7 +83,6 @@ jobs:
         done
   - script: |
       echo "##vso[task.setvariable variable=outActionGroupID;isOutput=true]$(actionGroupID)"
-    displayName: 'Export Action Group ID'
     name: exportActionGroupID
 
 - job: DeployAKS
@@ -170,7 +169,6 @@ jobs:
         done      
   - script: |
       echo "##vso[task.setvariable variable=outAksID;isOutput=true]$(aksID)"
-    displayName: 'Export AKS ID'
     name: exportAksID
 
 #   - task: AzureCLI@1
@@ -341,16 +339,17 @@ jobs:
 #         kubectl -n admin delete $(kubectl get pod -o name -l app=flux -n admin)
 
 - job: MonitoringAddAlerts
-  displayName: Monitoring - Add Alerts for AKS Cluster
+  displayName: Deploy Alerts
   dependsOn: 
     - Keyvault
+    - DeployAKS
     - MonitoringDeploy
   pool:
     vmImage: 'Ubuntu 16.04'
     #name: hmcts-agent-pool #TODO: change to hosted when merged
   variables:
     aksClusterName: $(aksResourceGroup)-cluster
-    outActionGroupID: $[dependencies.DeployMonitoring.outputs['exportActionGroupID.outActionGroupID']] 
+    outActionGroupID: $[dependencies.MonitoringDeploy.outputs['exportActionGroupID.outActionGroupID']] 
     outAksID: $[dependencies.DeployAKS.outputs['exportAksID.outAksID']] 
   steps:
 
