@@ -43,7 +43,8 @@ jobs:
     displayName: 'Export Keyvault Variables'
     name: exportKeyvault
 
-- job: DeployMonitoring
+- job: MonitoringDeploy
+  displayName: Monitoring - Deploy Monitoring Infrastructure
   pool:
     vmImage: 'Ubuntu 16.04'
     #name: hmcts-agent-pool #TODO: change to hosted when merged
@@ -68,7 +69,6 @@ jobs:
         -agEmailReceivers "$(monInfraAgEmailReceivers)"'
       deploymentOutputs: 'monInfraOutputs'
 
-  # TEMP -----------------------------------------------------------
   - task: Bash@3
     displayName: Parse ARM Outputs
     #condition: not(variables['aksSubnetId'])
@@ -86,20 +86,9 @@ jobs:
     displayName: 'Export Action Group ID'
     name: exportActionGroupID
 
-  #TEMP -----------------------------------------------------------
-  - task: AzureCLI@1
-    displayName: 'Testing output'
-    inputs:
-      azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        var_one='$(actionGroupID)'
-        echo $var_one
-
 - job: DeployAKS
   dependsOn: 
     - Keyvault
-    - DeployMonitoring
   pool:
     vmImage: 'Ubuntu 16.04'
     #name: hmcts-agent-pool #TODO: change to hosted when merged
@@ -109,73 +98,80 @@ jobs:
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
     slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
-    outActionGroupID: $[dependencies.DeployMonitoring.outputs['exportActionGroupID.outActionGroupID']] 
   steps:
 
-  #TEMP -----------------------------------------------------------
   - task: AzureCLI@1
-    displayName: 'Testing output'
+    displayName: Check VNET prerequisites
     inputs:
       azureSubscription: $(serviceConnection)
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        var_one='$(outActionGroupID)'
-        echo $var_one
+      arguments: $(aksResourceGroup) $(aksVnetCidr) $(aksSubnetCidr)
+      scriptPath: scripts/check-vnet-prerequisites.sh
 
-#   - task: AzureCLI@1
-#     displayName: Check VNET prerequisites
-#     inputs:
-#       azureSubscription: $(serviceConnection)
-#       arguments: $(aksResourceGroup) $(aksVnetCidr) $(aksSubnetCidr)
-#       scriptPath: scripts/check-vnet-prerequisites.sh
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Deploy VNET'
+    condition: not(variables['aksSubnetId'])
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksResourceGroup)
+      deploymentMode: 'Incremental'
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: 'templates/arm-vnet-template.json'
+      overrideParameters: '-aksVnetName $(aksClusterName) 
+        -aksVnetPrefix $(aksVnetCidr) 
+        -aksSubnetName default 
+        -aksSubnetPrefix $(aksSubnetCidr)'
+      deploymentOutputs: 'vnetOutputs'
 
-#   - task: AzureResourceGroupDeployment@2
-#     displayName: 'Deploy VNET'
-#     condition: not(variables['aksSubnetId'])
-#     inputs:
-#       azureSubscription: $(serviceConnection)
-#       action: 'Create Or Update Resource Group'
-#       resourceGroupName: $(aksResourceGroup)
-#       deploymentMode: 'Incremental'
-#       location: $(location)
-#       templateLocation: 'Linked artifact'
-#       csmFile: 'templates/arm-vnet-template.json'
-#       overrideParameters: '-aksVnetName $(aksClusterName) 
-#         -aksVnetPrefix $(aksVnetCidr) 
-#         -aksSubnetName default 
-#         -aksSubnetPrefix $(aksSubnetCidr)'
-#       deploymentOutputs: 'vnetOutputs'
+  - task: Bash@3
+    displayName: Parse ARM Outputs
+    condition: not(variables['aksSubnetId'])
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        for row in $(echo '$(vnetOutputs)' | jq -c '. | to_entries[]'); do
+          outputName=$(echo ${row} | jq -r ".key")
+          outputValue=$(echo ${row} | jq -r ".value.value")
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+        done
 
-#   - task: Bash@3
-#     displayName: Parse ARM Outputs
-#     condition: not(variables['aksSubnetId'])
-#     inputs:
-#       targetType: inline
-#       failOnStderr: false
-#       script: |
-#         for row in $(echo '$(vnetOutputs)' | jq -c '. | to_entries[]'); do
-#           outputName=$(echo ${row} | jq -r ".key")
-#           outputValue=$(echo ${row} | jq -r ".value.value")
-#           echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
-#         done
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Deploy AKS Cluster'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksResourceGroup)
+      deploymentMode: 'Incremental'
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: 'templates/arm-aks-template.json'
+      csmParametersFile: 'templates/arm-aks-parameters.json'
+      overrideParameters: '-aksClusterName $(aksClusterName) 
+        -aksVnetSubnetId $(aksSubnetId) 
+        -aksServiceCidr $(aksServiceCidr) 
+        -aksDnsServiceIp $(aksDnsServiceIp) 
+        -servicePrincipalSecret $(aksServicePrincipalSecret) 
+        -serverAppSecret $(aksServerAppSecret)'
+      deploymentOutputs: 'aksOutputs'
 
-#   - task: AzureResourceGroupDeployment@2
-#     displayName: 'Deploy AKS Cluster'
-#     inputs:
-#       azureSubscription: $(serviceConnection)
-#       action: 'Create Or Update Resource Group'
-#       resourceGroupName: $(aksResourceGroup)
-#       deploymentMode: 'Incremental'
-#       location: $(location)
-#       templateLocation: 'Linked artifact'
-#       csmFile: 'templates/arm-aks-template.json'
-#       csmParametersFile: 'templates/arm-aks-parameters.json'
-#       overrideParameters: '-aksClusterName $(aksClusterName) 
-#         -aksVnetSubnetId $(aksSubnetId) 
-#         -aksServiceCidr $(aksServiceCidr) 
-#         -aksDnsServiceIp $(aksDnsServiceIp) 
-#         -servicePrincipalSecret $(aksServicePrincipalSecret) 
-#         -serverAppSecret $(aksServerAppSecret)'
+  - task: Bash@3
+    displayName: Parse ARM Outputs
+    condition: not(variables['aksSubnetId'])
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        for row in $(echo '$(aksOutputs)' | jq -c '. | to_entries[]'); do
+          outputName=$(echo ${row} | jq -r ".key")
+          outputValue=$(echo ${row} | jq -r ".value.value")
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+        done      
+  - script: |
+      echo "##vso[task.setvariable variable=outAksID;isOutput=true]$(aksID)"
+    displayName: 'Export AKS ID'
+    name: exportAksID
 
 #   - task: AzureCLI@1
 #     displayName: 'Obtain AKS Admin access token.'
@@ -343,6 +339,32 @@ jobs:
 #         kubectl -n admin delete secret flux-git-deploy || true
 #         kubectl apply -f $(Agent.TempDirectory)/$(fluxGithubKeySecureFileName)
 #         kubectl -n admin delete $(kubectl get pod -o name -l app=flux -n admin)
+
+- job: MonitoringAddAlerts
+  displayName: Monitoring - Add Alerts for AKS Cluster
+  dependsOn: 
+    - Keyvault
+    - MonitoringDeploy
+  pool:
+    vmImage: 'Ubuntu 16.04'
+    #name: hmcts-agent-pool #TODO: change to hosted when merged
+  variables:
+    aksClusterName: $(aksResourceGroup)-cluster
+    outActionGroupID: $[dependencies.DeployMonitoring.outputs['exportActionGroupID.outActionGroupID']] 
+    outAksID: $[dependencies.DeployAKS.outputs['exportAksID.outAksID']] 
+  steps:
+
+  #TEMP -----------------------------------------------------------
+  - task: AzureCLI@1
+    displayName: 'Testing output'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        var_one='$(outActionGroupID)'
+        echo $var_one
+        var_two='$(outAksID)'
+        echo $var_two        
 
 # - job: RunTests
   # dependsOn: DeployAKS
