@@ -22,6 +22,7 @@ variables:
   monInfraAgName: 'aks_action_group'
   monInfraAgShortName: 'aksag'
   monInfraAgEmailReceivers: '{"receivers":[{"name":"rhollins","emailAddress":"rafal.hollins@hmcts.net"}]}'
+  metricAlertsEnabled: true
 
 jobs:
 - job: Keyvault
@@ -363,6 +364,21 @@ jobs:
         echo $var_one
         var_two='$(outAksID)'
         echo $var_two        
+
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Add Metric Alerts'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksResourceGroup)
+      deploymentMode: 'Incremental'
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: 'templates/arm-mon-metric-alerts.json'
+      overrideParameters: '-aksName $(aksClusterName) 
+        -isEnabled $(metricAlertsEnabled) 
+        -resourceId $(outAksID) 
+        -actionGroupId $(outActionGroupID)'
 
 # - job: RunTests
   # dependsOn: DeployAKS
