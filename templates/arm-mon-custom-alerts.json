@@ -4,6 +4,7 @@
     "parameters": {
         "aksName": {
             "type": "string",
+            "defaultValue": "myaksName",
             "metadata": {
                 "description": "Name of target AKS cluster."
             }
