@@ -1,79 +1,91 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "WorkspaceRef": {
+        "aksName": {
             "type": "string",
-            "defaultValue": "/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/rpe-infra/providers/Microsoft.KeyVault/vaults/rpe-infra"
+            "metadata": {
+                "description": "Name of target AKS cluster."
+            }
         },
-        "ActionGroup": {
+        "isEnabled": {
+            "type": "bool",
+            "defaultValue": true,
+            "metadata": {
+                "description": "Specifies whether the alert is enabled"
+            }
+        },
+        "resourceId": {
+            "type": "string",
+            "defaultValue": "/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/rpe-infra/providers/Microsoft.OperationalInsights/workspaces/rpe-infra",
+            "metadata": {
+                "description": "Resource ID of the resource emitting the metric that will be used for the comparison."
+            }
+        },
+        "actionGroupId": {
             "type": "string",
             "defaultValue": "/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/aks-rhollins-rg/providers/Microsoft.Insights/actionGroups/aks_action_group",
             "metadata": {
-                "description": "List of action groups for alert actions separated by a semicolon"
+                "description": "The ID of the action group that is triggered when the alert is activated or deactivated"
             }
         }
     },
     "variables": {
-        "workspace": {
-            "ref": "[parameters('workspaceRef')]"
+        "alertLocation": "UKSouth",
+        "alertName": "mylogalertArm",
+        "alertTag": "hidden-link:/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/rpe-infra/providers/Microsoft.OperationalInsights/workspaces/rpe-infra",
+        "alertDesription": "Sample log search alert",
+        "alertStatus": "true",
+        "alertSource": {
+            "Query": "KubePodInventory | where ContainerStatusReason in ('ImagePullBackOff', 'ErrImagePull', 'CreateContainerConfigError', 'CrashLoopBackOff', 'Error', 'PodInitializing', 'ContainerCreating') and isnotnull(Name) and PodCreationTimeStamp < ago(6h) and TimeGenerated > ago(20min) | summarize count() by Name, Namespace, ClusterName, ContainerStatusReason, PodCreationTimeStamp, Computer | order by Namespace, ContainerStatusReason",
+            "SourceId": "/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/rpe-infra/providers/Microsoft.OperationalInsights/workspaces/rpe-infra",
+            "Type": "ResultCount"
         },
-        "groupIds": [
-            "[parameters('actionGroup')]"
-        ],
-        "alerts": [
-            {
-                "name": "container-cpu-warning",
-                "description": "container CPU warning",
-                "query": " Perf |filter TimeGenerated > now(-5m) | where ObjectName == 'K8SContainer' and CounterName == 'cpuUsageNanoCores' | summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 1m), InstanceName | order by TimeGenerated | where AggregatedValue > 1000000",
-                "timeWindow": 5,
-                "frequency": 5,
-                "severity": "3",
-                "threshold": {
-                    "operator": "GreaterThan",
-                    "value": 0
-                }
-            }
-        ]
+        "alertSchedule": {
+            "Frequency": 360,
+            "Time": 360
+        },
+        "alertActions": {
+            "SeverityLevel": "1"
+        },
+        "alertTrigger": {
+            "Operator": "GreaterThan",
+            "Threshold": "0"
+        },
+        "actionGrp": {
+            "ActionGroup": "/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/aks-rhollins-rg/providers/Microsoft.Insights/actionGroups/aks_action_group"
+        }
     },
     "resources": [
         {
-            "name": "[variables('alerts')[copyIndex()].name]",
+            "name": "[concat(parameters('aksName'), ' - ', 'My Custom Search Alert')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
-            "copy": {
-                "name": "savedSearchCopy",
-                "count": "[length(variables('alerts'))]"
-            },
-            "tags": {
-                "[concat('hidden-link:', variables('workspace').ref)]": "Resource"
-            },
             "properties": {
-                "description": "[variables('alerts')[copyIndex()].description]",
-                "enabled": "true",
+                "description": "Sample log search alert",
+                "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[variables('alerts')[copyIndex()].query]",
-                    "dataSourceId": "[variables('workspace').ref]",
+                    "query": "KubePodInventory | where ContainerStatusReason in ('ImagePullBackOff', 'ErrImagePull', 'CreateContainerConfigError', 'CrashLoopBackOff', 'Error', 'PodInitializing', 'ContainerCreating') and isnotnull(Name) and PodCreationTimeStamp < ago(6h) and TimeGenerated > ago(20min) | summarize count() by Name, Namespace, ClusterName, ContainerStatusReason, PodCreationTimeStamp, Computer | order by Namespace, ContainerStatusReason",
+                    "dataSourceId": "[parameters('resourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
-                    "frequencyInMinutes": "[variables('alerts')[copyIndex()].frequency]",
-                    "timeWindowInMinutes": "[variables('alerts')[copyIndex()].timeWindow]"
+                    "frequencyInMinutes": 360,
+                    "timeWindowInMinutes": 360
                 },
                 "action": {
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
-                    "severity": "[variables('alerts')[copyIndex()].severity]",
+                    "severity": "2",
                     "aznsAction": {
-                        "actionGroup": "[variables('groupIds')]"
+                        "actionGroup": "[array(parameters('actionGroupId'))]"
                     },
                     "trigger": {
-                        "thresholdOperator": "[variables('alerts')[copyIndex()].threshold.operator]",
-                        "threshold": "[variables('alerts')[copyIndex()].threshold.value]"
+                        "thresholdOperator": "GreaterThan",
+                        "threshold": 0
                     }
                 }
             }
         }
-    ],
-    "outputs": {}
+    ]
 }
