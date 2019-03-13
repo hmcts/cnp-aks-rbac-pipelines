@@ -24,7 +24,7 @@
             }
         },
         "slackUri": {
-            "type": "securestring",
+            "type": "string",
             "metadata": {
                 "description": "URI to Slack Webhook"
             }
