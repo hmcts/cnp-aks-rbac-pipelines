@@ -38,6 +38,7 @@
     },
     "resources": [
         {
+            "comments": "Generalized from resource: '/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/aks-rhollins-rg/providers/Microsoft.Logic/workflows/aks-monitoring-la'.",
             "type": "Microsoft.Logic/workflows",
             "name": "[parameters('logicAppName')]",
             "apiVersion": "2017-07-01",
@@ -72,6 +73,7 @@
                                         "body": {
                                             "attachments": [
                                                 {
+                                                    "color": "#D50200",
                                                     "text": "Description: _@{body('Parse_JSON_2')?['data']?['context']?['description']}_",
                                                     "title": "@{body('Parse_JSON_2')?['data']?['context']?['name']}"
                                                 }
@@ -123,11 +125,8 @@
                                                                                     "metricName": {
                                                                                         "type": "string"
                                                                                     },
-                                                                                    "metricNamespace": {
-                                                                                        "type": "string"
-                                                                                    },
                                                                                     "metricValue": {
-                                                                                        "type": "integer"
+                                                                                        "type": "number"
                                                                                     },
                                                                                     "operator": {
                                                                                         "type": "string"
@@ -141,11 +140,10 @@
                                                                                 },
                                                                                 "required": [
                                                                                     "metricName",
-                                                                                    "metricNamespace",
+                                                                                    "dimensions",
                                                                                     "operator",
                                                                                     "threshold",
                                                                                     "timeAggregation",
-                                                                                    "dimensions",
                                                                                     "metricValue"
                                                                                 ],
                                                                                 "type": "object"
@@ -185,9 +183,6 @@
                                                                 "resourceType": {
                                                                     "type": "string"
                                                                 },
-                                                                "severity": {
-                                                                    "type": "string"
-                                                                },
                                                                 "subscriptionId": {
                                                                     "type": "string"
                                                                 },
@@ -197,7 +192,20 @@
                                                             },
                                                             "type": "object"
                                                         },
-                                                        "properties": {},
+                                                        "properties": {
+                                                            "properties": {
+                                                                "key1": {
+                                                                    "type": "string"
+                                                                },
+                                                                "key2": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "type": [
+                                                                "object",
+                                                                "null"
+                                                            ]
+                                                        },
                                                         "status": {
                                                             "type": "string"
                                                         },
