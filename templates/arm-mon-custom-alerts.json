@@ -4,28 +4,24 @@
     "parameters": {
         "aksName": {
             "type": "string",
-            "defaultValue": "myaksName",
             "metadata": {
                 "description": "Name of target AKS cluster."
             }
         },
         "isEnabled": {
             "type": "string",
-            "defaultValue": "true",
             "metadata": {
                 "description": "Specifies whether the alert is enabled"
             }
         },
         "resourceId": {
             "type": "string",
-            "defaultValue": "/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/rpe-infra/providers/Microsoft.OperationalInsights/workspaces/rpe-infra",
             "metadata": {
                 "description": "Resource ID of the resource emitting the metric that will be used for the comparison."
             }
         },
         "actionGroupId": {
             "type": "string",
-            "defaultValue": "/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/aks-rhollins-rg/providers/Microsoft.Insights/actionGroups/aks_action_group",
             "metadata": {
                 "description": "The ID of the action group that is triggered when the alert is activated or deactivated"
             }

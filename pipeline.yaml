@@ -23,6 +23,8 @@ variables:
   monInfraAgShortName: 'aksag'
   monInfraAgEmailReceivers: '{"receivers":[{"name":"rhollins","emailAddress":"rafal.hollins@hmcts.net"}]}'
   metricAlertsEnabled: true
+  customAlertsEnabled: true
+  workspaceID: "/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/rpe-infra/providers/Microsoft.OperationalInsights/workspaces/rpe-infra"
 
 jobs:
 - job: Keyvault
@@ -390,10 +392,10 @@ jobs:
       location: $(location)
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-mon-custom-alerts.json'
-      # overrideParameters: '-aksName $(aksClusterName) 
-      #   -isEnabled $(metricAlertsEnabled) 
-      #   -resourceId $(outAksID) 
-      #   -actionGroupId $(outActionGroupID)'
+      overrideParameters: '-aksName $(aksClusterName) 
+        -isEnabled $(customAlertsEnabled) 
+        -resourceId $(workspaceID)
+        -actionGroupId $(outActionGroupID)'
 
 # - job: RunTests
   # dependsOn: DeployAKS
