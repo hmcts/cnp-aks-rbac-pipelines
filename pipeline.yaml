@@ -18,7 +18,7 @@ variables:
   adminNamespace: 'admin'
   fluxGithubKeySecureFileName: 'cnp-flux-github-key.yaml'
   monInfraAppName: 'aks-monitoring-la'
-  monInfraSlackChannel: '#rhollins'
+  monInfraSlackChannel: '#cnp-monitoring'
   monInfraAgName: 'aks_action_group'
   monInfraAgShortName: 'aksag'
   monInfraAgEmailReceivers: '{"receivers":[{"name":"rhollins","emailAddress":"rafal.hollins@hmcts.net"}]}'
