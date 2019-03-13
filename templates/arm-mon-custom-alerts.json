@@ -31,6 +31,9 @@
             }
         }
     },
+    "variables": {
+        "1stQuery": "KubePodInventory | where ClusterName =~ 'CLUSTER_NAME' | where ContainerStatusReason in ('ImagePullBackOff', 'ErrImagePull', 'CreateContainerConfigError', 'CrashLoopBackOff', 'Error', 'PodInitializing', 'ContainerCreating') and isnotnull(Name) and PodCreationTimeStamp < ago(6h) and TimeGenerated > ago(20min) | summarize count() by Name, Namespace, ClusterName, ContainerStatusReason, PodCreationTimeStamp, Computer | order by Namespace, ContainerStatusReason"
+    },
     "resources": [
         {
             "name": "[concat(parameters('aksName'), ' - ', 'Pods in unhealthy state')]",
@@ -40,8 +43,8 @@
             "properties": {
                 "description": "Pods that are failing for at least 6 hours.",
                 "enabled": "[parameters('isEnabled')]",
-                "source": {
-                    "query": "KubePodInventory | where ContainerStatusReason in ('ImagePullBackOff', 'ErrImagePull', 'CreateContainerConfigError', 'CrashLoopBackOff', 'Error', 'PodInitializing', 'ContainerCreating') and isnotnull(Name) and PodCreationTimeStamp < ago(6h) and TimeGenerated > ago(20min) | summarize count() by Name, Namespace, ClusterName, ContainerStatusReason, PodCreationTimeStamp, Computer | order by Namespace, ContainerStatusReason",
+                "source": {         
+                    "query": "[replace(variables('1stQuery'),'CLUSTER_NAME', parameters('aksName'))]",
                     "dataSourceId": "[parameters('resourceId')]",
                     "queryType": "ResultCount"
                 },
