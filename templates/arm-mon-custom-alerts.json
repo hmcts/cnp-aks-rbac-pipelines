@@ -78,7 +78,7 @@
                 "description": "Number of scale up events in last 15 minutes.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[toUpper(replace(variables('2Query'),'CLUSTER_NAME', parameters('aksName')))]",
+                    "query": "[replace(variables('2Query'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
                     "dataSourceId": "[parameters('resourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -108,7 +108,7 @@
                 "description": "Number of deleted nodes in last 15 minutes.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[toUpper(replace(variables('3Query'),'CLUSTER_NAME', parameters('aksName')))]",
+                    "query": "[replace(variables('3Query'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
                     "dataSourceId": "[parameters('resourceId')]",
                     "queryType": "ResultCount"
                 },
