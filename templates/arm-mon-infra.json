@@ -38,7 +38,6 @@
     },
     "resources": [
         {
-            "comments": "Generalized from resource: '/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/aks-rhollins-rg/providers/Microsoft.Logic/workflows/aks-monitoring-la'.",
             "type": "Microsoft.Logic/workflows",
             "name": "[parameters('logicAppName')]",
             "apiVersion": "2017-07-01",
@@ -62,31 +61,49 @@
                     "actions": {
                         "Condition": {
                             "actions": {
-                                "HTTP": {
+                                "Condition_2": {
+                                    "actions": {
+                                        "HTTP_2": {
+                                            "runAfter": {},
+                                            "type": "Http",
+                                            "inputs": {
+                                                "body": {
+                                                    "attachments": [
+                                                        {
+                                                            "color": "@{variables('color')}",
+                                                            "text": "Description: _@{body('Parse_JSON_2')?['data']?['context']?['description']}_",
+                                                            "title": "@{body('Parse_JSON_2')?['data']?['context']?['name']}"
+                                                        }
+                                                    ],
+                                                    "channel": "[parameters('slackChannel')]",
+                                                    "username": "Azure Monitoring"
+                                                },
+                                                "headers": {
+                                                    "Content-Type": "application/json"
+                                                },
+                                                "method": "POST",
+                                                "uri": "[parameters('slackUri')]"
+                                            }
+                                        }
+                                    },
                                     "runAfter": {
                                         "Parse_JSON_2": [
                                             "Succeeded"
                                         ]
                                     },
-                                    "type": "Http",
-                                    "inputs": {
-                                        "body": {
-                                            "attachments": [
-                                                {
-                                                    "color": "#D50200",
-                                                    "text": "Description: _@{body('Parse_JSON_2')?['data']?['context']?['description']}_",
-                                                    "title": "@{body('Parse_JSON_2')?['data']?['context']?['name']}"
+                                    "expression": {
+                                        "and": [
+                                            {
+                                                "not": {
+                                                    "equals": [
+                                                        "@body('Parse_JSON_2')?['data']?['status']",
+                                                        "Deactivated"
+                                                    ]
                                                 }
-                                            ],
-                                            "channel": "[parameters('slackChannel')]",
-                                            "username": "Azure Monitoring"
-                                        },
-                                        "headers": {
-                                            "Content-Type": "application/json"
-                                        },
-                                        "method": "POST",
-                                        "uri": "[parameters('slackUri')]"
-                                    }
+                                            }
+                                        ]
+                                    },
+                                    "type": "If"
                                 },
                                 "Parse_JSON_2": {
                                     "runAfter": {},
@@ -183,6 +200,9 @@
                                                                 "resourceType": {
                                                                     "type": "string"
                                                                 },
+                                                                "severity": {
+                                                                    "type": "string"
+                                                                },
                                                                 "subscriptionId": {
                                                                     "type": "string"
                                                                 },
@@ -251,7 +271,7 @@
                                     },
                                     "HTTP_4": {
                                         "runAfter": {
-                                            "Switch_2": [
+                                            "HTTP_3": [
                                                 "Succeeded"
                                             ]
                                         },
@@ -382,59 +402,6 @@
                                                 "type": "object"
                                             }
                                         }
-                                    },
-                                    "Switch_2": {
-                                        "runAfter": {
-                                            "HTTP_3": [
-                                                "Succeeded"
-                                            ]
-                                        },
-                                        "cases": {
-                                            "Case": {
-                                                "case": "Informational",
-                                                "actions": {
-                                                    "Set_variable_4": {
-                                                        "runAfter": {},
-                                                        "type": "SetVariable",
-                                                        "inputs": {
-                                                            "name": "color",
-                                                            "value": "#28D7E5"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "Case_2": {
-                                                "case": "Critical",
-                                                "actions": {
-                                                    "Set_variable_5": {
-                                                        "runAfter": {},
-                                                        "type": "SetVariable",
-                                                        "inputs": {
-                                                            "name": "color",
-                                                            "value": "#D50200"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "Case_3": {
-                                                "case": "Warning",
-                                                "actions": {
-                                                    "Set_variable_6": {
-                                                        "runAfter": {},
-                                                        "type": "SetVariable",
-                                                        "inputs": {
-                                                            "name": "color",
-                                                            "value": "#DE9E31"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "default": {
-                                            "actions": {}
-                                        },
-                                        "expression": "@body('Parse_JSON')?['Severity']",
-                                        "type": "Switch"
                                     }
                                 }
                             },
@@ -458,7 +425,7 @@
                                     {
                                         "name": "color",
                                         "type": "String",
-                                        "value": "#E3E4E6"
+                                        "value": "#D50200"
                                     }
                                 ]
                             }
