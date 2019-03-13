@@ -10,8 +10,8 @@
             }
         },
         "isEnabled": {
-            "type": "bool",
-            "defaultValue": true,
+            "type": "string",
+            "defaultValue": "true",
             "metadata": {
                 "description": "Specifies whether the alert is enabled"
             }
