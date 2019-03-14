@@ -1,0 +1,377 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "aksName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of target AKS cluster."
+        }
+      },
+      "isEnabled": {
+        "type": "bool",
+        "metadata": {
+          "description": "Specifies whether the alert is enabled"
+        }
+      },
+      "resourceId": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Resource ID of the resource emitting the metric that will be used for the comparison."
+        }
+      },
+      "actionGroupId": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The ID of the action group that is triggered when the alert is activated or deactivated"
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "name": "[concat(parameters('aksName'), ' - ', 'Node VM Down')]",
+        "type": "Microsoft.Insights/metricAlerts",
+        "location": "global",
+        "apiVersion": "2018-03-01",
+        "tags": {},
+        "properties": {
+          "description": "Node VM is shut down.",
+          "severity": 1,
+          "enabled": "[parameters('isEnabled')]",
+          "scopes": [
+            "[parameters('resourceId')]"
+          ],
+          "evaluationFrequency": "PT5M",
+          "windowSize": "PT15M",
+          "criteria": {
+            "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "condition",
+                    "operator": "Include",
+                    "values": [
+                      "Ready"
+                    ]
+                  },
+                  {
+                    "name": "status",
+                    "operator": "Include",
+                    "values": [
+                      "Unknown"
+                    ]
+                  },
+                  {
+                    "name": "node",
+                    "operator": "Include",
+                    "values": [
+                      "*"
+                    ]
+                  }
+                ],
+                "metricName": "kube_node_status_condition",
+                "name": "1st criterion",
+                "operator": "GreaterThanOrEqual",
+                "threshold": 0,
+                "timeAggregation": "Total"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "actionGroupId": "[parameters('actionGroupId')]"
+            }
+          ]
+        }
+      },
+      {
+        "name": "[concat(parameters('aksName'), ' - ', 'Node DiskPressure')]",
+        "type": "Microsoft.Insights/metricAlerts",
+        "location": "global",
+        "apiVersion": "2018-03-01",
+        "tags": {},
+        "properties": {
+          "description": "Kubelet has disk pressure - DiskPressure",
+          "severity": 1,
+          "enabled": "[parameters('isEnabled')]",
+          "scopes": [
+            "[parameters('resourceId')]"
+          ],
+          "evaluationFrequency": "PT5M",
+          "windowSize": "PT15M",
+          "criteria": {
+            "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "condition",
+                    "operator": "Include",
+                    "values": [
+                      "DiskPressure"
+                    ]
+                  },
+                  {
+                    "name": "status",
+                    "operator": "Include",
+                    "values": [
+                      "true"
+                    ]
+                  },
+                  {
+                    "name": "node",
+                    "operator": "Include",
+                    "values": [
+                      "*"
+                    ]
+                  }
+                ],
+                "metricName": "kube_node_status_condition",
+                "name": "1st criterion",
+                "operator": "GreaterThanOrEqual",
+                "threshold": 1,
+                "timeAggregation": "Total"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "actionGroupId": "[parameters('actionGroupId')]"
+            }
+          ]
+        }
+      },
+      {
+        "name": "[concat(parameters('aksName'), ' - ', 'Node OutOfDisk')]",
+        "type": "Microsoft.Insights/metricAlerts",
+        "location": "global",
+        "apiVersion": "2018-03-01",
+        "tags": {},
+        "properties": {
+          "description": "kubelet has no disk space available - OutOfDisk",
+          "severity": 1,
+          "enabled": "[parameters('isEnabled')]",
+          "scopes": [
+            "[parameters('resourceId')]"
+          ],
+          "evaluationFrequency": "PT5M",
+          "windowSize": "PT15M",
+          "criteria": {
+            "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "condition",
+                    "operator": "Include",
+                    "values": [
+                      "OutOfDisk"
+                    ]
+                  },
+                  {
+                    "name": "status",
+                    "operator": "Include",
+                    "values": [
+                      "true"
+                    ]
+                  },
+                  {
+                    "name": "node",
+                    "operator": "Include",
+                    "values": [
+                      "*"
+                    ]
+                  }
+                ],
+                "metricName": "kube_node_status_condition",
+                "name": "1st criterion",
+                "operator": "GreaterThanOrEqual",
+                "threshold": 1,
+                "timeAggregation": "Total"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "actionGroupId": "[parameters('actionGroupId')]"
+            }
+          ]
+        }
+      },
+      {
+        "name": "[concat(parameters('aksName'), ' - ', 'Node MemoryPressure')]",
+        "type": "Microsoft.Insights/metricAlerts",
+        "location": "global",
+        "apiVersion": "2018-03-01",
+        "tags": {},
+        "properties": {
+          "description": "kubelet has no sufficient memory available - MemoryPressure",
+          "severity": 1,
+          "enabled": "[parameters('isEnabled')]",
+          "scopes": [
+            "[parameters('resourceId')]"
+          ],
+          "evaluationFrequency": "PT5M",
+          "windowSize": "PT15M",
+          "criteria": {
+            "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "condition",
+                    "operator": "Include",
+                    "values": [
+                      "MemoryPressure"
+                    ]
+                  },
+                  {
+                    "name": "status",
+                    "operator": "Include",
+                    "values": [
+                      "true"
+                    ]
+                  },
+                  {
+                    "name": "node",
+                    "operator": "Include",
+                    "values": [
+                      "*"
+                    ]
+                  }
+                ],
+                "metricName": "kube_node_status_condition",
+                "name": "1st criterion",
+                "operator": "GreaterThanOrEqual",
+                "threshold": 1,
+                "timeAggregation": "Total"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "actionGroupId": "[parameters('actionGroupId')]"
+            }
+          ]
+        }
+      },
+      {
+        "name": "[concat(parameters('aksName'), ' - ', 'Node PIDPressure')]",
+        "type": "Microsoft.Insights/metricAlerts",
+        "location": "global",
+        "apiVersion": "2018-03-01",
+        "tags": {},
+        "properties": {
+          "description": "kubelet has no sufficient PID available - PIDPressure",
+          "severity": 1,
+          "enabled": "[parameters('isEnabled')]",
+          "scopes": [
+            "[parameters('resourceId')]"
+          ],
+          "evaluationFrequency": "PT5M",
+          "windowSize": "PT15M",
+          "criteria": {
+            "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "condition",
+                    "operator": "Include",
+                    "values": [
+                      "PIDPressure"
+                    ]
+                  },
+                  {
+                    "name": "status",
+                    "operator": "Include",
+                    "values": [
+                      "true"
+                    ]
+                  },
+                  {
+                    "name": "node",
+                    "operator": "Include",
+                    "values": [
+                      "*"
+                    ]
+                  }
+                ],
+                "metricName": "kube_node_status_condition",
+                "name": "1st criterion",
+                "operator": "GreaterThanOrEqual",
+                "threshold": 1,
+                "timeAggregation": "Total"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "actionGroupId": "[parameters('actionGroupId')]"
+            }
+          ]
+        }
+      },
+      {
+        "name": "[concat(parameters('aksName'), ' - ', 'Node NotReady')]",
+        "type": "Microsoft.Insights/metricAlerts",
+        "location": "global",
+        "apiVersion": "2018-03-01",
+        "tags": {},
+        "properties": {
+          "description": "kubelet is posting not ready status. - NotReady",
+          "severity": 1,
+          "enabled": "[parameters('isEnabled')]",
+          "scopes": [
+            "[parameters('resourceId')]"
+          ],
+          "evaluationFrequency": "PT5M",
+          "windowSize": "PT15M",
+          "criteria": {
+            "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "condition",
+                    "operator": "Include",
+                    "values": [
+                      "Ready"
+                    ]
+                  },
+                  {
+                    "name": "status",
+                    "operator": "Include",
+                    "values": [
+                      "False"
+                    ]
+                  },
+                  {
+                    "name": "node",
+                    "operator": "Include",
+                    "values": [
+                      "*"
+                    ]
+                  }
+                ],
+                "metricName": "kube_node_status_condition",
+                "name": "1st criterion",
+                "operator": "GreaterThanOrEqual",
+                "threshold": 1,
+                "timeAggregation": "Total"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "actionGroupId": "[parameters('actionGroupId')]"
+            }
+          ]
+        }
+      }
+    ]
+  }

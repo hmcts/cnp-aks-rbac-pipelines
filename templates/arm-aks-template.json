@@ -103,5 +103,11 @@
         }
       }
     }
-  ]
+  ],
+  "outputs": {
+      "aksID": {
+          "type": "string",
+          "value": "[resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksClusterName'))]"
+      }
+  }
 }

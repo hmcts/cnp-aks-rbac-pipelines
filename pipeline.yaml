@@ -17,6 +17,12 @@ variables:
   acrName: rpedev
   adminNamespace: 'admin'
   fluxGithubKeySecureFileName: 'cnp-flux-github-key.yaml'
+  monInfraAppName: 'aks-monitoring-la'
+  monInfraSlackChannel: '#cnp-monitoring'
+  monInfraAgName: 'aks_action_group'
+  monInfraAgShortName: 'aksag'
+  metricAlertsEnabled: true
+  customAlertsEnabled: true
 
 jobs:
 - job: Keyvault
@@ -38,8 +44,51 @@ jobs:
     displayName: 'Export Keyvault Variables'
     name: exportKeyvault
 
+- job: MonitoringDeploy
+  displayName: Deploy Monitoring Infra
+  pool:
+    vmImage: 'Ubuntu 16.04'
+    #name: hmcts-agent-pool #TODO: change to hosted when merged
+  variables:
+    - group: aks-variable-group
+  steps:
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Deploy Monitoring Infrastructure'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksResourceGroup)
+      deploymentMode: 'Incremental'
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: 'templates/arm-mon-infra.json'
+      overrideParameters: '-logicAppName "$(monInfraAppName)"
+        -slackUri "$(slackUriSecureVariable)"
+        -slackChannel "$(monInfraSlackChannel)"
+        -agName "$(monInfraAgName)"
+        -agShortName "$(monInfraAgShortName)"
+        -agEmailReceivers "$(monInfraAgEmailReceivers)"'
+      deploymentOutputs: 'monInfraOutputs'
+
+  - task: Bash@3
+    displayName: Parse ARM Outputs
+    #condition: not(variables['aksSubnetId'])
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        for row in $(echo '$(monInfraOutputs)' | jq -c '. | to_entries[]'); do
+          outputName=$(echo ${row} | jq -r ".key")
+          outputValue=$(echo ${row} | jq -r ".value.value")
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+        done
+  - script: |
+      echo "##vso[task.setvariable variable=outActionGroupID;isOutput=true]$(actionGroupID)"
+    name: exportActionGroupID
+
 - job: DeployAKS
-  dependsOn: Keyvault
+  dependsOn: 
+    - Keyvault
   pool:
     vmImage: 'Ubuntu 16.04'
     #name: hmcts-agent-pool #TODO: change to hosted when merged
@@ -105,6 +154,22 @@ jobs:
         -aksDnsServiceIp $(aksDnsServiceIp) 
         -servicePrincipalSecret $(aksServicePrincipalSecret) 
         -serverAppSecret $(aksServerAppSecret)'
+      deploymentOutputs: 'aksOutputs'
+
+  - task: Bash@3
+    displayName: Parse ARM Outputs
+    inputs:
+      targetType: inline
+      failOnStderr: false
+      script: |
+        for row in $(echo '$(aksOutputs)' | jq -c '. | to_entries[]'); do
+          outputName=$(echo ${row} | jq -r ".key")
+          outputValue=$(echo ${row} | jq -r ".value.value")
+          echo "##vso[task.setvariable variable=${outputName}]${outputValue}"
+        done      
+  - script: |
+      echo "##vso[task.setvariable variable=outAksID;isOutput=true]$(aksID)"
+    name: exportAksID
 
   - task: AzureCLI@1
     displayName: 'Obtain AKS Admin access token.'
@@ -272,6 +337,55 @@ jobs:
         kubectl -n admin delete secret flux-git-deploy || true
         kubectl apply -f $(Agent.TempDirectory)/$(fluxGithubKeySecureFileName)
         kubectl -n admin delete $(kubectl get pod -o name -l app=flux -n admin)
+
+- job: MonitoringAddAlerts
+  displayName: Deploy Alerts
+  dependsOn: 
+    - Keyvault
+    - DeployAKS
+    - MonitoringDeploy
+  pool:
+    vmImage: 'Ubuntu 16.04'
+    #name: hmcts-agent-pool #TODO: change to hosted when merged
+  variables:
+    - group: aks-variable-group  
+    - name: aksClusterName
+      value: $(aksResourceGroup)-cluster
+    - name: outActionGroupID
+      value: $[dependencies.MonitoringDeploy.outputs['exportActionGroupID.outActionGroupID']]
+    - name: outAksID
+      value: $[dependencies.DeployAKS.outputs['exportAksID.outAksID']]
+  steps:
+
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Add Metric Alerts'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksResourceGroup)
+      deploymentMode: 'Incremental'
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: 'templates/arm-mon-metric-alerts.json'
+      overrideParameters: '-aksName $(aksClusterName) 
+        -isEnabled $(metricAlertsEnabled) 
+        -resourceId $(outAksID) 
+        -actionGroupId $(outActionGroupID)'
+
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Add Custom Search Alerts'
+    inputs:
+      azureSubscription: $(serviceConnection)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(aksResourceGroup)
+      deploymentMode: 'Incremental'
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: 'templates/arm-mon-custom-alerts.json'
+      overrideParameters: '-aksName $(aksClusterName) 
+        -isEnabled $(customAlertsEnabled) 
+        -resourceId $(workspaceID)
+        -actionGroupId $(outActionGroupID)'
 
 - job: RunTests
   dependsOn: DeployAKS
