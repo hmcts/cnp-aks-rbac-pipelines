@@ -21,10 +21,8 @@ variables:
   monInfraSlackChannel: '#cnp-monitoring'
   monInfraAgName: 'aks_action_group'
   monInfraAgShortName: 'aksag'
-  #monInfraAgEmailReceivers: '{"receivers":[{"name":"rhollins","emailAddress":"rafal.hollins@hmcts.net"}]}'
   metricAlertsEnabled: true
   customAlertsEnabled: true
-  workspaceID: "/subscriptions/a5453007-c32b-4336-9c79-3f643d817aea/resourceGroups/rpe-infra/providers/Microsoft.OperationalInsights/workspaces/rpe-infra"
 
 jobs:
 - job: Keyvault
