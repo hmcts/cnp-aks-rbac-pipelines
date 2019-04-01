@@ -5,14 +5,9 @@ name: RPE AKS RBAC Enabled Pipeline
 trigger: none
 pr: none
 variables:
-  aksResourceGroup: ''
-  aksVnetCidr: ''
-  aksSubnetCidr: ''
-  aksServiceCidr: ''
-  aksDnsServiceIp: ''
   keyvaultName: rpe-infra
   serviceConnection: azurerm-rpetemp
-  helmVersion: '2.12.0'
+  helmVersion: '2.13.0'
   location: 'UK South'
   acrName: rpedev
   adminNamespace: 'admin'
