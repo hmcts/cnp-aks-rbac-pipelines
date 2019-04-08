@@ -1,0 +1,189 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aksName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of target AKS cluster."
+            }
+        },
+        "isEnabled": {
+            "type": "string",
+            "metadata": {
+                "description": "Specifies whether the alert is enabled"
+            }
+        },
+        "resourceId": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource ID of the resource emitting the metric that will be used for the comparison."
+            }
+        },
+        "actionGroupId": {
+            "type": "string",
+            "metadata": {
+                "description": "The ID of the action group that is triggered when the alert is activated or deactivated"
+            }
+        }
+    },
+    "variables": {
+        "1Query": "KubePodInventory\r\n| where ClusterName =~ 'CLUSTER_NAME'\r\n| where ContainerStatusReason in ('ImagePullBackOff', 'ErrImagePull', 'CreateContainerConfigError', 'CrashLoopBackOff', 'Error', 'PodInitializing', 'ContainerCreating')\r\nand isnotnull(Name) \r\nand PodCreationTimeStamp < ago(6h)\r\nand TimeGenerated > ago(20min)\r\n| summarize count() by Name, Namespace, ClusterName, ContainerStatusReason, PodCreationTimeStamp, Computer\r\n| order by Namespace, ContainerStatusReason",
+        "2Query": "AzureDiagnostics\r\n| where Resource == 'CLUSTER_NAME'\r\n| where Category == \"cluster-autoscaler\" and TimeGenerated > ago(15m) and log_s matches regex \"Scale-up:\"\r\n| order by TimeGenerated desc\r\n| project TimeGenerated, log_s",
+        "3Query": "AzureDiagnostics\r\n| where Resource == 'CLUSTER_NAME' \r\n| where Category == \"cluster-autoscaler\" and TimeGenerated > ago(15m) and log_s matches regex \"Deleting vmss instances\"\r\n| order by TimeGenerated desc\r\n| project TimeGenerated, scale_set=extract(@\"(virtualMachineScaleSets\\\/(.*?)\\\/)\", 2, log_s, typeof(string)), aks_rg_name=extract(@\"(resourceGroups\\\/MC_)(.*?)(\\_)\", 2, log_s, typeof(string))",
+        "4Query": "let endDateTime = now();\r\nlet startDateTime = ago(6h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'cpuCapacityNanoCores';\r\nlet usageCounterName = 'cpuUsageNanoCores';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 95\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName",
+        "5Query": "let endDateTime = now();\r\nlet startDateTime = ago(1h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'memoryCapacityBytes';\r\nlet usageCounterName = 'memoryRssBytes';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 90\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('aksName'), ' - ', 'Pods in unhealthy state')]",
+            "type": "Microsoft.Insights/scheduledQueryRules",
+            "apiVersion": "2018-04-16",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "description": "Pods that are failing for at least 6 hours.",
+                "enabled": "[parameters('isEnabled')]",
+                "source": {         
+                    "query": "[replace(variables('1Query'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "dataSourceId": "[parameters('resourceId')]",
+                    "queryType": "ResultCount"
+                },
+                "schedule": {
+                    "frequencyInMinutes": 360,
+                    "timeWindowInMinutes": 360
+                },
+                "action": {
+                    "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
+                    "severity": "2",
+                    "aznsAction": {
+                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                    },
+                    "trigger": {
+                        "thresholdOperator": "GreaterThan",
+                        "threshold": 0
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat(parameters('aksName'), ' - ', 'Autoscaler adding instances')]",
+            "type": "Microsoft.Insights/scheduledQueryRules",
+            "apiVersion": "2018-04-16",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "description": "Number of scale up events in last 15 minutes.",
+                "enabled": "[parameters('isEnabled')]",
+                "source": {
+                    "query": "[replace(variables('2Query'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
+                    "dataSourceId": "[parameters('resourceId')]",
+                    "queryType": "ResultCount"
+                },
+                "schedule": {
+                    "frequencyInMinutes": 15,
+                    "timeWindowInMinutes": 15
+                },
+                "action": {
+                    "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
+                    "severity": "4",
+                    "aznsAction": {
+                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                    },
+                    "trigger": {
+                        "thresholdOperator": "GreaterThan",
+                        "threshold": 0
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat(parameters('aksName'), ' - ', 'Autoscaler deleting Instance')]",
+            "type": "Microsoft.Insights/scheduledQueryRules",
+            "apiVersion": "2018-04-16",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "description": "Number of deleted nodes in last 15 minutes.",
+                "enabled": "[parameters('isEnabled')]",
+                "source": {
+                    "query": "[replace(variables('3Query'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
+                    "dataSourceId": "[parameters('resourceId')]",
+                    "queryType": "ResultCount"
+                },
+                "schedule": {
+                    "frequencyInMinutes": 15,
+                    "timeWindowInMinutes": 15
+                },
+                "action": {
+                    "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
+                    "severity": "4",
+                    "aznsAction": {
+                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                    },
+                    "trigger": {
+                        "thresholdOperator": "GreaterThan",
+                        "threshold": 0
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat(parameters('aksName'), ' - ', 'Nodes with high CPU usage')]",
+            "type": "Microsoft.Insights/scheduledQueryRules",
+            "apiVersion": "2018-04-16",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "description": "Nodes that are using over 95% of CPU for at least the last 6 hours.",
+                "enabled": "[parameters('isEnabled')]",
+                "source": {
+                    "query": "[replace(variables('4Query'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "dataSourceId": "[parameters('resourceId')]",
+                    "queryType": "ResultCount"
+                },
+                "schedule": {
+                    "frequencyInMinutes": 360,
+                    "timeWindowInMinutes": 360
+                },
+                "action": {
+                    "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
+                    "severity": "0",
+                    "aznsAction": {
+                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                    },
+                    "trigger": {
+                        "thresholdOperator": "GreaterThan",
+                        "threshold": 0
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat(parameters('aksName'), ' - ', 'Nodes with low memory')]",
+            "type": "Microsoft.Insights/scheduledQueryRules",
+            "apiVersion": "2018-04-16",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "description": "Nodes that have 10% or less RAM left for at least the last hour.",
+                "enabled": "[parameters('isEnabled')]",
+                "source": {
+                    "query": "[replace(variables('5Query'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "dataSourceId": "[parameters('resourceId')]",
+                    "queryType": "ResultCount"
+                },
+                "schedule": {
+                    "frequencyInMinutes": 360,
+                    "timeWindowInMinutes": 360
+                },
+                "action": {
+                    "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
+                    "severity": "0",
+                    "aznsAction": {
+                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                    },
+                    "trigger": {
+                        "thresholdOperator": "GreaterThan",
+                        "threshold": 0
+                    }
+                }
+            }
+        }
+    ]
+}

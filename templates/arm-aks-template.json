@@ -1,0 +1,113 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "aksClusterName": {
+      "type": "string"
+    },
+    "kubernetesVersion": {
+      "type": "string"
+    },
+    "vmSize": {
+      "type": "string"
+    },
+    "nodeCount": {
+      "type": "int"
+    },
+    "aksVnetSubnetId": {
+      "type": "string"
+    },
+    "aksServiceCidr": {
+      "type": "string"
+    },
+    "aksDnsServiceIp": {
+      "type": "string"
+    },
+    "dnsPrefix": {
+      "type": "string"
+    },
+    "sshPublicKey": {
+      "type": "string"
+    },
+    "servicePrincipalId": {
+      "type": "string"
+    },
+    "servicePrincipalSecret": {
+      "type": "string"
+    },
+    "clientAppId": {
+      "type": "string"
+    },
+    "serverAppId": {
+      "type": "string"
+    },
+    "serverAppSecret": {
+      "type": "string"
+    },
+    "tenantId": {
+      "type": "string"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.ContainerService/managedClusters",
+      "name": "[parameters('aksClusterName')]",
+      "apiVersion": "2018-03-31",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "Team Name": "CNP"
+      },
+      "scale": null,
+      "properties": {
+        "kubernetesVersion": "[parameters('kubernetesVersion')]",
+        "dnsPrefix": "[parameters('dnsPrefix')]",
+        "agentPoolProfiles": [
+          {
+            "name": "nodepool1",
+            "count": "[parameters('nodeCount')]",
+            "vmSize": "[parameters('vmSize')]",
+            "osDiskSizeGB": 100,
+            "storageProfile": "ManagedDisks",
+            "maxPods": 30,
+            "vnetSubnetID": "[parameters('aksVnetSubnetId')]",
+            "osType": "Linux"
+          }
+        ],
+        "linuxProfile": {
+          "adminUsername": "azureuser",
+          "ssh": {
+            "publicKeys": [
+              {
+                "keyData": "[parameters('sshPublicKey')]"
+              }
+            ]
+          }
+        },
+        "servicePrincipalProfile": {
+          "clientId": "[parameters('servicePrincipalId')]",
+          "secret": "[parameters('servicePrincipalSecret')]"
+        },
+        "enableRBAC": true,
+        "aadProfile": {
+          "clientAppID": "[parameters('clientAppId')]",
+          "serverAppID": "[parameters('serverAppId')]",
+          "serverAppSecret": "[parameters('serverAppSecret')]",
+          "tenantID": "[parameters('tenantId')]"
+        },
+        "networkProfile": {
+          "networkPlugin": "azure",
+          "serviceCidr": "[parameters('aksServiceCidr')]",
+          "dnsServiceIP": "[parameters('aksDnsServiceIp')]",
+          "dockerBridgeCidr": "172.17.0.1/16"
+        }
+      }
+    }
+  ],
+  "outputs": {
+      "aksID": {
+          "type": "string",
+          "value": "[resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksClusterName'))]"
+      }
+  }
+}

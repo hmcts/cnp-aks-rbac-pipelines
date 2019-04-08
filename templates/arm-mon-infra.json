@@ -1,0 +1,468 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "agName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Action Group"
+            }
+        },
+        "agShortName": {
+            "type": "string",
+            "metadata": {
+                "description": "Short name of the Action Group (maximum 12 characters)"
+            }
+        },
+        "agEmailReceivers": {
+            "type": "object"
+        },
+        "logicAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Logic App"
+            }
+        },
+        "slackUri": {
+            "type": "string",
+            "metadata": {
+                "description": "URI to Slack Webhook"
+            }
+        },
+        "slackChannel": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Slack Channel to send alerts"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "name": "[parameters('logicAppName')]",
+            "apiVersion": "2017-07-01",
+            "location": "[resourceGroup().location]",
+            "scale": null,
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Condition": {
+                            "actions": {
+                                "Condition_2": {
+                                    "actions": {
+                                        "HTTP_2": {
+                                            "runAfter": {},
+                                            "type": "Http",
+                                            "inputs": {
+                                                "body": {
+                                                    "attachments": [
+                                                        {
+                                                            "color": "@{variables('color')}",
+                                                            "text": "Description: _@{body('Parse_JSON_2')?['data']?['context']?['description']}_",
+                                                            "title": "@{body('Parse_JSON_2')?['data']?['context']?['name']}"
+                                                        }
+                                                    ],
+                                                    "channel": "[parameters('slackChannel')]",
+                                                    "username": "Azure Monitoring"
+                                                },
+                                                "headers": {
+                                                    "Content-Type": "application/json"
+                                                },
+                                                "method": "POST",
+                                                "uri": "[parameters('slackUri')]"
+                                            }
+                                        }
+                                    },
+                                    "runAfter": {
+                                        "Parse_JSON_2": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "expression": {
+                                        "and": [
+                                            {
+                                                "not": {
+                                                    "equals": [
+                                                        "@body('Parse_JSON_2')?['data']?['status']",
+                                                        "Deactivated"
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "type": "If"
+                                },
+                                "Parse_JSON_2": {
+                                    "runAfter": {},
+                                    "type": "ParseJson",
+                                    "inputs": {
+                                        "content": "@triggerBody()",
+                                        "schema": {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "context": {
+                                                            "properties": {
+                                                                "condition": {
+                                                                    "properties": {
+                                                                        "allOf": {
+                                                                            "items": {
+                                                                                "properties": {
+                                                                                    "dimensions": {
+                                                                                        "items": {
+                                                                                            "properties": {
+                                                                                                "name": {
+                                                                                                    "type": "string"
+                                                                                                },
+                                                                                                "value": {
+                                                                                                    "type": "string"
+                                                                                                }
+                                                                                            },
+                                                                                            "required": [
+                                                                                                "name",
+                                                                                                "value"
+                                                                                            ],
+                                                                                            "type": "object"
+                                                                                        },
+                                                                                        "type": "array"
+                                                                                    },
+                                                                                    "metricName": {
+                                                                                        "type": "string"
+                                                                                    },
+                                                                                    "metricValue": {
+                                                                                        "type": "number"
+                                                                                    },
+                                                                                    "operator": {
+                                                                                        "type": "string"
+                                                                                    },
+                                                                                    "threshold": {
+                                                                                        "type": "string"
+                                                                                    },
+                                                                                    "timeAggregation": {
+                                                                                        "type": "string"
+                                                                                    }
+                                                                                },
+                                                                                "required": [
+                                                                                    "metricName",
+                                                                                    "dimensions",
+                                                                                    "operator",
+                                                                                    "threshold",
+                                                                                    "timeAggregation",
+                                                                                    "metricValue"
+                                                                                ],
+                                                                                "type": "object"
+                                                                            },
+                                                                            "type": "array"
+                                                                        },
+                                                                        "windowSize": {
+                                                                            "type": "string"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "conditionType": {
+                                                                    "type": "string"
+                                                                },
+                                                                "description": {
+                                                                    "type": "string"
+                                                                },
+                                                                "id": {
+                                                                    "type": "string"
+                                                                },
+                                                                "name": {
+                                                                    "type": "string"
+                                                                },
+                                                                "portalLink": {
+                                                                    "type": "string"
+                                                                },
+                                                                "resourceGroupName": {
+                                                                    "type": "string"
+                                                                },
+                                                                "resourceId": {
+                                                                    "type": "string"
+                                                                },
+                                                                "resourceName": {
+                                                                    "type": "string"
+                                                                },
+                                                                "resourceType": {
+                                                                    "type": "string"
+                                                                },
+                                                                "severity": {
+                                                                    "type": "string"
+                                                                },
+                                                                "subscriptionId": {
+                                                                    "type": "string"
+                                                                },
+                                                                "timestamp": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        },
+                                                        "properties": {
+                                                            "properties": {
+                                                                "key1": {
+                                                                    "type": "string"
+                                                                },
+                                                                "key2": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "type": [
+                                                                "object",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "status": {
+                                                            "type": "string"
+                                                        },
+                                                        "version": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "schemaId": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Initialize_variable_2": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "else": {
+                                "actions": {
+                                    "HTTP_3": {
+                                        "runAfter": {
+                                            "Parse_JSON": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "body": {
+                                                "longUrl": "@{body('Parse_JSON')?['LinkToSearchResults']}"
+                                            },
+                                            "headers": {
+                                                "Content-Type": "application/json"
+                                            },
+                                            "method": "POST",
+                                            "uri": "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBkT1BRbA-uULHz8HMUAi0ywJtpNLXHShI"
+                                        }
+                                    },
+                                    "HTTP_4": {
+                                        "runAfter": {
+                                            "HTTP_3": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "body": {
+                                                "attachments": [
+                                                    {
+                                                        "color": "@{variables('color')}",
+                                                        "fields": [
+                                                            {
+                                                                "short": true,
+                                                                "title": "Results",
+                                                                "value": "@{body('Parse_JSON')?['ResultCount']}"
+                                                            },
+                                                            {
+                                                                "short": true,
+                                                                "title": "Severity",
+                                                                "value": "@{body('Parse_JSON')?['Severity']}"
+                                                            }
+                                                        ],
+                                                        "text": "Description: _@{body('Parse_JSON')?['Description']}_",
+                                                        "title": "<@{body('HTTP_3')['id']}|Alert> - @{body('Parse_JSON')?['AlertRuleName']}"
+                                                    }
+                                                ],
+                                                "channel": "[parameters('slackChannel')]",
+                                                "username": "Azure Monitoring"
+                                            },
+                                            "headers": {
+                                                "Content-Type": "application/json"
+                                            },
+                                            "method": "POST",
+                                            "uri": "[parameters('slackUri')]"
+                                        }
+                                    },
+                                    "Parse_JSON": {
+                                        "runAfter": {},
+                                        "type": "ParseJson",
+                                        "inputs": {
+                                            "content": "@triggerBody()",
+                                            "schema": {
+                                                "properties": {
+                                                    "AlertRuleName": {
+                                                        "type": "string"
+                                                    },
+                                                    "AlertThresholdOperator": {
+                                                        "type": "string"
+                                                    },
+                                                    "AlertThresholdValue": {
+                                                        "type": "integer"
+                                                    },
+                                                    "Description": {
+                                                        "type": "string"
+                                                    },
+                                                    "LinkToSearchResults": {
+                                                        "type": "string"
+                                                    },
+                                                    "ResultCount": {
+                                                        "type": "integer"
+                                                    },
+                                                    "SearchIntervalEndtimeUtc": {
+                                                        "type": "string"
+                                                    },
+                                                    "SearchIntervalInSeconds": {
+                                                        "type": "integer"
+                                                    },
+                                                    "SearchIntervalStartTimeUtc": {
+                                                        "type": "string"
+                                                    },
+                                                    "SearchQuery": {
+                                                        "type": "string"
+                                                    },
+                                                    "SearchResult": {
+                                                        "properties": {
+                                                            "tables": {
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "columns": {
+                                                                            "items": {
+                                                                                "properties": {
+                                                                                    "name": {
+                                                                                        "type": "string"
+                                                                                    },
+                                                                                    "type": {
+                                                                                        "type": "string"
+                                                                                    }
+                                                                                },
+                                                                                "required": [
+                                                                                    "name",
+                                                                                    "type"
+                                                                                ],
+                                                                                "type": "object"
+                                                                            },
+                                                                            "type": "array"
+                                                                        },
+                                                                        "name": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "rows": {
+                                                                            "items": {
+                                                                                "type": "array"
+                                                                            },
+                                                                            "type": "array"
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "name",
+                                                                        "columns",
+                                                                        "rows"
+                                                                    ],
+                                                                    "type": "object"
+                                                                },
+                                                                "type": "array"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "Severity": {
+                                                        "type": "string"
+                                                    },
+                                                    "SubscriptionId": {
+                                                        "type": "string"
+                                                    },
+                                                    "WorkspaceId": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "expression": {
+                                "and": [
+                                    {
+                                        "contains": [
+                                            "@{triggerBody()?['schemaId']}",
+                                            "AzureMonitorMetricAlert"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "type": "If"
+                        },
+                        "Initialize_variable_2": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "color",
+                                        "type": "String",
+                                        "value": "#D50200"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {}
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Insights/actionGroups",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('agName')]",
+            "location": "Global",
+            "dependsOn": [
+                "[concat('Microsoft.Logic/workflows/', parameters('logicAppName'))]"
+            ],
+            "properties": {
+                "groupShortName": "[parameters('agShortName')]",
+                "enabled": true,
+                "smsReceivers": [],
+                "emailReceivers": "[parameters('agEmailReceivers').receivers]",
+                "webhookReceivers": [
+                    {
+                        "name": "slackHook",
+                        "serviceUri": "[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', parameters('logicAppName')), '/triggers/manual'), '2016-06-01').value]"
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "actionGroupID": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Insights/actionGroups/', parameters('agName'))]"
+        }
+    }
+}
