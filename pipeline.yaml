@@ -1,23 +1,28 @@
-#
-# Build for the RPE PoCs AKS Cluster
-#
-name: RPE AKS RBAC Enabled Pipeline
-trigger: none
-pr: none
-variables:
-  keyvaultName: rpe-infra
-  serviceConnection: azurerm-rpetemp
-  helmVersion: '2.13.0'
-  location: 'UK South'
-  acrName: rpedev
-  adminNamespace: 'admin'
-  fluxGithubKeySecureFileName: 'cnp-flux-github-key.yaml'
-  monInfraAppName: 'aks-monitoring-la'
-  monInfraSlackChannel: '#cnp-monitoring'
-  monInfraAgName: 'aks_action_group'
-  monInfraAgShortName: 'aksag'
-  metricAlertsEnabled: true
-  customAlertsEnabled: true
+parameters:
+  keyvaultName: ''
+  serviceConnection: ''
+  helmVersion: ''
+  location: ''
+  acrName: ''
+  fluxGithubKeySecureFileName: ''
+  monInfraAppName: ''
+  monInfraSlackChannel: ''
+  monInfraAgName: ''
+  monInfraAgShortName: ''
+  monInfraRg: ''
+  metricAlertsEnabled: ''
+  customAlertsEnabled: ''
+  aksClusterName: ''
+  aksVnetName: ''
+  aksKubernetesVersion: ''
+  aksVmSize: ''
+  aksNodeCount: ''
+  aksDnsPrefix: ''
+  aksSshPublicKey: ''
+  aksServicePrincipalId: ''
+  aksClientAppId: ''
+  aksServerAppId: ''
+  aksTenantId: ''
 
 jobs:
 - job: Keyvault
@@ -28,8 +33,8 @@ jobs:
   - task: AzureKeyVault@1
     displayName: 'Get secrets from Keyvault'
     inputs:
-      azureSubscription: $(serviceConnection)
-      keyVaultName: $(keyvaultName)
+      azureSubscription: ${{ parameters.serviceConnection }}
+      keyVaultName: ${{ parameters.keyvaultName }}
       secretsFilter: 'aks-sp-id,aks-sp-secret,aks-sapp-secret,slack-webhook-url'
   - script: |
       echo "##vso[task.setvariable variable=aksServicePrincipalId;isOutput=true]$(aks-sp-id)"
@@ -50,18 +55,18 @@ jobs:
   - task: AzureResourceGroupDeployment@2
     displayName: 'Deploy Monitoring Infrastructure'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       action: 'Create Or Update Resource Group'
-      resourceGroupName: $(aksResourceGroup)
+      resourceGroupName: ${{ parameters.monInfraRg }}
       deploymentMode: 'Incremental'
-      location: $(location)
+      location: ${{ parameters.location }}
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-mon-infra.json'
-      overrideParameters: '-logicAppName "$(monInfraAppName)"
+      overrideParameters: '-logicAppName "${{ parameters.monInfraAppName }}"
         -slackUri "$(slackUriSecureVariable)"
-        -slackChannel "$(monInfraSlackChannel)"
-        -agName "$(monInfraAgName)"
-        -agShortName "$(monInfraAgShortName)"
+        -slackChannel "${{ parameters.monInfraSlackChannel }}"
+        -agName "${{ parameters.monInfraAgName }}"
+        -agShortName "${{ parameters.monInfraAgShortName }}"
         -agEmailReceivers "$(monInfraAgEmailReceivers)"'
       deploymentOutputs: 'monInfraOutputs'
 
@@ -88,7 +93,6 @@ jobs:
     vmImage: 'Ubuntu 16.04'
     #name: hmcts-agent-pool #TODO: change to hosted when merged
   variables:
-    aksClusterName: $(aksResourceGroup)-cluster
     aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
     aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
     aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
@@ -98,7 +102,7 @@ jobs:
   - task: AzureCLI@1
     displayName: Check VNET prerequisites
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       arguments: $(aksResourceGroup) $(aksVnetCidr) $(aksSubnetCidr)
       scriptPath: scripts/check-vnet-prerequisites.sh
 
@@ -106,14 +110,14 @@ jobs:
     displayName: 'Deploy VNET'
     condition: not(variables['aksSubnetId'])
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       action: 'Create Or Update Resource Group'
       resourceGroupName: $(aksResourceGroup)
       deploymentMode: 'Incremental'
-      location: $(location)
+      location: ${{ parameters.location }}
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-vnet-template.json'
-      overrideParameters: '-aksVnetName $(aksClusterName) 
+      overrideParameters: '-aksVnetName ${{ parameters.aksClusterName }} 
         -aksVnetPrefix $(aksVnetCidr) 
         -aksSubnetName default 
         -aksSubnetPrefix $(aksSubnetCidr)'
@@ -135,20 +139,29 @@ jobs:
   - task: AzureResourceGroupDeployment@2
     displayName: 'Deploy AKS Cluster'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       action: 'Create Or Update Resource Group'
       resourceGroupName: $(aksResourceGroup)
       deploymentMode: 'Incremental'
-      location: $(location)
+      location: ${{ parameters.location }}
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-aks-template.json'
       csmParametersFile: 'templates/arm-aks-parameters.json'
-      overrideParameters: '-aksClusterName $(aksClusterName) 
+      overrideParameters: '-aksClusterName ${{ parameters.aksClusterName }} 
         -aksVnetSubnetId $(aksSubnetId) 
         -aksServiceCidr $(aksServiceCidr) 
-        -aksDnsServiceIp $(aksDnsServiceIp) 
+        -aksDnsServiceIp $(aksDnsServiceIp)
         -servicePrincipalSecret $(aksServicePrincipalSecret) 
-        -serverAppSecret $(aksServerAppSecret)'
+        -serverAppSecret $(aksServerAppSecret)
+        -kubernetesVersion ${{ parameters.aksKubernetesVersion }}
+        -vmSize ${{ parameters.aksVmSize }}
+        -nodeCount ${{ parameters.aksNodeCount }}
+        -dnsPrefix ${{ parameters.aksDnsPrefix }}
+        -sshPublicKey "${{ parameters.aksSshPublicKey }}"
+        -servicePrincipalId ${{ parameters.aksServicePrincipalId }}
+        -clientAppId ${{ parameters.aksClientAppId }}
+        -serverAppId ${{ parameters.aksServerAppId }}
+        -tenantId ${{ parameters.aksTenantId }}'
       deploymentOutputs: 'aksOutputs'
 
   - task: Bash@3
@@ -169,10 +182,10 @@ jobs:
   - task: AzureCLI@1
     displayName: 'Obtain AKS Admin access token.'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksClusterName) --admin --overwrite-existing
+        az aks get-credentials --resource-group $(aksResourceGroup) --name ${{ parameters.aksClusterName }} --admin --overwrite-existing
 
   - task: Bash@3
     displayName: 'Create Custom Namespaces'
@@ -185,12 +198,12 @@ jobs:
   - task: AzureCLI@1
     displayName: 'Bind admin role to "aks-cluster-admin" group'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       scriptLocation: 'inlineScript'
       inlineScript: |
         CLUSTER_GLOBAL_ADMINS_GROUP=$(az ad group list --query  "[?displayName=='aks-cluster-admins'].objectId" -o tsv)
         
-        CLUSTER_ADMINS_GROUP_NAME="$(aksClusterName)-cluster-admins"
+        CLUSTER_ADMINS_GROUP_NAME="${{ parameters.aksClusterName }}-cluster-admins"
         CLUSTER_ADMIN_GROUP=$(az ad group list --query  "[?displayName=='${CLUSTER_ADMINS_GROUP_NAME}'].objectId" -o tsv)
         if [ -z "${CLUSTER_ADMIN_GROUP}" ]; then 
             echo "Cluster admin group doesn't exist, creating"
@@ -205,7 +218,7 @@ jobs:
   - task: AzureCLI@1
     displayName: 'Bind developers roles'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       scriptLocation: 'inlineScript'
       inlineScript: |
         kubectl apply -f roles/developers-log-reader-role.yaml
@@ -217,14 +230,14 @@ jobs:
   - task: AzureResourceGroupDeployment@2
     displayName: 'Create Managed Identity for AKS'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       action: 'Create Or Update Resource Group'
       resourceGroupName: $(aksResourceGroup)
       deploymentMode: 'Incremental'
-      location: $(location)
+      location: ${{ parameters.location }}
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-mi-template.json'
-      overrideParameters: '-resourceName $(aksClusterName)-mi'
+      overrideParameters: '-resourceName ${{ parameters.aksClusterName }}-mi'
       deploymentOutputs: 'miOutputs'
 
   - task: Bash@3
@@ -240,28 +253,28 @@ jobs:
         done
 
   - task: AzureCLI@1
-    displayName: 'Permissions MI to Key Vault $(keyvaultName)'
+    displayName: 'Permissions MI to Key Vault ${{ parameters.keyvaultName }}'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az keyvault set-policy -n $(keyvaultName) --object-id $(miPrincipalID) --secret-permissions get list --certificate-permissions get list --key-permissions get list
+        az keyvault set-policy -n ${{ parameters.keyvaultName }} --object-id $(miPrincipalID) --secret-permissions get list --certificate-permissions get list --key-permissions get list
 
   - task: HelmInstaller@0
-    displayName: 'Helm - Install Client $(helmVersion)'
+    displayName: 'Helm - Install Client ${{ parameters.helmVersion }}'
     inputs:
-        helmVersion: $(helmVersion)
+        helmVersion: ${{ parameters.helmVersion }}
         checkLatestHelmVersion: false
         installKubectl: false
 
   - task: Bash@3
-    displayName: 'Helm - Install Tiller $(helmVersion)'
+    displayName: 'Helm - Install Tiller ${{ parameters.helmVersion }}'
     inputs:
       targetType: inline
       failOnStderr: false
       script: |
         kubectl apply -f roles/helm-rbac-config.yaml
-        helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v$(helmVersion) --history-max=5 --kube-context '$(aksClusterName)-admin'
+        helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v${{ parameters.helmVersion }} --history-max=5 --kube-context '${{ parameters.aksClusterName }}-admin'
 
   - task: Bash@3
     displayName: 'Kured - Template secret'
@@ -273,7 +286,7 @@ jobs:
         sed -i -e 's@${SLACK_USERNAME}@'"$SLACK_USERNAME"'@' templates/kured/values.yaml
     env:
       SLACK_WEBHOOK_URL: $(slackWebhookUrl)
-      SLACK_USERNAME: $(aksClusterName)
+      SLACK_USERNAME: ${{ parameters.aksClusterName }}
 
   - task: Bash@3
     displayName: 'Kured - Create secret'
@@ -290,7 +303,7 @@ jobs:
       targetType: inline
       failOnStderr: true
       script: |
-        sed -i -e 's/${ACR_NAME}/$(acrName)/g' \
+        sed -i -e 's/${ACR_NAME}/${{ parameters.acrName }}/g' \
                -e 's@${ACR_SERVICE_PRINCIPAL_ID}@'"$AKS_SP_ID"'@' \
                -e 's@${ACR_SERVICE_PRINCIPAL_SECRET}@'"$AKS_SP_SECRET"'@' \
           templates/repositories.yaml
@@ -315,13 +328,13 @@ jobs:
       script: |
         helm repo add weaveworks https://weaveworks.github.io/flux
         helm upgrade flux weaveworks/flux --install --namespace admin -f deployments/weave-flux/values.yaml \
-          --set "git.path=k8s/$(aksResourceGroup)-cluster\,k8s/common",git.label=$(aksResourceGroup)-cluster \
+          --set "git.path=k8s/${{ parameters.aksClusterName }}\,k8s/common",git.label=${{ parameters.aksClusterName }} \
           --wait
 
   - task: DownloadSecureFile@1
     displayName: 'Flux - Download Github Key'
     inputs:
-      secureFile: $(fluxGithubKeySecureFileName)
+      secureFile: ${{ parameters.fluxGithubKeySecureFileName }}
 
   - task: Bash@3
     displayName: 'Flux - Create Github Key Secret'
@@ -330,7 +343,7 @@ jobs:
       failOnStderr: false
       script: |
         kubectl -n admin delete secret flux-git-deploy || true
-        kubectl apply -f $(Agent.TempDirectory)/$(fluxGithubKeySecureFileName)
+        kubectl apply -f $(Agent.TempDirectory)/${{ parameters.fluxGithubKeySecureFileName }}
         kubectl -n admin delete $(kubectl get pod -o name -l app=flux -n admin)
 
 - job: MonitoringAddAlerts
@@ -344,8 +357,6 @@ jobs:
     #name: hmcts-agent-pool #TODO: change to hosted when merged
   variables:
     - group: aks-variable-group  
-    - name: aksClusterName
-      value: $(aksResourceGroup)-cluster
     - name: outActionGroupID
       value: $[dependencies.MonitoringDeploy.outputs['exportActionGroupID.outActionGroupID']]
     - name: outAksID
@@ -355,30 +366,30 @@ jobs:
   - task: AzureResourceGroupDeployment@2
     displayName: 'Add Metric Alerts'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       action: 'Create Or Update Resource Group'
       resourceGroupName: $(aksResourceGroup)
       deploymentMode: 'Incremental'
-      location: $(location)
+      location: ${{ parameters.location }}
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-mon-metric-alerts.json'
-      overrideParameters: '-aksName $(aksClusterName) 
-        -isEnabled $(metricAlertsEnabled) 
+      overrideParameters: '-aksName ${{ parameters.aksClusterName }} 
+        -isEnabled ${{ parameters.metricAlertsEnabled }} 
         -resourceId $(outAksID) 
         -actionGroupId $(outActionGroupID)'
 
   - task: AzureResourceGroupDeployment@2
     displayName: 'Add Custom Search Alerts'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       action: 'Create Or Update Resource Group'
       resourceGroupName: $(aksResourceGroup)
       deploymentMode: 'Incremental'
-      location: $(location)
+      location: ${{ parameters.location }}
       templateLocation: 'Linked artifact'
       csmFile: 'templates/arm-mon-custom-alerts.json'
-      overrideParameters: '-aksName $(aksClusterName) 
-        -isEnabled $(customAlertsEnabled) 
+      overrideParameters: '-aksName ${{ parameters.aksClusterName }} 
+        -isEnabled ${{ parameters.metricAlertsEnabled }} 
         -resourceId $(workspaceID)
         -actionGroupId $(outActionGroupID)'
 
@@ -391,10 +402,10 @@ jobs:
   - task: AzureCLI@1
     displayName: 'Obtain AKS Admin access token.'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az aks get-credentials --resource-group $(aksResourceGroup) --name $(aksResourceGroup)-cluster
+        az aks get-credentials --resource-group $(aksResourceGroup) --name ${{ parameters.aksClusterName }} --admin --overwrite-existing
 
   - task: DownloadSecureFile@1
     displayName: 'Download test developer'
@@ -412,7 +423,7 @@ jobs:
   - task: AzureCLI@1
     displayName: 'Run tests'
     inputs:
-      azureSubscription: $(serviceConnection)
+      azureSubscription: ${{ parameters.serviceConnection }}
       scriptLocation: 'inlineScript'
       addSpnToEnvironment: true
       inlineScript:
