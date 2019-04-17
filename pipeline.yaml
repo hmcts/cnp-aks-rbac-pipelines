@@ -93,10 +93,15 @@ jobs:
     vmImage: 'Ubuntu 16.04'
     #name: hmcts-agent-pool #TODO: change to hosted when merged
   variables:
-    aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
-    aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
-    aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
-    slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
+    - group: aks-variable-group
+    - name: aksServicePrincipalId
+      value: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
+    - name: aksServicePrincipalSecret
+      value: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
+    - name: aksServerAppSecret
+      value: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
+    - name: slackWebhookUrl
+      value: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
   steps:
 
   - task: AzureCLI@1
@@ -120,7 +125,8 @@ jobs:
       overrideParameters: '-aksVnetName ${{ parameters.aksClusterName }} 
         -aksVnetPrefix $(aksVnetCidr) 
         -aksSubnetName default 
-        -aksSubnetPrefix $(aksSubnetCidr)'
+        -aksSubnetPrefix $(aksSubnetCidr)
+        -aksLogAnalyticsId $(workspaceID)'
       deploymentOutputs: 'vnetOutputs'
 
   - task: Bash@3

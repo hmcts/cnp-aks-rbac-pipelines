@@ -46,6 +46,9 @@
     },
     "tenantId": {
       "type": "string"
+    },
+    "aksLogAnalyticsId": {
+      "type": "string"
     }
   },
   "variables": {},
@@ -88,6 +91,14 @@
           "clientId": "[parameters('servicePrincipalId')]",
           "secret": "[parameters('servicePrincipalSecret')]"
         },
+        "addonProfiles": {
+          "omsagent": {
+              "enabled": true,
+              "config": {
+                  "logAnalyticsWorkspaceResourceID": "[parameters('aksLogAnalyticsId')]"
+              }
+          }
+        },           
         "enableRBAC": true,
         "aadProfile": {
           "clientAppID": "[parameters('clientAppId')]",
