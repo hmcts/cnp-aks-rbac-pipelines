@@ -193,6 +193,19 @@ jobs:
       inlineScript: |
         az aks get-credentials --resource-group $(aksResourceGroup) --name ${{ parameters.aksClusterName }} --admin --overwrite-existing
 
+  - task: AzureCLI@1
+    displayName: 'Enable Diagnostics Settings'
+    inputs:
+      azureSubscription: ${{ parameters.serviceConnection }}
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az monitor diagnostic-settings create \
+            -n DiagLogAnalytics \
+            --resource $(aksID) \
+            --workspace $(workspaceID) \
+            --logs '[{"category":"kube-apiserver","Enabled":true},{"category":"kube-controller-manager","Enabled":true},{"category":"cluster-autoscaler","Enabled":true},{"category":"kube-scheduler","Enabled":true},{"category":"kube-audit","Enabled":true},{"category":"guard","Enabled":true}]' \
+            --metrics '[{"category":"AllMetrics","enabled":true,"retentionPolicy":{"days":30,"enabled":true},"timeGrain":null}}]'       
+
   - task: Bash@3
     displayName: 'Create Custom Namespaces'
     inputs:
