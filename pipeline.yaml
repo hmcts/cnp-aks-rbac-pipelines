@@ -203,8 +203,8 @@ jobs:
             -n DiagLogAnalytics \
             --resource $(aksID) \
             --workspace $(workspaceID) \
-            --logs '[{"category":"kube-apiserver","Enabled":true},{"category":"kube-controller-manager","Enabled":true},{"category":"cluster-autoscaler","Enabled":true},{"category":"kube-scheduler","Enabled":true},{"category":"kube-audit","Enabled":true},{"category":"guard","Enabled":true}]' \
-            --metrics '[{"category":"AllMetrics","enabled":true,"retentionPolicy":{"days":30,"enabled":true},"timeGrain":null}}]'
+            --logs '[{"category":"kube-apiserver","Enabled":true},{"category":"kube-controller-manager","Enabled":true},{"category":"cluster-autoscaler","Enabled":true},{"category":"kube-scheduler","Enabled":true},{"category":"kube-audit","Enabled":true}]' \
+            --metrics '[{"category":"AllMetrics","enabled":true,"retentionPolicy":{"days":30,"enabled":true}}]'
 
   - task: Bash@3
     displayName: 'Create Custom Namespaces'
