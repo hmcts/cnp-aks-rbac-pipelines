@@ -93,10 +93,15 @@ jobs:
     vmImage: 'Ubuntu 16.04'
     #name: hmcts-agent-pool #TODO: change to hosted when merged
   variables:
-    aksServicePrincipalId: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
-    aksServicePrincipalSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
-    aksServerAppSecret: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
-    slackWebhookUrl: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
+    - group: aks-variable-group
+    - name: aksServicePrincipalId
+      value: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalId']]
+    - name: aksServicePrincipalSecret
+      value: $[dependencies.Keyvault.outputs['exportKeyvault.aksServicePrincipalSecret']]
+    - name: aksServerAppSecret
+      value: $[dependencies.Keyvault.outputs['exportKeyvault.aksServerAppSecret']]
+    - name: slackWebhookUrl
+      value: $[dependencies.Keyvault.outputs['exportKeyvault.slackWebhookUrl']]
   steps:
 
   - task: AzureCLI@1
@@ -161,7 +166,8 @@ jobs:
         -servicePrincipalId ${{ parameters.aksServicePrincipalId }}
         -clientAppId ${{ parameters.aksClientAppId }}
         -serverAppId ${{ parameters.aksServerAppId }}
-        -tenantId ${{ parameters.aksTenantId }}'
+        -tenantId ${{ parameters.aksTenantId }}
+        -aksLogAnalyticsId $(workspaceID)'
       deploymentOutputs: 'aksOutputs'
 
   - task: Bash@3
@@ -186,6 +192,19 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks get-credentials --resource-group $(aksResourceGroup) --name ${{ parameters.aksClusterName }} --admin --overwrite-existing
+
+  - task: AzureCLI@1
+    displayName: 'Enable Diagnostics Settings'
+    inputs:
+      azureSubscription: ${{ parameters.serviceConnection }}
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az monitor diagnostic-settings create \
+            -n DiagLogAnalytics \
+            --resource $(aksID) \
+            --workspace $(workspaceID) \
+            --logs '[{"category":"kube-apiserver","Enabled":true},{"category":"kube-controller-manager","Enabled":true},{"category":"cluster-autoscaler","Enabled":true},{"category":"kube-scheduler","Enabled":true},{"category":"kube-audit","Enabled":true}]' \
+            --metrics '[{"category":"AllMetrics","enabled":true,"retentionPolicy":{"days":30,"enabled":true}}]'
 
   - task: Bash@3
     displayName: 'Create Custom Namespaces'

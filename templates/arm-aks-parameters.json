@@ -40,6 +40,9 @@
     },
     "tenantId": {
       "value": ""
+    },
+    "aksLogAnalyticsId": {
+      "value": ""
     }
   }
 }
