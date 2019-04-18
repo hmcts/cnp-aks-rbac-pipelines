@@ -125,8 +125,7 @@ jobs:
       overrideParameters: '-aksVnetName ${{ parameters.aksClusterName }} 
         -aksVnetPrefix $(aksVnetCidr) 
         -aksSubnetName default 
-        -aksSubnetPrefix $(aksSubnetCidr)
-        -aksLogAnalyticsId $(workspaceID)'
+        -aksSubnetPrefix $(aksSubnetCidr)'
       deploymentOutputs: 'vnetOutputs'
 
   - task: Bash@3
@@ -167,7 +166,8 @@ jobs:
         -servicePrincipalId ${{ parameters.aksServicePrincipalId }}
         -clientAppId ${{ parameters.aksClientAppId }}
         -serverAppId ${{ parameters.aksServerAppId }}
-        -tenantId ${{ parameters.aksTenantId }}'
+        -tenantId ${{ parameters.aksTenantId }}
+        -aksLogAnalyticsId $(workspaceID)'
       deploymentOutputs: 'aksOutputs'
 
   - task: Bash@3
