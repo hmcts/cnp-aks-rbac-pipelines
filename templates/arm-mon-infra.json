@@ -2,26 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "agName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Action Group"
-            }
-        },
-        "agShortName": {
-            "type": "string",
-            "metadata": {
-                "description": "Short name of the Action Group (maximum 12 characters)"
-            }
-        },
         "agEmailReceivers": {
             "type": "object"
-        },
-        "logicAppName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Logic App"
-            }
         },
         "slackUri": {
             "type": "string",
@@ -31,18 +13,41 @@
         },
         "slackChannel": {
             "type": "string",
+            "defaultValue": "#cnp-monitoring",
             "metadata": {
                 "description": "Name of the Slack Channel to send alerts"
             }
+        },
+        "environmentName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Environment"
+            }
+        },
+        "branch": {
+            "type": "string",
+            "defaultValue": "Unknown",
+            "metadata": {
+                "description": "source branch"
+            }
         }
+    },
+    "variables" : {
+        "agName" : "[concat('aks_',parameters('environmentName'),'_action_group')]",
+        "agShortName" : "[concat('aks',parameters('environmentName'),'ag')]",
+        "logicAppName": "[concat('aks-',parameters('environmentName'),'-monitoring-la')]"
     },
     "resources": [
         {
             "type": "Microsoft.Logic/workflows",
-            "name": "[parameters('logicAppName')]",
+            "name": "[variables('logicAppName')]",
             "apiVersion": "2017-07-01",
             "location": "[resourceGroup().location]",
             "scale": null,
+            "tags" : {
+                "EnvironmentName": "[parameters('environmentName')]",
+                "Branch":"[parameters('branch')]"
+            },
             "properties": {
                 "state": "Enabled",
                 "definition": {
@@ -440,20 +445,24 @@
         {
             "type": "Microsoft.Insights/actionGroups",
             "apiVersion": "2018-03-01",
-            "name": "[parameters('agName')]",
+            "name": "[variables('agName')]",
             "location": "Global",
             "dependsOn": [
-                "[concat('Microsoft.Logic/workflows/', parameters('logicAppName'))]"
+                "[concat('Microsoft.Logic/workflows/', variables('logicAppName'))]"
             ],
+            "tags" : {
+                "EnvironmentName": "[parameters('environmentName')]",
+                "Branch":"[parameters('branch')]"
+            },
             "properties": {
-                "groupShortName": "[parameters('agShortName')]",
+                "groupShortName": "[variables('agShortName')]",
                 "enabled": true,
                 "smsReceivers": [],
                 "emailReceivers": "[parameters('agEmailReceivers').receivers]",
                 "webhookReceivers": [
                     {
                         "name": "slackHook",
-                        "serviceUri": "[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', parameters('logicAppName')), '/triggers/manual'), '2016-06-01').value]"
+                        "serviceUri": "[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', variables('logicAppName')), '/triggers/manual'), '2016-06-01').value]"
                     }
                 ]
             }
@@ -462,7 +471,7 @@
     "outputs": {
         "actionGroupID": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Insights/actionGroups/', parameters('agName'))]"
+            "value": "[resourceId('Microsoft.Insights/actionGroups/', variables('agName'))]"
         }
     }
 }
