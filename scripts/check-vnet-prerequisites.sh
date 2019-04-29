@@ -33,9 +33,3 @@ fi
 
 subnetId=$(echo $subnetCandidate | jq -r ".id")
 echo "##vso[task.setvariable variable=aksSubnetId]${subnetId}"
-
-
-
-
-
-
