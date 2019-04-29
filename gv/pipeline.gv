@@ -1,0 +1,182 @@
+graph g {
+rankdir=LR;
+    graph [fontsize=10 fontname="Verdana" compound=true overlap=false];
+    node [shape=record fontsize=10 fontname="Verdana"];
+
+subgraph cluster_pipeline_rpe{
+ label="pipeline-rpe.yaml"
+}
+    subgraph cluster_pipeline {
+        label="pipeline.yaml"
+
+        subgraph cluster_Keyvault {
+            label = "Keyvault"
+            Keyvault_AzureKeyVault [shape=Mrecord label="{AzureKeyVault|Get secrets from Keyvault|{aksServicePrincipalId|aksServicePrincipalSecret|aksServerAppSecret|slackWebhookUrl}}"];
+        }
+
+        subgraph cluster_MonitoringDeploy {
+            label = "MonitoringDeploy"
+            MonitoringDeploy_AzureResourceGroupDeployment [shape=Mrecord label="{AzureResourceGroupDeployment|Deploy Monitoring Infrastructure|monInfraOutputs}}"];
+            MonitoringDeploy_Bash[shape=Mrecord label="{Bash|Parse ARM Outputs|{monInfraOutputs|outActionGroupID}}"];
+        MonitoringDeploy_AzureResourceGroupDeployment -- MonitoringDeploy_Bash
+        
+        }
+
+        subgraph cluster_DeployAKS {
+            label = "DeployAKS"
+            DeployAKS_AzureCLI[shape=Mrecord label="{AzureCLI|Check VNET prerequisites}}"];
+            DeployAKS_AzureResourceGroupDeployment [shape=Mrecord label="{AzureResourceGroupDeployment|Deploy VNET|vnetOutputs}}"];
+            DeployAKS_Bash[shape=Mrecord label="{Bash|Parse ARM Outputs|{vnetOutputs}}"];
+            DeployAKS_AzureResourceGroupDeployment2 [shape=Mrecord label="{AzureResourceGroupDeployment|Deploy AKS Cluster|aksOutputs}}"];
+            DeployAKS_Bash2[shape=Mrecord label="{Bash|Parse ARM Outputs|{vnetOutputs|outAksID}}"];
+            DeployAKS_AzureCLI2[shape=Mrecord label="{AzureCLI|Obtain AKS Admin access token}}"];
+            DeployAKS_AzureCLI3[shape=Mrecord label="{AzureCLI|Enable Diagnostics Settings}}"];
+            DeployAKS_Bash3[shape=Mrecord label="{Bash|Create Custom Namespaces}}"];
+            DeployAKS_AzureCLI4[shape=Mrecord label="{Bash|Bind admin role to aks-cluster-admin group}}"];
+            DeployAKS_AzureCLI5[shape=Mrecord label="{Bash|Bind developers roles}}"];
+            DeployAKS_AzureResourceGroupDeployment3 [shape=Mrecord label="{AzureResourceGroupDeployment|Create Managed Identity for AKS|miOutputs}}"];
+            DeployAKS_Bash4[shape=Mrecord label="{Bash|Parse ARM Outputs|{miOutputs}}"];
+            DeployAKS_AzureCLI6[shape=Mrecord label="{Bash|Permissions MI to Key Vault}}"];
+            DeployAKS_HelmInstaller[shape=Mrecord label="{HelmInstaller|Helm - Install Client}}"];
+            DeployAKS_Bash5[shape=Mrecord label="{Bash|Helm - Install Tiller}}"];
+            DeployAKS_Bash6[shape=Mrecord label="{Bash|Kured - Template secret}}"];
+            DeployAKS_Bash7[shape=Mrecord label="{Bash|Kured - Create secret}}"];
+            DeployAKS_Bash8[shape=Mrecord label="{Bash|Flux - Template repositories.yaml secret}}"];
+            DeployAKS_Bash9[shape=Mrecord label="{Bash|Flux - Create repositories.yaml secret}}"];
+            DeployAKS_Bash10[shape=Mrecord label="{Bash|Flux - Install}}"];
+            DeployAKS_DownloadSecureFile[shape=Mrecord label="{DownloadSecureFile|Flux - Download Github Key}}"];
+            DeployAKS_Bash11[shape=Mrecord label="{Bash|Flux - Create Github Key Secret}}"];
+
+ 
+
+DeployAKS_AzureCLI -- DeployAKS_AzureResourceGroupDeployment
+ DeployAKS_AzureResourceGroupDeployment -- DeployAKS_Bash
+ DeployAKS_Bash -- DeployAKS_AzureResourceGroupDeployment2
+ DeployAKS_AzureResourceGroupDeployment2 -- DeployAKS_Bash2
+ DeployAKS_Bash2 -- DeployAKS_AzureCLI2
+ DeployAKS_AzureCLI2 -- DeployAKS_AzureCLI3
+ DeployAKS_AzureCLI3 -- DeployAKS_Bash3
+ DeployAKS_Bash3 -- DeployAKS_AzureCLI4
+ DeployAKS_AzureCLI4 -- DeployAKS_AzureCLI5
+ DeployAKS_AzureCLI5 -- DeployAKS_AzureResourceGroupDeployment3
+ DeployAKS_AzureResourceGroupDeployment3 -- DeployAKS_Bash4
+ DeployAKS_Bash4 -- DeployAKS_AzureCLI6
+ DeployAKS_AzureCLI6 -- DeployAKS_HelmInstaller
+  DeployAKS_HelmInstaller -- DeployAKS_Bash5
+  DeployAKS_Bash5 -- DeployAKS_Bash6
+   DeployAKS_Bash6 --DeployAKS_Bash7
+   DeployAKS_Bash7 --DeployAKS_Bash8
+   DeployAKS_Bash8 -- DeployAKS_Bash9
+   DeployAKS_Bash9 -- DeployAKS_Bash10
+  DeployAKS_Bash10 -- DeployAKS_DownloadSecureFile
+  DeployAKS_DownloadSecureFile -- DeployAKS_Bash11
+         
+
+        }
+
+        subgraph cluster_MonitoringAddAlerts {
+            label = "Deploy Alerts"
+            MonitoringAddAlerts_AzureResourceGroupDeployment [shape=Mrecord label="{AzureResourceGroupDeployment|Deploy Monitoring Infrastructure}}"];
+            MonitoringAddAlerts_AzureResourceGroupDeployment2 [shape=Mrecord label="{AzureResourceGroupDeployment|Add Custom Search Alerts}}"];
+
+            MonitoringAddAlerts_AzureResourceGroupDeployment -- MonitoringAddAlerts_AzureResourceGroupDeployment2
+        }
+
+        subgraph cluster_RunTests {
+            label = "RunTests"
+            RunTests_AzureCLI[shape=Mrecord label="{AzureCLI|Obtain AKS Admin access token}}"];
+            RunTests_DownloadSecureFile[shape=Mrecord label="{DownloadSecureFile|Download test developer}}"];
+            RunTests_Bash[shape=Mrecord label="{Bash|Install Chrome}}"];
+            RunTests_AzureCLI2[shape=Mrecord label="{AzureCLI|Run tests}}"];
+            RunTests_PublishTestResults[shape=Mrecord label="{PublishTestResults|Publish Environment Test Results}}"];
+
+RunTests_AzureCLI -- RunTests_DownloadSecureFile
+RunTests_DownloadSecureFile -- RunTests_Bash
+RunTests_Bash -- RunTests_AzureCLI2
+RunTests_AzureCLI2 -- RunTests_PublishTestResults
+        }
+
+    }
+
+subgraph cluster_files {
+label="files"
+ subgraph cluster_tests {
+        label = "tests";
+        subgraph cluster_interactive{
+            label = "interactive-login-bypasser";
+                    install_chrome [shape=note label="install-chrome.sh"]    
+
+        }
+        }
+
+ subgraph cluster_scripts {
+        label = "scripts";
+        check_vnet_prerequisites [shape=note label="check-vnet-prerequisites.sh"];
+        }
+
+   subgraph cluster_deployments {
+        label = "deployments";
+        kv_flexvol_installer [shape=note label="kv-flexvol-installer.yaml"]    
+        namespaces [shape=note label="namespaces.yaml"]    
+
+        subgraph cluster_weave_flux {
+                label = "weave-flux"
+                weave_flux_values [shape=note label="values.yaml"]    
+        }
+    }
+    
+    subgraph cluster_roles {
+        label = "roles";
+
+        cluster_admin_role_binding [shape=note label="cluster-admin-role-binding.yaml"]    
+        developers_log_reader_binding [shape=note label="developers-log-reader-binding.yaml"]    
+        developers_log_reader_role [shape=note label="developers-log-reader-role.yaml"]    
+        helm_rbac_config [shape=note label="helm-rbac-config.yaml"]    
+    }
+
+     subgraph cluster_templates
+     {
+            label = "templates";
+            subgraph cluster_templates_kured
+            {
+                label = "kured";
+                kured_values [shape=note label="values.yaml"]    
+            }
+
+        arm_mon_infra [shape=note label="arm-mon-infra.json"]
+        arm_vnet_template[shape=note label="arm-vnet-template.json"]
+        arm_aks_template[shape=note label="arm-aks-template.json"]
+        arm_aks_parameters[shape=note label="arm-aks-parameters.json"]
+        arm_mon_metric_alerts[shape=note label="arm-mon-metric-alerts.json"]
+        arm_mon_custom_alerts[shape=note label="arm-mon-custom-alerts.json"]
+        arm_mi_template[shape=note label="arm-mi-template.json"]
+        repositories [shape=note label="repositories.yaml"]
+     }
+}
+    MonitoringDeploy_AzureResourceGroupDeployment--arm_mon_infra;
+
+    DeployAKS_AzureCLI--check_vnet_prerequisites;
+    DeployAKS_AzureResourceGroupDeployment--arm_vnet_template;
+    DeployAKS_AzureResourceGroupDeployment2--arm_aks_template;
+   DeployAKS_AzureResourceGroupDeployment2-- arm_aks_parameters;
+DeployAKS_Bash3--namespaces;
+DeployAKS_AzureResourceGroupDeployment3--arm_mi_template;
+DeployAKS_Bash5--helm_rbac_config;
+DeployAKS_Bash6--kured_values;
+DeployAKS_Bash7--kured_values;
+DeployAKS_Bash8--repositories;
+DeployAKS_Bash9--repositories;
+DeployAKS_Bash10--weave_flux_values;
+
+
+MonitoringAddAlerts_AzureResourceGroupDeployment--arm_mon_metric_alerts;
+MonitoringAddAlerts_AzureResourceGroupDeployment2--arm_mon_custom_alerts;
+
+RunTests_Bash--install_chrome;
+
+cluster_pipeline_rpe -- cluster_pipeline;
+
+
+
+
+}
