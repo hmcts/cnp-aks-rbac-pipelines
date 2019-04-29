@@ -21,10 +21,12 @@
       "type": "string"
     },
     "aksServiceCidr": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "10.0.0.0/16"
     },
     "aksDnsServiceIp": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "10.0.0.10"
     },
     "dnsPrefix": {
       "type": "string"
