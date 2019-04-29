@@ -9,12 +9,25 @@
       "type": "string"
     },
     "aksSubnetName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "default"
     },
     "aksSubnetPrefix": {
       "type": "string"
+    },
+    "environmentName": {
+        "type": "string",
+        "metadata": {
+            "description": "Name of the Environment"
+        }
+    },
+    "branch": {
+        "type": "string",
+        "defaultValue": "Unknown",
+        "metadata": {
+            "description": "source branch"
+        }
     }
-    
   },
   "variables": {},
   "resources": [
@@ -23,7 +36,10 @@
       "name": "[parameters('aksVnetName')]",
       "apiVersion": "2018-10-01",
       "location": "[resourceGroup().location]",
-      "tags": {},
+      "tags" : {
+        "EnvironmentName": "[parameters('environmentName')]",
+        "Branch":"[parameters('branch')]"
+      },
       "scale": null,
       "properties": {
         "addressSpace": {
