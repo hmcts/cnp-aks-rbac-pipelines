@@ -1,7 +1,7 @@
 #!/bin/bash
 
-AKS_ID=$1
-WORKSPACE_ID=$2
+WORKSPACE_ID=$1
+AKS_ID=$2
 
 az monitor diagnostic-settings create \
     -n DiagLogAnalytics \
