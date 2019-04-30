@@ -72,7 +72,7 @@
   "variables": {
     "osDiskSizeGB": 100,  
     "maxPods": 30,  
-    "nodepoolName" : "nodepool1",
+    "nodepoolName" : "[concat(parameters('environmentName'),'-nodepool1')]",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser"
@@ -87,7 +87,6 @@
         "EnvironmentName": "[parameters('environmentName')]",
         "Branch":"[parameters('branch')]"
       },
-      "scale": null,
       "properties": {
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
         "dnsPrefix": "[parameters('dnsPrefix')]",
