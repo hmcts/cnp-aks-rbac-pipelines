@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 RESOURCE_GROUP_NAME=$1
 CLUSTER_NAME=$2

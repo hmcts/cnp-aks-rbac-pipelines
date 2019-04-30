@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 RESOURCE_GROUP_NAME=$1
 VNET_CIDR=$2
@@ -33,4 +34,3 @@ fi
 
 subnetId=$(echo $subnetCandidate | jq -r ".id")
 echo "##vso[task.setvariable variable=aksSubnetId]${subnetId}"
-

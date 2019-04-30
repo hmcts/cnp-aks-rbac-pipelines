@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 CLUSTER_NAME=$1
 CLUSTER_ADMIN_BINDING=${2:-roles/cluster-admin-role-binding.yaml}

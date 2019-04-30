@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 CLUSTER_NAME=$1
 HELM_VERSION=$2

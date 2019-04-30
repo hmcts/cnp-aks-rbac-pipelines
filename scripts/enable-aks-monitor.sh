@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 WORKSPACE_ID=$1
 AKS_ID=$2

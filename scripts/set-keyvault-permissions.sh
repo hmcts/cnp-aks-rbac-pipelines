@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 KEYVAULT_NAME=$1
 MI_PRINCIPAL_ID=$2        
