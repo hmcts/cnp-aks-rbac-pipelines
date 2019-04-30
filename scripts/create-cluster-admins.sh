@@ -1,10 +1,11 @@
 #!/bin/bash
 
-CLUSTER_ADMIN_BINDING=${1:-roles/cluster-admin-role-binding.yaml}
+CLUSTER_NAME=$1
+CLUSTER_ADMIN_BINDING=${2:-roles/cluster-admin-role-binding.yaml}
 
 CLUSTER_GLOBAL_ADMINS_GROUP=$(az ad group list --query  "[?displayName=='aks-cluster-admins'].objectId" -o tsv)
 
-CLUSTER_ADMINS_GROUP_NAME="${{ parameters.aksClusterName }}-cluster-admins"
+CLUSTER_ADMINS_GROUP_NAME="${CLUSTER_NAME}-cluster-admins"
 CLUSTER_ADMIN_GROUP=$(az ad group list --query  "[?displayName=='${CLUSTER_ADMINS_GROUP_NAME}'].objectId" -o tsv)
 if [ -z "${CLUSTER_ADMIN_GROUP}" ]; then 
     echo "Cluster admin group doesn't exist, creating"
