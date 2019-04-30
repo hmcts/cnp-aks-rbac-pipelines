@@ -97,7 +97,7 @@
             "count": "[parameters('nodeCount')]",
             "vmSize": "[parameters('vmSize')]",
             "osDiskSizeGB": "[variables('osDiskSizeGB')]",
-            "storageProfile": "[variables('ManagedDisks')]",
+            "storageProfile": "[variables('storageProfile')]",
             "maxPods": "[variables('maxPods')]",
             "vnetSubnetID": "[parameters('aksVnetSubnetId')]",
             "osType": "[variables('osType')]"
