@@ -275,7 +275,7 @@
                                                             }
                                                         ],
                                                         "text": "Description: _@{body('Parse_JSON')?['Description']}_",
-                                                        "title": "<@{body('Parse_JSON')?['LinkToSearchResults']}|Alert> - @{body('Parse_JSON')?['AlertRuleName']}"
+                                                        "title": "Alert - @{body('Parse_JSON')?['AlertRuleName']}"
                                                     }
                                                 ],
                                                 "channel": "[parameters('slackChannel')]",
