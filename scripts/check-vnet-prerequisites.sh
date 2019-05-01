@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 RESOURCE_GROUP_NAME=$1
 VNET_CIDR=$2
