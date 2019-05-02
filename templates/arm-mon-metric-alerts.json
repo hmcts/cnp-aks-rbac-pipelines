@@ -10,6 +10,7 @@
       },
       "isEnabled": {
         "type": "bool",
+        "defaultValue": "true",
         "metadata": {
           "description": "Specifies whether the alert is enabled"
         }
@@ -27,7 +28,20 @@
         "metadata": {
           "description": "The ID of the action group that is triggered when the alert is activated or deactivated"
         }
-      }
+      },
+        "environmentName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Environment"
+            }
+        },
+        "branch": {
+            "type": "string",
+            "defaultValue": "Unknown",
+            "metadata": {
+                "description": "source branch"
+            }
+        }
     },
     "variables": {},
     "resources": [
@@ -36,7 +50,10 @@
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
-        "tags": {},
+        "tags" : {
+          "EnvironmentName": "[parameters('environmentName')]",
+          "Branch":"[parameters('branch')]"
+        },
         "properties": {
           "description": "Node VM is shut down.",
           "severity": 1,
@@ -93,7 +110,10 @@
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
-        "tags": {},
+        "tags" : {
+          "EnvironmentName": "[parameters('environmentName')]",
+          "Branch":"[parameters('branch')]"
+        },
         "properties": {
           "description": "Kubelet has disk pressure - DiskPressure",
           "severity": 1,
@@ -150,7 +170,10 @@
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
-        "tags": {},
+        "tags" : {
+          "EnvironmentName": "[parameters('environmentName')]",
+          "Branch":"[parameters('branch')]"
+        },
         "properties": {
           "description": "kubelet has no disk space available - OutOfDisk",
           "severity": 1,
@@ -207,7 +230,10 @@
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
-        "tags": {},
+        "tags" : {
+          "EnvironmentName": "[parameters('environmentName')]",
+          "Branch":"[parameters('branch')]"
+        },
         "properties": {
           "description": "kubelet has no sufficient memory available - MemoryPressure",
           "severity": 1,
@@ -264,7 +290,10 @@
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
-        "tags": {},
+        "tags" : {
+          "EnvironmentName": "[parameters('environmentName')]",
+          "Branch":"[parameters('branch')]"
+        },
         "properties": {
           "description": "kubelet has no sufficient PID available - PIDPressure",
           "severity": 1,
@@ -321,7 +350,10 @@
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
-        "tags": {},
+        "tags" : {
+          "EnvironmentName": "[parameters('environmentName')]",
+          "Branch":"[parameters('branch')]"
+        },
         "properties": {
           "description": "kubelet is posting not ready status. - NotReady",
           "severity": 1,
