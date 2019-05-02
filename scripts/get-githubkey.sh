@@ -2,7 +2,7 @@
 set -e
 
 FLUX_GITHUB_FILE=${1}
-WORK_FOLDER=${2:-.)}
+WORK_FOLDER=${2:-.}
 
 kubectl -n admin delete secret flux-git-deploy || true
 kubectl apply -f ${WORK_FOLDER}/${FLUX_GITHUB_FILE}
