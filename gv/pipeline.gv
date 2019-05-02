@@ -1,5 +1,5 @@
 graph g {
-rankdir=LR;
+rankdir=TD;
     graph [fontsize=10 fontname="Verdana" compound=true overlap=false];
     node [shape=record fontsize=10 fontname="Verdana"];
 
