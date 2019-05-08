@@ -14,7 +14,7 @@ In general, the pipelines do the following:
 Each pipeline has a folder in which all YAML files, scripts and other related content will be self contained.
 
 ### Triggers
-The continous integration triggers on YAML push have been __disabled__. The pipelines are queued on demand.
+The continuous integration triggers on YAML push have been __disabled__. The pipelines are queued on demand.
 
 
 ---
