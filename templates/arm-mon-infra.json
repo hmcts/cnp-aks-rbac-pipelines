@@ -43,7 +43,6 @@
             "name": "[variables('logicAppName')]",
             "apiVersion": "2017-07-01",
             "location": "[resourceGroup().location]",
-            "scale": null,
             "tags" : {
                 "EnvironmentName": "[parameters('environmentName')]",
                 "Branch":"[parameters('branch')]"
@@ -256,27 +255,9 @@
                             },
                             "else": {
                                 "actions": {
-                                    "HTTP_3": {
-                                        "runAfter": {
-                                            "Parse_JSON": [
-                                                "Succeeded"
-                                            ]
-                                        },
-                                        "type": "Http",
-                                        "inputs": {
-                                            "body": {
-                                                "longUrl": "@{body('Parse_JSON')?['LinkToSearchResults']}"
-                                            },
-                                            "headers": {
-                                                "Content-Type": "application/json"
-                                            },
-                                            "method": "POST",
-                                            "uri": "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBkT1BRbA-uULHz8HMUAi0ywJtpNLXHShI"
-                                        }
-                                    },
                                     "HTTP_4": {
                                         "runAfter": {
-                                            "HTTP_3": [
+                                            "Parse_JSON": [
                                                 "Succeeded"
                                             ]
                                         },
@@ -299,7 +280,7 @@
                                                             }
                                                         ],
                                                         "text": "Description: _@{body('Parse_JSON')?['Description']}_",
-                                                        "title": "<@{body('HTTP_3')['id']}|Alert> - @{body('Parse_JSON')?['AlertRuleName']}"
+                                                        "title": "Alert - @{body('Parse_JSON')?['AlertRuleName']}"
                                                     }
                                                 ],
                                                 "channel": "[parameters('slackChannel')]",
@@ -439,8 +420,7 @@
                     "outputs": {}
                 },
                 "parameters": {}
-            },
-            "dependsOn": []
+            }
         },
         {
             "type": "Microsoft.Insights/actionGroups",
