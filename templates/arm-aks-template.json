@@ -7,7 +7,7 @@
     },
     "kubernetesVersion": {
       "type": "string",
-      "defaultValue": "1.12.6"
+      "defaultValue": "1.13.5"
     },
     "vmSize": {
       "type": "string",
