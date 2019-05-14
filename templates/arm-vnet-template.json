@@ -5,15 +5,25 @@
     "aksVnetName": {
       "type": "string"
     },
-    "aksVnetPrefix": {
-      "type": "string"
-    },
-    "aksSubnetName": {
+    "aksVnetCIDR": {
       "type": "string",
-      "defaultValue": "default"
+      "defaultValue": "10.10.0.0/16"
     },
-    "aksSubnetPrefix": {
-      "type": "string"
+    "aksPrimarySubnetName": {
+      "type": "string",
+      "defaultValue": "01"
+    },
+    "aksPrimarySubnetCIDR": {
+      "type": "string",
+      "defaultValue": "10.10.1.0/24"
+    },
+    "aksSecondarySubnetName": {
+      "type": "string",
+      "defaultValue": "02"
+    },
+    "aksSecondarySubnetCIDR": {
+      "type": "string",
+      "defaultValue": "10.10.2.0/24"
     },
     "environmentName": {
         "type": "string",
@@ -29,7 +39,11 @@
         }
     }
   },
-  "variables": {},
+  "variables": {
+    "subnetPrefix": "[concat(parameters('aksVnetName'),'_sub_')]",
+    "primarySubnetName": "[concat(variables('subnetPrefix'),parameters('aksPrimarySubnetName'))]",
+    "secondarySubnetName": "[concat(variables('subnetPrefix'),parameters('aksSecondarySubnetName'))]"
+  },
   "resources": [
     {
       "type": "Microsoft.Network/virtualNetworks",
@@ -43,7 +57,7 @@
       "scale": null,
       "properties": {
         "addressSpace": {
-          "addressPrefixes": ["[parameters('aksVnetPrefix')]"]
+          "addressPrefixes": ["[parameters('aksVnetCIDR')]"]
         },
         "enableDdosProtection": false,
         "enableVmProtection": false
@@ -53,12 +67,24 @@
           "apiVersion": "2018-10-01",
           "type": "subnets",
           "location": "[resourceGroup().location]",
-          "name": "[parameters('aksSubnetName')]",
+          "name": "[concat(variables('primarySubnetName'))]",
           "dependsOn": [
              "[parameters('aksVnetName')]"
           ],
           "properties": {
-            "addressPrefix": "[parameters('aksSubnetPrefix')]"
+            "addressPrefix": "[parameters('aksPrimarySubnetCIDR')]"
+          }
+        },
+        {
+          "apiVersion": "2018-10-01",
+          "type": "subnets",
+          "location": "[resourceGroup().location]",
+          "name": "[concat(variables('secondarySubnetName'))]",
+          "dependsOn": [
+             "[parameters('aksVnetName')]"
+          ],
+          "properties": {
+            "addressPrefix": "[parameters('aksSecondarySubnetCIDR')]"
           }
         }
       ],
@@ -66,9 +92,13 @@
     } 
   ],
   "outputs": {
-    "aksSubnetId": {
+    "aksPrimarySubnetId": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('aksVnetName'), parameters('aksSubnetName'))]"
+      "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('aksVnetName'), variables('primarySubnetName'))]"
+    },
+    "aksSecondarySubnetId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('aksVnetName'), variables('secondarySubnetName'))]"
     }
   }
 }
