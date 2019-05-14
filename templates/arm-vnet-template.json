@@ -11,19 +11,19 @@
     },
     "aksPrimarySubnetName": {
       "type": "string",
-      "defaultValue": "01"
+      "defaultValue": "00"
     },
     "aksPrimarySubnetCIDR": {
       "type": "string",
-      "defaultValue": "10.10.1.0/24"
+      "defaultValue": "10.10.0.0/24"
     },
     "aksSecondarySubnetName": {
       "type": "string",
-      "defaultValue": "02"
+      "defaultValue": "01"
     },
     "aksSecondarySubnetCIDR": {
       "type": "string",
-      "defaultValue": "10.10.2.0/24"
+      "defaultValue": "10.10.1.0/24"
     },
     "environmentName": {
         "type": "string",
