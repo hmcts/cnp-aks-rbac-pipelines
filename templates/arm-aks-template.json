@@ -49,9 +49,6 @@
     "serverAppSecret": {
       "type": "string"
     },
-    "tenantId": {
-      "type": "string"
-    },
     "aksLogAnalyticsId": {
       "type": "string"
     },
@@ -129,7 +126,7 @@
           "clientAppID": "[parameters('clientAppId')]",
           "serverAppID": "[parameters('serverAppId')]",
           "serverAppSecret": "[parameters('serverAppSecret')]",
-          "tenantID": "[parameters('tenantId')]"
+          "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
           "networkPlugin": "azure",
