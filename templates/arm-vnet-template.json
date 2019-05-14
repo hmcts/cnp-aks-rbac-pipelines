@@ -81,7 +81,8 @@
           "location": "[resourceGroup().location]",
           "name": "[variables('secondarySubnetName')]",
           "dependsOn": [
-             "[parameters('aksVnetName')]"
+             "[parameters('aksVnetName')]",
+             "[variables('primarySubnetName')]"
           ],
           "properties": {
             "addressPrefix": "[parameters('aksSecondarySubnetCIDR')]"
