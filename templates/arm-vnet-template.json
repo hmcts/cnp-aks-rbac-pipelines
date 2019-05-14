@@ -40,7 +40,7 @@
     }
   },
   "variables": {
-    "subnetPrefix": "[concat(parameters('aksVnetName'),'_sub_')]",
+    "subnetPrefix": "[concat(parameters('aksVnetName'),'-sub-')]",
     "primarySubnetName": "[concat(variables('subnetPrefix'),parameters('aksPrimarySubnetName'))]",
     "secondarySubnetName": "[concat(variables('subnetPrefix'),parameters('aksSecondarySubnetName'))]"
   },
@@ -67,7 +67,7 @@
           "apiVersion": "2018-10-01",
           "type": "subnets",
           "location": "[resourceGroup().location]",
-          "name": "[concat(variables('primarySubnetName'))]",
+          "name": "[variables('primarySubnetName')]",
           "dependsOn": [
              "[parameters('aksVnetName')]"
           ],
@@ -79,7 +79,7 @@
           "apiVersion": "2018-10-01",
           "type": "subnets",
           "location": "[resourceGroup().location]",
-          "name": "[concat(variables('secondarySubnetName'))]",
+          "name": "[variables('secondarySubnetName')]",
           "dependsOn": [
              "[parameters('aksVnetName')]"
           ],
