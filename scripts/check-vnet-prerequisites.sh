@@ -3,8 +3,7 @@
 RESOURCE_GROUP_NAME=$1
 VNET_CIDR=$2
 PRIMARY_SUBNET_CIDR=$3
-SECONDARY_SUBNET_CIDR=$3
-
+SECONDARY_SUBNET_CIDR=$4  
 
 if [ -z "${RESOURCE_GROUP_NAME}" ] ; then
   echo "Resource Group name is required." 
