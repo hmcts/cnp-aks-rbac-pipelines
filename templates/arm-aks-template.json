@@ -69,7 +69,7 @@
   "variables": {
     "osDiskSizeGB": 100,  
     "maxPods": 30,  
-    "nodepoolName" : "nodepool1",
+    "nodepoolName" : "[concat(parameters('environmentName'),'-nodepool')]",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser"
@@ -78,7 +78,7 @@
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2018-03-31",
+      "apiVersion": "2019-02-01",
       "location": "[resourceGroup().location]",
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
