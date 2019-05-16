@@ -4,7 +4,7 @@ digraph g {
         label = "Subscription";
 
         subgraph clusterEnvironmentRg{
-            label = "resource group: core-infra-concept)";
+            label = "resource group: core-infra-concept";
 
             envPattern[shape=record label="{naming pattern|{core|infra|#env#}|{example|core-infra-concept}}"];
 
@@ -46,11 +46,9 @@ digraph g {
             subgraph clusterManagedIdentity{
                 label=""
                 mipattern[shape=record label="{naming pattern|{|core|#env#|cluster|#index#|mi}|{example|core-concept-cluster-00-mi}}"];
-                mi00[shape=Mrecord label="{Managed Identity|{{index|00}}}"];
+                mi00[shape=Mrecord label="{Managed Identity"];
                 mipattern->mi00;
-                mi01[shape=Mrecord label="{Managed Identity|{{index|01}}}"];
-                mipattern->mi01;
-            }
+             }
 }
 
         subgraph clusterK800rg{
@@ -76,8 +74,8 @@ digraph g {
   
 
         subgraph clusterManagedCluxterRg00 {
-            label = "resource group: MC_core-concept-rg-core-concept-cluster-00_uksouth";
-            mcpattern00[shape=record label="{naming pattern|{MC|core|#env#|rg|core|#env#|#cluster#|#index#|}|{example|MC_core-concept-rg-core-concept-cluster-00_uksouth}}"];
+            label = "resource group: MC_concept-core-concept-cluster-00_uksouth";
+            mcpattern00[shape=record label="{naming pattern|{MC|#env#|core|#env#|#cluster#|#index#|}|{example|mc-concept-00-core-concept-cluster-00_uksouth}}"];
             mc00[shape=Mrecord label="{Managed Cluster Resource Group|{index|00}}}}"];
             mcpattern00->mc00;
             

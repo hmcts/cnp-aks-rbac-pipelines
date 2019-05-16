@@ -2,19 +2,52 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "resourceName": {
+      "resourceName": {
           "type": "string",
           "metadata": {
             "description": "Name of managed identity resource"
-          }
         }
+      },
+      "environmentName": {
+          "type": "string",
+          "metadata": {
+              "description": "Name of the Environment"
+          }
+      },
+      "branch": {
+          "type": "string",
+          "defaultValue": "Unknown",
+          "metadata": {
+              "description": "source branch"
+          }
+      },
+      "managedBy": {   "type": "string"},
+      "solutionOwner": {   "type": "string"},
+      "activityName": {   "type": "string"},
+      "dataClassification": {   "type": "string"},
+      "automation": {   "type": "string"},
+      "costCentre": {   "type": "string"},
+      "environment": {   "type": "string"},
+      "criticality": {   "type": "string"}
   },
   "resources": [
     {
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
       "name": "[parameters('resourceName')]",
       "apiVersion": "2018-11-30",
-      "location": "[resourceGroup().location]"
+      "location": "[resourceGroup().location]",
+      "tags" : {
+        "EnvironmentName": "[parameters('environmentName')]",
+        "Branch":"[parameters('branch')]",
+        "managedBy":"[parameters('managedBy')]",
+        "solutionOwner": "[parameters('solutionOwner')]",
+        "activityName": "[parameters('activityName')]",
+        "dataClassification":"[parameters('dataClassification')]",
+        "automation": "[parameters('automation')]",
+        "costCentre":"[parameters('costCentre')]",
+        "environment": "[parameters('environment')]",
+        "criticality": "[parameters('criticality')]"
+      }
     }
   ],
   "outputs": {

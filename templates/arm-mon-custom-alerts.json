@@ -39,7 +39,15 @@
             "metadata": {
                 "description": "source branch"
             }
-        }
+        },
+        "managedBy": {   "type": "string"},
+        "solutionOwner": {   "type": "string"},
+        "activityName": {   "type": "string"},
+        "dataClassification": {   "type": "string"},
+        "automation": {   "type": "string"},
+        "costCentre": {   "type": "string"},
+        "environment": {   "type": "string"},
+        "criticality": {   "type": "string"}
     },
     "variables": {
         "Query001": "KubePodInventory\r\n| where ClusterName =~ 'CLUSTER_NAME'\r\n| where ContainerStatusReason in ('ImagePullBackOff', 'ErrImagePull', 'CreateContainerConfigError', 'CrashLoopBackOff', 'Error', 'PodInitializing', 'ContainerCreating')\r\nand isnotnull(Name) \r\nand PodCreationTimeStamp < ago(6h)\r\nand TimeGenerated > ago(20min)\r\n| summarize count() by Name, Namespace, ClusterName, ContainerStatusReason, PodCreationTimeStamp, Computer\r\n| order by Namespace, ContainerStatusReason",
@@ -56,7 +64,15 @@
             "location": "[resourceGroup().location]",
             "tags" : {
                 "EnvironmentName": "[parameters('environmentName')]",
-                "Branch":"[parameters('branch')]"
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
              },
             "properties": {
                 "description": "Pods that are failing for at least 6 hours.",
@@ -90,7 +106,15 @@
             "location": "[resourceGroup().location]",
             "tags" : {
                 "EnvironmentName": "[parameters('environmentName')]",
-                "Branch":"[parameters('branch')]"
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
              },
             "properties": {
                 "description": "Number of scale up events in last 15 minutes.",
@@ -154,7 +178,15 @@
             "location": "[resourceGroup().location]",
             "tags" : {
                 "EnvironmentName": "[parameters('environmentName')]",
-                "Branch":"[parameters('branch')]"
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
               },
             "properties": {
                 "description": "Nodes that are using over 95% of CPU for at least the last 6 hours.",
@@ -188,7 +220,15 @@
             "location": "[resourceGroup().location]",
             "tags" : {
                 "EnvironmentName": "[parameters('environmentName')]",
-                "Branch":"[parameters('branch')]"
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
               },
             "properties": {
                 "description": "Nodes that have 10% or less RAM left for at least the last hour.",

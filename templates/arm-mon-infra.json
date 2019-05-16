@@ -30,7 +30,15 @@
             "metadata": {
                 "description": "source branch"
             }
-        }
+        },
+        "managedBy": {   "type": "string"},
+        "solutionOwner": {   "type": "string"},
+        "activityName": {   "type": "string"},
+        "dataClassification": {   "type": "string"},
+        "automation": {   "type": "string"},
+        "costCentre": {   "type": "string"},
+        "environment": {   "type": "string"},
+        "criticality": {   "type": "string"}
     },
     "variables" : {
         "agName" : "[concat('aks_',parameters('environmentName'),'_action_group')]",
@@ -45,7 +53,15 @@
             "location": "[resourceGroup().location]",
             "tags" : {
                 "EnvironmentName": "[parameters('environmentName')]",
-                "Branch":"[parameters('branch')]"
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
             },
             "properties": {
                 "state": "Enabled",
@@ -432,7 +448,15 @@
             ],
             "tags" : {
                 "EnvironmentName": "[parameters('environmentName')]",
-                "Branch":"[parameters('branch')]"
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
             },
             "properties": {
                 "groupShortName": "[variables('agShortName')]",
