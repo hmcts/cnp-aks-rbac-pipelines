@@ -65,14 +65,30 @@
             "description": "source branch"
         }
     },
-    "managedBy": {   "type": "string"},
-    "solutionOwner": {   "type": "string"},
-    "activityName": {   "type": "string"},
-    "dataClassification": {   "type": "string"},
-    "automation": {   "type": "string"},
-    "costCentre": {   "type": "string"},
-    "environment": {   "type": "string"},
-    "criticality": {   "type": "string"}
+    "managedBy": {
+      "type": "string"
+    },
+    "solutionOwner": {
+      "type": "string"
+    },
+    "activityName": {
+      "type": "string"
+    },
+    "dataClassification": {
+      "type": "string"
+    },
+    "automation": {
+      "type": "string"
+    },
+    "costCentre": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "criticality": {
+      "type": "string"
+    }
   },
   "variables": {
     "osDiskSizeGB": 100,  

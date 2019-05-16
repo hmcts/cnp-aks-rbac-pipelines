@@ -40,14 +40,30 @@
                 "description": "source branch"
             }
         },
-        "managedBy": {   "type": "string"},
-        "solutionOwner": {   "type": "string"},
-        "activityName": {   "type": "string"},
-        "dataClassification": {   "type": "string"},
-        "automation": {   "type": "string"},
-        "costCentre": {   "type": "string"},
-        "environment": {   "type": "string"},
-        "criticality": {   "type": "string"}
+        "managedBy": {
+            "type": "string"
+          },
+          "solutionOwner": {
+            "type": "string"
+          },
+          "activityName": {
+            "type": "string"
+          },
+          "dataClassification": {
+            "type": "string"
+          },
+          "automation": {
+            "type": "string"
+          },
+          "costCentre": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "criticality": {
+            "type": "string"
+          }
     },
     "variables": {
         "Query001": "KubePodInventory\r\n| where ClusterName =~ 'CLUSTER_NAME'\r\n| where ContainerStatusReason in ('ImagePullBackOff', 'ErrImagePull', 'CreateContainerConfigError', 'CrashLoopBackOff', 'Error', 'PodInitializing', 'ContainerCreating')\r\nand isnotnull(Name) \r\nand PodCreationTimeStamp < ago(6h)\r\nand TimeGenerated > ago(20min)\r\n| summarize count() by Name, Namespace, ClusterName, ContainerStatusReason, PodCreationTimeStamp, Computer\r\n| order by Namespace, ContainerStatusReason",
