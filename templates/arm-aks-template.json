@@ -93,7 +93,7 @@
   "variables": {
     "osDiskSizeGB": 100,  
     "maxPods": 30,  
-    "nodepoolName" : "[concat(parameters('environmentName'),'nodepool')]",
+    "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser"
