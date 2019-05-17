@@ -1,0 +1,30 @@
+name: RPE KLAWANI UKS
+trigger: none
+pr: none
+jobs:
+- template: pipeline.yaml
+  parameters:
+    keyvaultName: rpe-infra
+    serviceConnection: azurerm-rpetemp
+    helmVersion: '2.13.0'
+    location: 'UK South'
+    acrName: rpedev
+    fluxGithubKeySecureFileName: 'cnp-flux-github-key.yaml'
+    monInfraAppName: 'aks-monitoring-la'
+    monInfraSlackChannel: '#cnp-monitoring'
+    monInfraAgName: 'aks_action_group'
+    monInfraAgShortName: 'aksag'
+    monInfraRg: 'aks-klawani-rg'
+    metricAlertsEnabled: true
+    customAlertsEnabled: true
+    aksClusterName: 'aks-klawani-uks'
+    aksVnetName: 'aks-klawani-uks'
+    aksKubernetesVersion: '1.12.6'
+    aksVmSize: 'Standard_B4ms'
+    aksNodeCount: 2
+    aksDnsPrefix: 'cnp-aks-rpe-kl'
+    aksSshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDByksOKZjMovSnLZGIljdrs6bSvUNM514q/HCo5ITi1P/pMbARYHFl62AyxSrIuk+0RA2dYlzl6H1iluQa2bPT5PQqii9cA1XDnCBikkrLO2lMDG11Pu0cvDdYZNCrfgcpWZLy987mwOWchnWDGOdvIHv8Drx8eywL7Mzrx0wXS+vBOozUq0bN3ze9+mH6igRO/05e+r2PC+ohL4g0998qShvOoETU16bzcSm1TAKs6kCUPCnjj1y2/8nXAcYUKyesqSYx9brYhGbEPgE51IY6KQG24t7NNers17jqqgDAjO6a6d4jxgmJInLb5fziuelysOAP7pU0l0i8f9dtQu6H'
+    aksServicePrincipalId: 'b31d1a08-b9c7-44de-9a17-181313364d51'
+    aksClientAppId: '515343a3-7091-4bb8-bba3-0560ddb019a4'
+    aksServerAppId: 'ac483ac6-6a1d-4654-94fa-3a473c16f7ce'
+    aksTenantId: 'a0d77fc4-df1e-4b0d-8e35-46750ca5a672'
