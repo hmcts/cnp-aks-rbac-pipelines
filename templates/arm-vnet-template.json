@@ -64,9 +64,8 @@
     }
   },
   "variables": {
-    "subnetPrefix": "[concat(parameters('aksVnetName'),'-sub-')]",
-    "primarySubnetName": "[concat(variables('subnetPrefix'),parameters('aksPrimarySubnetName'))]",
-    "secondarySubnetName": "[concat(variables('subnetPrefix'),parameters('aksSecondarySubnetName'))]"
+    "primarySubnetName": "[concat('aks-',parameters('aksPrimarySubnetName'))]",
+    "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]"
   },
   "resources": [
     {
