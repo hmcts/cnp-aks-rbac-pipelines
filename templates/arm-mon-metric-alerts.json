@@ -41,6 +41,30 @@
             "metadata": {
                 "description": "source branch"
             }
+        },
+        "managedBy": {
+          "type": "string"
+        },
+        "solutionOwner": {
+          "type": "string"
+        },
+        "activityName": {
+          "type": "string"
+        },
+        "dataClassification": {
+          "type": "string"
+        },
+        "automation": {
+          "type": "string"
+        },
+        "costCentre": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "criticality": {
+          "type": "string"
         }
     },
     "variables": {},
@@ -52,7 +76,15 @@
         "apiVersion": "2018-03-01",
         "tags" : {
           "EnvironmentName": "[parameters('environmentName')]",
-          "Branch":"[parameters('branch')]"
+          "Branch":"[parameters('branch')]",
+          "managedBy":"[parameters('managedBy')]",
+          "solutionOwner": "[parameters('solutionOwner')]",
+          "activityName": "[parameters('activityName')]",
+          "dataClassification":"[parameters('dataClassification')]",
+          "automation": "[parameters('automation')]",
+          "costCentre":"[parameters('costCentre')]",
+          "environment": "[parameters('environment')]",
+          "criticality": "[parameters('criticality')]"
         },
         "properties": {
           "description": "Node VM is shut down.",
@@ -112,7 +144,15 @@
         "apiVersion": "2018-03-01",
         "tags" : {
           "EnvironmentName": "[parameters('environmentName')]",
-          "Branch":"[parameters('branch')]"
+          "Branch":"[parameters('branch')]",
+          "managedBy":"[parameters('managedBy')]",
+          "solutionOwner": "[parameters('solutionOwner')]",
+          "activityName": "[parameters('activityName')]",
+          "dataClassification":"[parameters('dataClassification')]",
+          "automation": "[parameters('automation')]",
+          "costCentre":"[parameters('costCentre')]",
+          "environment": "[parameters('environment')]",
+          "criticality": "[parameters('criticality')]"
         },
         "properties": {
           "description": "Kubelet has disk pressure - DiskPressure",
@@ -172,7 +212,15 @@
         "apiVersion": "2018-03-01",
         "tags" : {
           "EnvironmentName": "[parameters('environmentName')]",
-          "Branch":"[parameters('branch')]"
+          "Branch":"[parameters('branch')]",
+          "managedBy":"[parameters('managedBy')]",
+          "solutionOwner": "[parameters('solutionOwner')]",
+          "activityName": "[parameters('activityName')]",
+          "dataClassification":"[parameters('dataClassification')]",
+          "automation": "[parameters('automation')]",
+          "costCentre":"[parameters('costCentre')]",
+          "environment": "[parameters('environment')]",
+          "criticality": "[parameters('criticality')]"
         },
         "properties": {
           "description": "kubelet has no disk space available - OutOfDisk",
@@ -232,7 +280,15 @@
         "apiVersion": "2018-03-01",
         "tags" : {
           "EnvironmentName": "[parameters('environmentName')]",
-          "Branch":"[parameters('branch')]"
+          "Branch":"[parameters('branch')]",
+          "managedBy":"[parameters('managedBy')]",
+          "solutionOwner": "[parameters('solutionOwner')]",
+          "activityName": "[parameters('activityName')]",
+          "dataClassification":"[parameters('dataClassification')]",
+          "automation": "[parameters('automation')]",
+          "costCentre":"[parameters('costCentre')]",
+          "environment": "[parameters('environment')]",
+          "criticality": "[parameters('criticality')]"
         },
         "properties": {
           "description": "kubelet has no sufficient memory available - MemoryPressure",
@@ -292,7 +348,15 @@
         "apiVersion": "2018-03-01",
         "tags" : {
           "EnvironmentName": "[parameters('environmentName')]",
-          "Branch":"[parameters('branch')]"
+          "Branch":"[parameters('branch')]",
+          "managedBy":"[parameters('managedBy')]",
+          "solutionOwner": "[parameters('solutionOwner')]",
+          "activityName": "[parameters('activityName')]",
+          "dataClassification":"[parameters('dataClassification')]",
+          "automation": "[parameters('automation')]",
+          "costCentre":"[parameters('costCentre')]",
+          "environment": "[parameters('environment')]",
+          "criticality": "[parameters('criticality')]"
         },
         "properties": {
           "description": "kubelet has no sufficient PID available - PIDPressure",
@@ -352,7 +416,15 @@
         "apiVersion": "2018-03-01",
         "tags" : {
           "EnvironmentName": "[parameters('environmentName')]",
-          "Branch":"[parameters('branch')]"
+          "Branch":"[parameters('branch')]",
+          "managedBy":"[parameters('managedBy')]",
+          "solutionOwner": "[parameters('solutionOwner')]",
+          "activityName": "[parameters('activityName')]",
+          "dataClassification":"[parameters('dataClassification')]",
+          "automation": "[parameters('automation')]",
+          "costCentre":"[parameters('costCentre')]",
+          "environment": "[parameters('environment')]",
+          "criticality": "[parameters('criticality')]"
         },
         "properties": {
           "description": "kubelet is posting not ready status. - NotReady",

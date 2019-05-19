@@ -5,15 +5,25 @@
     "aksVnetName": {
       "type": "string"
     },
-    "aksVnetPrefix": {
-      "type": "string"
-    },
-    "aksSubnetName": {
+    "aksVnetCIDR": {
       "type": "string",
-      "defaultValue": "default"
+      "defaultValue": "10.10.0.0/16"
     },
-    "aksSubnetPrefix": {
-      "type": "string"
+    "aksPrimarySubnetName": {
+      "type": "string",
+      "defaultValue": "00"
+    },
+    "aksPrimarySubnetCIDR": {
+      "type": "string",
+      "defaultValue": "10.10.0.0/24"
+    },
+    "aksSecondarySubnetName": {
+      "type": "string",
+      "defaultValue": "01"
+    },
+    "aksSecondarySubnetCIDR": {
+      "type": "string",
+      "defaultValue": "10.10.1.0/24"
     },
     "environmentName": {
         "type": "string",
@@ -27,9 +37,36 @@
         "metadata": {
             "description": "source branch"
         }
+    },
+    "managedBy": {
+      "type": "string"
+    },
+    "solutionOwner": {
+      "type": "string"
+    },
+    "activityName": {
+      "type": "string"
+    },
+    "dataClassification": {
+      "type": "string"
+    },
+    "automation": {
+      "type": "string"
+    },
+    "costCentre": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "criticality": {
+      "type": "string"
     }
   },
-  "variables": {},
+  "variables": {
+    "primarySubnetName": "[concat('aks-',parameters('aksPrimarySubnetName'))]",
+    "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]"
+  },
   "resources": [
     {
       "type": "Microsoft.Network/virtualNetworks",
@@ -38,12 +75,20 @@
       "location": "[resourceGroup().location]",
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
-        "Branch":"[parameters('branch')]"
+        "Branch":"[parameters('branch')]",
+        "managedBy":"[parameters('managedBy')]",
+        "solutionOwner": "[parameters('solutionOwner')]",
+        "activityName": "[parameters('activityName')]",
+        "dataClassification":"[parameters('dataClassification')]",
+        "automation": "[parameters('automation')]",
+        "costCentre":"[parameters('costCentre')]",
+        "environment": "[parameters('environment')]",
+        "criticality": "[parameters('criticality')]"
       },
       "scale": null,
       "properties": {
         "addressSpace": {
-          "addressPrefixes": ["[parameters('aksVnetPrefix')]"]
+          "addressPrefixes": ["[parameters('aksVnetCIDR')]"]
         },
         "enableDdosProtection": false,
         "enableVmProtection": false
@@ -53,12 +98,25 @@
           "apiVersion": "2018-10-01",
           "type": "subnets",
           "location": "[resourceGroup().location]",
-          "name": "[parameters('aksSubnetName')]",
+          "name": "[variables('primarySubnetName')]",
           "dependsOn": [
              "[parameters('aksVnetName')]"
           ],
           "properties": {
-            "addressPrefix": "[parameters('aksSubnetPrefix')]"
+            "addressPrefix": "[parameters('aksPrimarySubnetCIDR')]"
+          }
+        },
+        {
+          "apiVersion": "2018-10-01",
+          "type": "subnets",
+          "location": "[resourceGroup().location]",
+          "name": "[variables('secondarySubnetName')]",
+          "dependsOn": [
+             "[parameters('aksVnetName')]",
+             "[variables('primarySubnetName')]"
+          ],
+          "properties": {
+            "addressPrefix": "[parameters('aksSecondarySubnetCIDR')]"
           }
         }
       ],
@@ -66,9 +124,13 @@
     } 
   ],
   "outputs": {
-    "aksSubnetId": {
+    "aksPrimarySubnetId": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('aksVnetName'), parameters('aksSubnetName'))]"
+      "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('aksVnetName'), variables('primarySubnetName'))]"
+    },
+    "aksSecondarySubnetId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('aksVnetName'), variables('secondarySubnetName'))]"
     }
   }
 }

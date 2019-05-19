@@ -49,9 +49,6 @@
     "serverAppSecret": {
       "type": "string"
     },
-    "tenantId": {
-      "type": "string"
-    },
     "aksLogAnalyticsId": {
       "type": "string"
     },
@@ -67,12 +64,36 @@
         "metadata": {
             "description": "source branch"
         }
+    },
+    "managedBy": {
+      "type": "string"
+    },
+    "solutionOwner": {
+      "type": "string"
+    },
+    "activityName": {
+      "type": "string"
+    },
+    "dataClassification": {
+      "type": "string"
+    },
+    "automation": {
+      "type": "string"
+    },
+    "costCentre": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "criticality": {
+      "type": "string"
     }
   },
   "variables": {
     "osDiskSizeGB": 100,  
     "maxPods": 30,  
-    "nodepoolName" : "nodepool1",
+    "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser"
@@ -81,11 +102,19 @@
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2018-03-31",
+      "apiVersion": "2019-02-01",
       "location": "[resourceGroup().location]",
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
-        "Branch":"[parameters('branch')]"
+        "Branch":"[parameters('branch')]",
+        "managedBy":"[parameters('managedBy')]",
+        "solutionOwner": "[parameters('solutionOwner')]",
+        "activityName": "[parameters('activityName')]",
+        "dataClassification":"[parameters('dataClassification')]",
+        "automation": "[parameters('automation')]",
+        "costCentre":"[parameters('costCentre')]",
+        "environment": "[parameters('environment')]",
+        "criticality": "[parameters('criticality')]"
       },
       "properties": {
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
@@ -129,7 +158,7 @@
           "clientAppID": "[parameters('clientAppId')]",
           "serverAppID": "[parameters('serverAppId')]",
           "serverAppSecret": "[parameters('serverAppSecret')]",
-          "tenantID": "[parameters('tenantId')]"
+          "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
           "networkPlugin": "azure",

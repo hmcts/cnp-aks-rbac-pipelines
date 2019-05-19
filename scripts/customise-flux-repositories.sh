@@ -3,7 +3,7 @@ set -e
 
 ACR_NAME=$1
 AKS_SP_ID=$2
-AKS_SP_SECRET=${3}
+AKS_SP_SECRET=$3
 REPOSITORIES_YAML=${4:-templates/repositories.yaml}
 
 sed -i -e 's/${ACR_NAME}/'"${ACR_NAME}"'/g' \
