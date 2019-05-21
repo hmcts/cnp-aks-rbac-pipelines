@@ -1,13 +1,15 @@
 #!/bin/bash
 set -e
 
-SUBSCRIPTION_NAME=$1
-CLUSTER_ADMIN_BINDING=${2:-roles/cluster-admin-role-binding.yaml}
+CLUSTER_ADMIN_BINDING=${1:-roles/cluster-admin-role-binding.yaml}
+AAD_ADMIN_GROUP_NAME=${2:-dcd_group_aks_admin_global_v2}
+CLUSTER_ADMINS_GROUP_PREFIX=${3:-dcd_group_aks_admin_}
 
-CLUSTER_GLOBAL_ADMINS_GROUP=$(az ad group list --query  "[?displayName=='dcd_group_aks_admin_global_v2'].objectId" -o tsv)
-
-CLUSTER_ADMINS_GROUP_NAME="dcd_group_aks_admin_${SUBSCRIPTION_NAME,,}_v2"
+SUBSCRIPTION_NAME=$(az account show --query name -o tsv)
+CLUSTER_GLOBAL_ADMINS_GROUP=$(az ad group list --query "[?displayName=='${AAD_ADMIN_GROUP_NAME}'].objectId" -o tsv)
+CLUSTER_ADMINS_GROUP_NAME="${CLUSTER_ADMINS_GROUP_PREFIX}${SUBSCRIPTION_NAME,,}_v2"
 CLUSTER_ADMIN_GROUP=$(az ad group list --query  "[?displayName=='${CLUSTER_ADMINS_GROUP_NAME}'].objectId" -o tsv)
+
 if [ -z "${CLUSTER_ADMIN_GROUP}" ]; then
     echo "Cluster admin group doesn't exist, aborting"
     exit 1
