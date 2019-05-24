@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 CLUSTER_ADMIN_BINDING=${1:-roles/cluster-admin-role-binding.yaml}
 AAD_ADMIN_GROUP_NAME=${2:-dcd_group_aks_admin_global_v2}
