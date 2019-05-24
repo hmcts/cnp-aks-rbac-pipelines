@@ -246,6 +246,15 @@ jobs:
           cat roles/developers-log-reader-binding.yaml | sed -e 's@${DEVELOPERS_GROUP}@'"$DEVELOPERS_GROUP"'@' | kubectl apply -f -
         fi
 
+  - task: AzureCLI@1
+    displayName: 'Bind portal roles'
+    inputs:
+      azureSubscription: ${{ parameters.serviceConnection }}
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        kubectl apply -f roles/portal-log-reader-role.yaml
+        kubectl apply -f roles/portal-log-reader-binding.yaml
+
   - task: HelmInstaller@0
     displayName: 'Helm - Install Client ${{ parameters.helmVersion }}'
     inputs:
