@@ -13,5 +13,5 @@ az keyvault secret download \
 
 kubectl apply -f sealed-secrets-pki.yaml
 
-helm upgrade sealed-secrets stable/sealed-secrets --version ${VERSION} --install --namespace ${NAMESPACE} --set secretName=sealed-secrets-pki --wait
+helm upgrade sealed-secrets stable/sealed-secrets --version ${VERSION} --install --recreate-pods --namespace ${NAMESPACE} --set secretName=sealed-secrets-pki --wait
 
