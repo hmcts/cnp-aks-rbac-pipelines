@@ -5,7 +5,7 @@ VAULT_NAME=$1
 NAMESPACE=${2:-admin}
 
 openssl req -x509 -newkey rsa:4096 -keyout tls.key -out tls.crt -days 365 \
-  -subj "/C=US/ST=Oregon/L=Portland/O=Company Name/OU=Org/CN=www.example.com" -nodes
+  -subj "/C=GB/ST=London/L=London/O=Ministry of Justice/OU=HMCTS/CN=sealed-secrets.platform.hmcts.net" -nodes
 
 kubectl create secret generic sealed-secrets-pki \
   --from-file=tls.key \
