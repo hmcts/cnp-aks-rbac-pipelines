@@ -1,4 +1,5 @@
 #!/bin/bash
+# Adds service principal credentials to flux so that it can pull from our container registry
 set -e
 
 ACR_NAME=$1
