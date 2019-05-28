@@ -10,6 +10,7 @@
         },
         "isEnabled": {
             "type": "string",
+            "defaultValue": "true",
             "metadata": {
                 "description": "Specifies whether the alert is enabled"
             }
@@ -25,14 +26,51 @@
             "metadata": {
                 "description": "The ID of the action group that is triggered when the alert is activated or deactivated"
             }
-        }
+        },
+        "environmentName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Environment"
+            }
+        },
+        "branch": {
+            "type": "string",
+            "defaultValue": "Unknown",
+            "metadata": {
+                "description": "source branch"
+            }
+        },
+        "managedBy": {
+            "type": "string"
+          },
+          "solutionOwner": {
+            "type": "string"
+          },
+          "activityName": {
+            "type": "string"
+          },
+          "dataClassification": {
+            "type": "string"
+          },
+          "automation": {
+            "type": "string"
+          },
+          "costCentre": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "criticality": {
+            "type": "string"
+          }
     },
     "variables": {
-        "1Query": "KubePodInventory\r\n| where ClusterName =~ 'CLUSTER_NAME'\r\n| where ContainerStatusReason in ('ImagePullBackOff', 'ErrImagePull', 'CreateContainerConfigError', 'CrashLoopBackOff', 'Error', 'PodInitializing', 'ContainerCreating')\r\nand isnotnull(Name) \r\nand PodCreationTimeStamp < ago(6h)\r\nand TimeGenerated > ago(20min)\r\n| summarize count() by Name, Namespace, ClusterName, ContainerStatusReason, PodCreationTimeStamp, Computer\r\n| order by Namespace, ContainerStatusReason",
-        "2Query": "AzureDiagnostics\r\n| where Resource == 'CLUSTER_NAME'\r\n| where Category == \"cluster-autoscaler\" and TimeGenerated > ago(15m) and log_s matches regex \"Scale-up:\"\r\n| order by TimeGenerated desc\r\n| project TimeGenerated, log_s",
-        "3Query": "AzureDiagnostics\r\n| where Resource == 'CLUSTER_NAME' \r\n| where Category == \"cluster-autoscaler\" and TimeGenerated > ago(15m) and log_s matches regex \"Deleting vmss instances\"\r\n| order by TimeGenerated desc\r\n| project TimeGenerated, scale_set=extract(@\"(virtualMachineScaleSets\\\/(.*?)\\\/)\", 2, log_s, typeof(string)), aks_rg_name=extract(@\"(resourceGroups\\\/MC_)(.*?)(\\_)\", 2, log_s, typeof(string))",
-        "4Query": "let endDateTime = now();\r\nlet startDateTime = ago(6h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'cpuCapacityNanoCores';\r\nlet usageCounterName = 'cpuUsageNanoCores';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 95\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName",
-        "5Query": "let endDateTime = now();\r\nlet startDateTime = ago(1h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'memoryCapacityBytes';\r\nlet usageCounterName = 'memoryRssBytes';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 90\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName"
+        "Query001": "KubePodInventory\r\n| where ClusterName =~ 'CLUSTER_NAME'\r\n| where ContainerStatusReason in ('ImagePullBackOff', 'ErrImagePull', 'CreateContainerConfigError', 'CrashLoopBackOff', 'Error', 'PodInitializing', 'ContainerCreating')\r\nand isnotnull(Name) \r\nand PodCreationTimeStamp < ago(6h)\r\nand TimeGenerated > ago(20min)\r\n| summarize count() by Name, Namespace, ClusterName, ContainerStatusReason, PodCreationTimeStamp, Computer\r\n| order by Namespace, ContainerStatusReason",
+        "Query002": "AzureDiagnostics\r\n| where Resource == 'CLUSTER_NAME'\r\n| where Category == \"cluster-autoscaler\" and TimeGenerated > ago(15m) and log_s matches regex \"Scale-up:\"\r\n| order by TimeGenerated desc\r\n| project TimeGenerated, log_s",
+        "Query003": "AzureDiagnostics\r\n| where Resource == 'CLUSTER_NAME' \r\n| where Category == \"cluster-autoscaler\" and TimeGenerated > ago(15m) and log_s matches regex \"Deleting vmss instances\"\r\n| order by TimeGenerated desc\r\n| project TimeGenerated, scale_set=extract(@\"(virtualMachineScaleSets\\\/(.*?)\\\/)\", 2, log_s, typeof(string)), aks_rg_name=extract(@\"(resourceGroups\\\/MC_)(.*?)(\\_)\", 2, log_s, typeof(string))",
+        "Query004": "let endDateTime = now();\r\nlet startDateTime = ago(6h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'cpuCapacityNanoCores';\r\nlet usageCounterName = 'cpuUsageNanoCores';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 95\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName",
+        "Query005": "let endDateTime = now();\r\nlet startDateTime = ago(1h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'memoryCapacityBytes';\r\nlet usageCounterName = 'memoryRssBytes';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 90\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName"    
     },
     "resources": [
         {
@@ -40,11 +78,23 @@
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
+            "tags" : {
+                "EnvironmentName": "[parameters('environmentName')]",
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
+             },
             "properties": {
                 "description": "Pods that are failing for at least 6 hours.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {         
-                    "query": "[replace(variables('1Query'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[replace(variables('Query001'),'CLUSTER_NAME', parameters('aksName'))]",
                     "dataSourceId": "[parameters('resourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -70,11 +120,23 @@
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
+            "tags" : {
+                "EnvironmentName": "[parameters('environmentName')]",
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
+             },
             "properties": {
                 "description": "Number of scale up events in last 15 minutes.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('2Query'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
+                    "query": "[replace(variables('Query002'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
                     "dataSourceId": "[parameters('resourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -104,7 +166,7 @@
                 "description": "Number of deleted nodes in last 15 minutes.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('3Query'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
+                    "query": "[replace(variables('Query003'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
                     "dataSourceId": "[parameters('resourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -130,11 +192,23 @@
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
+            "tags" : {
+                "EnvironmentName": "[parameters('environmentName')]",
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
+              },
             "properties": {
                 "description": "Nodes that are using over 95% of CPU for at least the last 6 hours.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('4Query'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[replace(variables('Query004'),'CLUSTER_NAME', parameters('aksName'))]",
                     "dataSourceId": "[parameters('resourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -160,11 +234,23 @@
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
+            "tags" : {
+                "EnvironmentName": "[parameters('environmentName')]",
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
+              },
             "properties": {
                 "description": "Nodes that have 10% or less RAM left for at least the last hour.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('5Query'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[replace(variables('Query005'),'CLUSTER_NAME', parameters('aksName'))]",
                     "dataSourceId": "[parameters('resourceId')]",
                     "queryType": "ResultCount"
                 },

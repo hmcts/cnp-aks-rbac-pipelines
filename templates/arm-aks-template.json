@@ -6,22 +6,27 @@
       "type": "string"
     },
     "kubernetesVersion": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "1.13.5"
     },
     "vmSize": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "Standard_B4ms"
     },
     "nodeCount": {
-      "type": "int"
+      "type": "int",
+      "defaultValue": 2
     },
     "aksVnetSubnetId": {
       "type": "string"
     },
     "aksServiceCidr": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "10.0.0.0/16"
     },
     "aksDnsServiceIp": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "10.0.0.10"
     },
     "dnsPrefix": {
       "type": "string"
@@ -44,41 +49,90 @@
     "serverAppSecret": {
       "type": "string"
     },
-    "tenantId": {
+    "aksLogAnalyticsId": {
       "type": "string"
     },
-    "aksLogAnalyticsId": {
+    "environmentName": {
+        "type": "string",
+        "metadata": {
+            "description": "Name of the Environment"
+        }
+    },
+    "branch": {
+        "type": "string",
+        "defaultValue": "Unknown",
+        "metadata": {
+            "description": "source branch"
+        }
+    },
+    "managedBy": {
+      "type": "string"
+    },
+    "solutionOwner": {
+      "type": "string"
+    },
+    "activityName": {
+      "type": "string"
+    },
+    "dataClassification": {
+      "type": "string"
+    },
+    "automation": {
+      "type": "string"
+    },
+    "costCentre": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "criticality": {
       "type": "string"
     }
   },
-  "variables": {},
+  "variables": {
+    "osDiskSizeGB": 100,  
+    "maxPods": 30,  
+    "nodepoolName" : "nodepool",
+    "storageProfile": "ManagedDisks",
+    "osType": "Linux",
+    "adminUsername": "azureuser"
+  },
   "resources": [
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2018-03-31",
+      "apiVersion": "2019-02-01",
       "location": "[resourceGroup().location]",
-      "tags": {
-        "Team Name": "CNP"
+      "tags" : {
+        "EnvironmentName": "[parameters('environmentName')]",
+        "Branch":"[parameters('branch')]",
+        "managedBy":"[parameters('managedBy')]",
+        "solutionOwner": "[parameters('solutionOwner')]",
+        "activityName": "[parameters('activityName')]",
+        "dataClassification":"[parameters('dataClassification')]",
+        "automation": "[parameters('automation')]",
+        "costCentre":"[parameters('costCentre')]",
+        "environment": "[parameters('environment')]",
+        "criticality": "[parameters('criticality')]"
       },
-      "scale": null,
       "properties": {
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
         "dnsPrefix": "[parameters('dnsPrefix')]",
         "agentPoolProfiles": [
           {
-            "name": "nodepool1",
+            "name": "[variables('nodepoolName')]",
             "count": "[parameters('nodeCount')]",
             "vmSize": "[parameters('vmSize')]",
-            "osDiskSizeGB": 100,
-            "storageProfile": "ManagedDisks",
-            "maxPods": 30,
+            "osDiskSizeGB": "[variables('osDiskSizeGB')]",
+            "storageProfile": "[variables('storageProfile')]",
+            "maxPods": "[variables('maxPods')]",
             "vnetSubnetID": "[parameters('aksVnetSubnetId')]",
-            "osType": "Linux"
+            "osType": "[variables('osType')]"
           }
         ],
         "linuxProfile": {
-          "adminUsername": "azureuser",
+          "adminUsername": "[variables('adminUsername')]",
           "ssh": {
             "publicKeys": [
               {
@@ -104,7 +158,7 @@
           "clientAppID": "[parameters('clientAppId')]",
           "serverAppID": "[parameters('serverAppId')]",
           "serverAppSecret": "[parameters('serverAppSecret')]",
-          "tenantID": "[parameters('tenantId')]"
+          "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
           "networkPlugin": "azure",
