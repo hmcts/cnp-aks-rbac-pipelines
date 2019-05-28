@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -x
 
 ENV=$1
 CLUSTER_NAME=$2
