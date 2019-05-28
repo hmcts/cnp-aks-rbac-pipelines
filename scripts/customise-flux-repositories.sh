@@ -1,6 +1,6 @@
 #!/bin/bash
 # Adds service principal credentials to flux so that it can pull from our container registry
-set -e
+set -eux
 
 ACR_NAME=$1
 AKS_SP_ID=$2
