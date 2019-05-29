@@ -103,7 +103,15 @@
              "[parameters('aksVnetName')]"
           ],
           "properties": {
-            "addressPrefix": "[parameters('aksPrimarySubnetCIDR')]"
+            "addressPrefix": "[parameters('aksPrimarySubnetCIDR')]",
+            "serviceEndpoints": [
+              {
+                "service": "Microsoft.Sql"
+              },
+              {
+                "service": "Microsoft.Storage"
+              }
+            ]
           }
         },
         {
@@ -116,7 +124,15 @@
              "[variables('primarySubnetName')]"
           ],
           "properties": {
-            "addressPrefix": "[parameters('aksSecondarySubnetCIDR')]"
+            "addressPrefix": "[parameters('aksSecondarySubnetCIDR')]",
+            "serviceEndpoints": [
+              {
+                "service": "Microsoft.Sql"
+              },
+              {
+                "service": "Microsoft.Storage"
+              }
+            ]
           }
         }
       ],
