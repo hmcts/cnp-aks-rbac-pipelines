@@ -35,7 +35,7 @@
     },
     "enableHttp2": {
       "type": "bool",
-      "defaultValue": false
+      "defaultValue": true
     },
     "zones": {
       "type": "array",
