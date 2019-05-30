@@ -25,6 +25,13 @@
       "type": "string",
       "defaultValue": "10.10.1.0/24"
     },
+    "appgwSubnetName": {
+      "type": "string",
+      "defaultValue": "aks-appgw"
+    },
+    "appgwSubnetCIDR": {
+      "type": "string"
+    },
     "environmentName": {
         "type": "string",
         "metadata": {
@@ -91,51 +98,44 @@
           "addressPrefixes": ["[parameters('aksVnetCIDR')]"]
         },
         "enableDdosProtection": false,
-        "enableVmProtection": false
+        "enableVmProtection": false,
+        "subnets": [
+          {
+            "name": "[variables('primarySubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('aksPrimarySubnetCIDR')]",
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.Sql"
+                },
+                {
+                  "service": "Microsoft.Storage"
+                }
+              ]
+            }
+          },
+          {
+            "name": "[variables('secondarySubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('aksSecondarySubnetCIDR')]",
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.Sql"
+                },
+                {
+                  "service": "Microsoft.Storage"
+                }
+              ]
+            }
+          },
+          {
+            "name": "[parameters('appgwSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('appgwSubnetCIDR')]"
+            }
+          }
+        ]
       },
-      "resources": [
-        {
-          "apiVersion": "2018-10-01",
-          "type": "subnets",
-          "location": "[resourceGroup().location]",
-          "name": "[variables('primarySubnetName')]",
-          "dependsOn": [
-             "[parameters('aksVnetName')]"
-          ],
-          "properties": {
-            "addressPrefix": "[parameters('aksPrimarySubnetCIDR')]",
-            "serviceEndpoints": [
-              {
-                "service": "Microsoft.Sql"
-              },
-              {
-                "service": "Microsoft.Storage"
-              }
-            ]
-          }
-        },
-        {
-          "apiVersion": "2018-10-01",
-          "type": "subnets",
-          "location": "[resourceGroup().location]",
-          "name": "[variables('secondarySubnetName')]",
-          "dependsOn": [
-             "[parameters('aksVnetName')]",
-             "[variables('primarySubnetName')]"
-          ],
-          "properties": {
-            "addressPrefix": "[parameters('aksSecondarySubnetCIDR')]",
-            "serviceEndpoints": [
-              {
-                "service": "Microsoft.Sql"
-              },
-              {
-                "service": "Microsoft.Storage"
-              }
-            ]
-          }
-        }
-      ],
       "dependsOn": []
     } 
   ],

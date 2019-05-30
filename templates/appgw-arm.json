@@ -44,9 +44,6 @@
     "appgwVirtualNetworkName": {
       "type": "string"
     },
-    "appgwSubnetCIDR": {
-      "type": "string"
-    },
     "aksIngressIpAddresses": {
       "type": "array"
     },
@@ -71,9 +68,6 @@
       "apiVersion": "2018-12-01",
       "location": "[parameters('location')]",
       "zones": "[parameters('zones')]",
-      "dependsOn": [
-        "[variables('subnetRef')]"
-      ],
       "comments": "probes.host is set to host.never.exists.rr so that it is invalid so that traefik will ignore the hostname and pick default one",
       "properties": {
         "sku": {
@@ -186,14 +180,6 @@
         ],
         "enableHttp2": "[parameters('enableHttp2')]",
         "sslCertificates": []
-      }
-    },
-    {
-      "name": "[concat(parameters('appgwVirtualNetworkName'), '/', parameters('appgwSubnetName'))]",
-      "type": "Microsoft.Network/virtualNetworks/subnets",
-      "apiVersion": "2018-08-01",
-      "properties": {
-        "addressPrefix": "[parameters('appgwSubnetCIDR')]"
       }
     }
   ]
