@@ -27,7 +27,7 @@ openssl x509 -req -CA ca.cert.pem -CAkey ca.key.pem -CAcreateserial \
 openssl x509 -req -CA ca.cert.pem -CAkey ca.key.pem -CAcreateserial \
 -in helm.csr.pem -out helm.cert.pem -days 365
 
-# Generate secret container Helm certs for Flux while we're at it
+# Generate secret for Helm certs for Flux while we're at it
 kubectl -n admin create secret tls helm-client-certs \
 --cert=helm.cert.pem \
 --key=helm.key.pem \
