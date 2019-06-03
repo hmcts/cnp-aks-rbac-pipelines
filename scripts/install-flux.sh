@@ -3,10 +3,10 @@ set -ex
 
 ENV=$1
 CLUSTER_NAME=$2
-GIT_REPO=${3:-https://weaveworks.github.io/flux}
-VALUES=${4-deployments/weave-flux/values.yaml}
-VAULT_NAME=$5
-ENABLE_HELM_TLS=${6:false}
+VAULT_NAME=$3
+ENABLE_HELM_TLS=${4:false}
+GIT_REPO=${5:-https://weaveworks.github.io/flux}
+VALUES=${6-deployments/weave-flux/values.yaml}
 
 helm repo add weaveworks ${GIT_REPO}
 

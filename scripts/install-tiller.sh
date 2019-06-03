@@ -3,8 +3,8 @@
 CLUSTER_NAME=$1
 HELM_VERSION=$2
 HISTORY_MAX=${3:-5}
-RBAC_CONFIG=${4:-roles/helm-rbac-config.yaml}
-ENABLE_HELM_TLS=${5:false}
+ENABLE_HELM_TLS=${4:false}
+RBAC_CONFIG=${5:-roles/helm-rbac-config.yaml}
 
 kubectl create -f ${RBAC_CONFIG}
 
