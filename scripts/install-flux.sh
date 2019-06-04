@@ -5,8 +5,8 @@ ENV=$1
 CLUSTER_NAME=$2
 VAULT_NAME=$3
 ENABLE_HELM_TLS=$4
-GIT_REPO=${5:-https://weaveworks.github.io/flux}
-VALUES=${6-deployments/weave-flux/values.yaml}
+GIT_REPO=https://weaveworks.github.io/flux
+VALUES=deployments/weave-flux/values.yaml
 
 helm repo add weaveworks ${GIT_REPO}
 
