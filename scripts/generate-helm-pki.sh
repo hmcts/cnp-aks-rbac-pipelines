@@ -22,10 +22,10 @@ openssl req -key helm.key.pem -new -sha256 -out helm.csr.pem \
 echo subjectAltName=IP:127.0.0.1 > extfile.cnf
 
 openssl x509 -req -CA ca.cert.pem -CAkey ca.key.pem -CAcreateserial \
--in tiller.csr.pem -out tiller.cert.pem -days 365 -extfile extfile.cnf
+-in tiller.csr.pem -out tiller.cert.pem -days 1095 -extfile extfile.cnf
 
 openssl x509 -req -CA ca.cert.pem -CAkey ca.key.pem -CAcreateserial \
--in helm.csr.pem -out helm.cert.pem -days 365
+-in helm.csr.pem -out helm.cert.pem -days 1095
 
 # Generate secret for Helm certs for Flux while we're at it
 kubectl -n admin create secret tls helm-client-certs \
