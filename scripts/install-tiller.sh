@@ -5,7 +5,8 @@ HELM_VERSION=$2
 HISTORY_MAX=${3:-5}
 ENABLE_HELM_TLS=$4
 RBAC_CONFIG=roles/helm-rbac-config.yaml
-
+#added for debugging
+ls -lash
 kubectl create -f ${RBAC_CONFIG}
 
 if [[ ${ENABLE_HELM_TLS} == true ]]
