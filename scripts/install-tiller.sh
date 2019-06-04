@@ -10,7 +10,7 @@ kubectl create -f ${RBAC_CONFIG}
 
 if [[ ${ENABLE_HELM_TLS} == true ]]
 then
- helm_tls_params+=(--tiller-tls --tiller-tls-cert ./tiller.cert.pem --tiller-tls-key ./tiller.key.pem --tiller-tls-verify --tls-ca-cert ./ca.cert.pem)
+ helm_tls_params+=(--tiller-tls --tiller-tls-cert tiller.cert.pem --tiller-tls-key tiller.key.pem --tiller-tls-verify --tls-ca-cert ca.cert.pem)
 fi
 
 helm init --wait --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v${HELM_VERSION} --history-max=${HISTORY_MAX} --kube-context ${CLUSTER_NAME}-admin "${helm_tls_params[@]}"
