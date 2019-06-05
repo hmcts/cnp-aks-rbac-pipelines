@@ -18,7 +18,7 @@ then
        --set helmOperator.tls.enable=true)
 fi
 
-helm upgrade flux weaveworks/flux --install --namespace admin -f ${VALUES} \
+helm upgrade flux weaveworks/flux --install --recreate-pods --namespace admin -f ${VALUES} \
     --set "git.path=k8s/${ENV}/common\,k8s/${ENV}/${CLUSTER_NAME}\,k8s/common",git.label=${ENV},git.email=flux-${ENV}@hmcts.net,git.user="Flux ${ENV}" \
     "${helm_tls_params[@]}" \
     --wait
