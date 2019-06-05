@@ -12,6 +12,8 @@ kubectl create -f ${RBAC_CONFIG}
 #resetting tiller before installing it again
 helm reset --force || helm reset --force --tls --tls-ca-cert scripts/ca.cert.pem --tls-cert scripts/helm.cert.pem --tls-key scripts/helm.key.pem || true
 
+#adding sleep for init to work just after a reset
+sleep 5s
 if [[ ${ENABLE_HELM_TLS} == true ]]
 then
  helm_tls_params+=(--tiller-tls --tiller-tls-cert scripts/tiller.cert.pem --tiller-tls-key scripts/tiller.key.pem --tiller-tls-verify --tls-ca-cert scripts/ca.cert.pem)
