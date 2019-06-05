@@ -15,7 +15,7 @@ then
  az keyvault secret download --vault-name ${VAULT_NAME} --encoding ascii --name helm-pki-flux-secret --file helm-client-certs.yaml
  kubectl apply -f helm-client-certs.yaml
  helm_tls_params+=(--tls --tls-verify --tls-ca-cert scripts/ca.cert.pem --tls-cert scripts/helm.cert.pem --tls-key scripts/helm.key.pem  \
-       --set "helmOperator.tls.caContent="$(cat scripts/ca.cert.pem)" , helmOperator.tls.enable=true, helmOperator.tls.verify=true")
+       --set "helmOperator.tls.caContent="$(cat scripts/ca.cert.pem)" , helmOperator.tls.enable=true)
 fi
 
 helm upgrade flux weaveworks/flux --install --namespace admin -f ${VALUES} \
