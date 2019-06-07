@@ -30,7 +30,12 @@
       "defaultValue": "aks-appgw"
     },
     "appgwSubnetCIDR": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "10.10.2.0/28"
+    },
+    "aksVnetDnsServers": {
+      "type": "array",
+      "defaultValue": []
     },
     "environmentName": {
         "type": "string",
@@ -99,6 +104,9 @@
         },
         "enableDdosProtection": false,
         "enableVmProtection": false,
+        "dhcpOptions": {
+          "dnsServers": "[parameters('aksVnetDnsServers')]"
+        },
         "subnets": [
           {
             "name": "[variables('primarySubnetName')]",
