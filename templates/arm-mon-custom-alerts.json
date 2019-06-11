@@ -15,12 +15,6 @@
                 "description": "Specifies whether the alert is enabled"
             }
         },
-        "resourceId": {
-            "type": "string",
-            "metadata": {
-                "description": "Resource ID of the resource emitting the metric that will be used for the comparison."
-            }
-        },
         "actionGroupId": {
             "type": "string",
             "metadata": {
@@ -70,7 +64,8 @@
         "Query002": "AzureDiagnostics\r\n| where Resource == 'CLUSTER_NAME'\r\n| where Category == \"cluster-autoscaler\" and TimeGenerated > ago(15m) and log_s matches regex \"Scale-up:\"\r\n| order by TimeGenerated desc\r\n| project TimeGenerated, log_s",
         "Query003": "AzureDiagnostics\r\n| where Resource == 'CLUSTER_NAME' \r\n| where Category == \"cluster-autoscaler\" and TimeGenerated > ago(15m) and log_s matches regex \"Deleting vmss instances\"\r\n| order by TimeGenerated desc\r\n| project TimeGenerated, scale_set=extract(@\"(virtualMachineScaleSets\\\/(.*?)\\\/)\", 2, log_s, typeof(string)), aks_rg_name=extract(@\"(resourceGroups\\\/MC_)(.*?)(\\_)\", 2, log_s, typeof(string))",
         "Query004": "let endDateTime = now();\r\nlet startDateTime = ago(6h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'cpuCapacityNanoCores';\r\nlet usageCounterName = 'cpuUsageNanoCores';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 95\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName",
-        "Query005": "let endDateTime = now();\r\nlet startDateTime = ago(1h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'memoryCapacityBytes';\r\nlet usageCounterName = 'memoryRssBytes';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 90\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName"    
+        "Query005": "let endDateTime = now();\r\nlet startDateTime = ago(1h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'memoryCapacityBytes';\r\nlet usageCounterName = 'memoryRssBytes';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 90\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName",
+        "aksResourceId": "[resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksName'))]"
     },
     "resources": [
         {
@@ -95,7 +90,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {         
                     "query": "[replace(variables('Query001'),'CLUSTER_NAME', parameters('aksName'))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -137,7 +132,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query002'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -167,7 +162,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query003'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -209,7 +204,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query004'),'CLUSTER_NAME', parameters('aksName'))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -251,7 +246,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query005'),'CLUSTER_NAME', parameters('aksName'))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {

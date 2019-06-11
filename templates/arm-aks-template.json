@@ -17,7 +17,13 @@
       "type": "int",
       "defaultValue": 2
     },
-    "aksVnetSubnetId": {
+    "aksVnetResourceGroup": {
+      "type": "string"
+    },
+    "aksVnetName": {
+      "type": "string"
+    },
+    "subnetName": {
       "type": "string"
     },
     "aksServiceCidr": {
@@ -96,7 +102,8 @@
     "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
-    "adminUsername": "azureuser"
+    "adminUsername": "azureuser",
+    "aksVnetSubnetId": "[resourceId('parameters('aksVnetResourceGroup')','Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]"
   },
   "resources": [
     {
@@ -127,7 +134,7 @@
             "osDiskSizeGB": "[variables('osDiskSizeGB')]",
             "storageProfile": "[variables('storageProfile')]",
             "maxPods": "[variables('maxPods')]",
-            "vnetSubnetID": "[parameters('aksVnetSubnetId')]",
+            "vnetSubnetID": "[variables('aksVnetSubnetId')]",
             "osType": "[variables('osType')]"
           }
         ],

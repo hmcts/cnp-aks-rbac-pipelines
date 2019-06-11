@@ -67,7 +67,9 @@
           "type": "string"
         }
     },
-    "variables": {},
+    "variables": {
+      "aksResourceId": "[resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksName'))]"
+    },
     "resources": [
       {
         "name": "[concat(parameters('aksName'), ' - ', 'Node VM Down')]",
@@ -91,7 +93,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -159,7 +161,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -227,7 +229,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -295,7 +297,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -363,7 +365,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -431,7 +433,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
