@@ -10,7 +10,7 @@ ls -lash
 kubectl create -f ${RBAC_CONFIG}
 
 #resetting tiller before installing it again
-helm reset --force || helm reset --force --tls --tls-ca-cert scripts/ca.cert.pem --tls-cert scripts/helm.cert.pem --tls-key scripts/helm.key.pem || true
+helm reset --force --tiller-connection-timeout 20 || helm reset --force --tls --tls-ca-cert scripts/ca.cert.pem --tls-cert scripts/helm.cert.pem --tls-key scripts/helm.key.pem --tiller-connection-timeout 20 || true
 
 #adding sleep for init to work just after a reset
 sleep 5s
