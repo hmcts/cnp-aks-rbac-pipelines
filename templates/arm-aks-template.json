@@ -103,7 +103,7 @@
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser",
-    "aksVnetSubnetId": "[resourceId('parameters('aksVnetResourceGroup')','Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]"
+    "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]"
   },
   "resources": [
     {
