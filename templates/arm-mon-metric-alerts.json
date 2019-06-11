@@ -24,7 +24,7 @@
       "agName": {
         "type": "string",
         "metadata": {
-          "description": "Action Group for alerts"
+          "description": "Action Group for AKS alerts"
         }
       },
       "environmentName": {
