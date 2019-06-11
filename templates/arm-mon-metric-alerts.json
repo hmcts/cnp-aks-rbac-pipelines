@@ -62,7 +62,7 @@
     "variables": {
       "agName" : "[concat('aks_',parameters('environmentName'),'_action_group')]",
       "aksResourceId": "[resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksName'))]",
-      "actionGroupId": "[resourceId('parameters('infraResourceGroup')','Microsoft.Insights/actiongroups/', parameters('agName'))]"
+      "actionGroupId": "[resourceId(parameters('infraResourceGroup'),'Microsoft.Insights/actiongroups/', parameters('agName'))]"
     },
     "resources": [
       {
