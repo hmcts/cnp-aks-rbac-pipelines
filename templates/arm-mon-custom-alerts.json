@@ -316,7 +316,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Nodes with low disk available')]",
+            "name": "[concat(parameters('aksName'), ' - ', 'Nodes with low free disk available')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -333,7 +333,7 @@
                 "criticality": "[parameters('criticality')]"
               },
             "properties": {
-                "description": "Nodes that have 10% or less Disk left for in the last hour.",
+                "description": "Nodes that have 10% or less free Disk left for in the last hour.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query007'),'CLUSTER_NAME', parameters('aksName'))]",
