@@ -1,7 +1,7 @@
 # Docs:
 # https://aka.ms/yaml
 
-name: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+name: $(SourceBranchName)$(PullRequest.PullRequestId)_$(Date:yyyyMMdd)$(Rev:.r)
 pool:
   name: Hosted Ubuntu 1604
 steps:
