@@ -297,7 +297,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {         
                     "query": "[replace(variables('Query006'),'CLUSTER_NAME', parameters('aksName'))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -339,7 +339,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query007'),'CLUSTER_NAME', parameters('aksName'))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
