@@ -47,4 +47,3 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
-  condition: ne(variables['Build.SourceBranchName'], 'merge')
