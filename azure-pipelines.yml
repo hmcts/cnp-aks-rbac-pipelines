@@ -1,10 +1,16 @@
 # Docs:
 # https://aka.ms/yaml
 
-name: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger:
+  - master
 pool:
   name: Hosted Ubuntu 1604
 steps:
+- task: Bash@3
+  displayName: "Set build number"
+  inputs:
+    filePath: 'ci/set-build-pipeline-name.sh'
+
 - task: PowerShell@2
   displayName: 'Run tests'
   inputs:
