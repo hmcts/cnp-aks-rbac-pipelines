@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 VSTS_COMMAND="vso[build.updatebuildnumber]"
-DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+DATE=$(date -u +"%Y-%m-%d.T%H-%M-%SZ")
 
 BRANCH_NAME=${BUILD_SOURCEBRANCHNAME}
 
