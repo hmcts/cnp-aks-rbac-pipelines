@@ -21,7 +21,7 @@
           "description": "Infra Resource Group"
         }
       },
-      "agName": {
+      "actionGroupName": {
         "type": "string",
         "metadata": {
           "description": "Action Group for AKS alerts"
@@ -67,7 +67,7 @@
     },
     "variables": {
       "aksResourceId": "[resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksName'))]",
-      "actionGroupId": "[resourceId(parameters('infraResourceGroup'),'Microsoft.Insights/actiongroups/', parameters('agName'))]"
+      "actionGroupId": "[resourceId(parameters('infraResourceGroup'),'Microsoft.Insights/actiongroups/', parameters('actionGroupName'))]"
     },
     "resources": [
       {
