@@ -1,7 +1,7 @@
 # Docs:
 # https://aka.ms/yaml
 
-name: $(SourceBranchName)$(PullRequest.PullRequestId)_$(Date:yyyyMMdd)$(Rev:.r)
+name: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 pool:
   name: Hosted Ubuntu 1604
 steps:
@@ -35,3 +35,4 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
+  condition: ne(variables['Build.SourceBranchName'], 'merge')
