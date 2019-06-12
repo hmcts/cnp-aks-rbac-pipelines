@@ -7,14 +7,16 @@ name: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 pool:
   name: Hosted Ubuntu 1604
 steps:
-- task: PowerShell@2
-  displayName: 'Set build number'
+- task: Bash@3
   inputs:
     targetType: 'inline'
-    script: |
-      Write-Host "##vso[build.updatebuildnumber]$($env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER)_$(Date:yyyyMMdd)$(Rev:.r)"
-    failOnStderr: true
-    pwsh: true
+    script: 'env'
+
+- task: Bash@3
+  displayName: "Set build number"
+  inputs:
+    filePath: 'ci/set-build-pipeline-name.sh'
+    arguments: '$(Rev:.r)'
 
 - task: PowerShell@2
   displayName: 'Run tests'
