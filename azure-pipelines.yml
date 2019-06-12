@@ -15,7 +15,6 @@ steps:
     failOnStderr: true
     pwsh: true
 
-
 - task: PublishTestResults@2
   displayName: 'Publish Test Results **/TEST-*.xml'
   inputs:
