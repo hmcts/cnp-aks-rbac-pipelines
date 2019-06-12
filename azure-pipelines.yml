@@ -6,12 +6,16 @@
 pool:
   name: Hosted Ubuntu 1604
 steps:
-- powershell: |
-   Install-Module -Name Pester -Force -Verbose -Scope CurrentUser
-   Invoke-Pester ./ci -OutputFormat NUnitXml -OutputFile ./TEST-CI.xml -EnableExit
-  failOnStderr: true
-  pwsh: true
-  displayName: 'PowerShell Script'
+- task: PowerShell@2
+  displayName: 'Run tests'
+  inputs:
+    targetType: 'inline'
+    script: |
+      Install-Module -Name Pester -Force -Verbose -Scope CurrentUser
+      Invoke-Pester ./ci -OutputFormat NUnitXml -OutputFile ./TEST-CI.xml -EnableExit
+    failOnStderr: true
+    pwsh: true
+
 
 - task: PublishTestResults@2
   displayName: 'Publish Test Results **/TEST-*.xml'
