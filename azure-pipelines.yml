@@ -12,7 +12,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Write-Host "##vso[build.updatebuildnumber]$(pullrequest.pullRequestNumber)_$(Date:yyyyMMdd)$(Rev:.r)"
+      Write-Host "##vso[build.updatebuildnumber]$($env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER)_$(Date:yyyyMMdd)$(Rev:.r)"
     failOnStderr: true
     pwsh: true
 
