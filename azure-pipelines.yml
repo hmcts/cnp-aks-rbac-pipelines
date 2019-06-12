@@ -1,6 +1,8 @@
 # Docs:
 # https://aka.ms/yaml
 
+trigger:
+  - master
 name: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 pool:
   name: Hosted Ubuntu 1604
