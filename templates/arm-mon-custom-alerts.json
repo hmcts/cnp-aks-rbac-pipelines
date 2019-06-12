@@ -299,7 +299,7 @@
                     "queryType": "ResultCount"
                 },
                 "schedule": {
-                    "frequencyInMinutes": 60,
+                    "frequencyInMinutes": 5,
                     "timeWindowInMinutes": 60
                 },
                 "action": {
@@ -341,7 +341,7 @@
                     "queryType": "ResultCount"
                 },
                 "schedule": {
-                    "frequencyInMinutes": 60,
+                    "frequencyInMinutes": 5,
                     "timeWindowInMinutes": 60
                 },
                 "action": {
