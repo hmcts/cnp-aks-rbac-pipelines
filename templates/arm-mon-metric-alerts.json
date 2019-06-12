@@ -15,59 +15,60 @@
           "description": "Specifies whether the alert is enabled"
         }
       },
-      "resourceId": {
+      "infraResourceGroup": {
         "type": "string",
-        "defaultValue": "",
         "metadata": {
-          "description": "Resource ID of the resource emitting the metric that will be used for the comparison."
+          "description": "Infra Resource Group"
         }
       },
-      "actionGroupId": {
+      "actionGroupName": {
         "type": "string",
-        "defaultValue": "",
         "metadata": {
-          "description": "The ID of the action group that is triggered when the alert is activated or deactivated"
+          "description": "Action Group for AKS alerts"
         }
       },
-        "environmentName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Environment"
-            }
-        },
-        "branch": {
-            "type": "string",
-            "defaultValue": "Unknown",
-            "metadata": {
-                "description": "source branch"
-            }
-        },
-        "managedBy": {
-          "type": "string"
-        },
-        "solutionOwner": {
-          "type": "string"
-        },
-        "activityName": {
-          "type": "string"
-        },
-        "dataClassification": {
-          "type": "string"
-        },
-        "automation": {
-          "type": "string"
-        },
-        "costCentre": {
-          "type": "string"
-        },
-        "environment": {
-          "type": "string"
-        },
-        "criticality": {
-          "type": "string"
-        }
+      "environmentName": {
+          "type": "string",
+          "metadata": {
+              "description": "Name of the Environment"
+          }
+      },
+      "branch": {
+          "type": "string",
+          "defaultValue": "Unknown",
+          "metadata": {
+              "description": "source branch"
+          }
+      },
+      "managedBy": {
+        "type": "string"
+      },
+      "solutionOwner": {
+        "type": "string"
+      },
+      "activityName": {
+        "type": "string"
+      },
+      "dataClassification": {
+        "type": "string"
+      },
+      "automation": {
+        "type": "string"
+      },
+      "costCentre": {
+        "type": "string"
+      },
+      "environment": {
+        "type": "string"
+      },
+      "criticality": {
+        "type": "string"
+      }
     },
-    "variables": {},
+    "variables": {
+      "aksResourceId": "[resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksName'))]",
+      "actionGroupId": "[resourceId(parameters('infraResourceGroup'),'Microsoft.Insights/actiongroups/', parameters('actionGroupName'))]"
+    },
     "resources": [
       {
         "name": "[concat(parameters('aksName'), ' - ', 'Node VM Down')]",
@@ -91,7 +92,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -132,7 +133,7 @@
           },
           "actions": [
             {
-              "actionGroupId": "[parameters('actionGroupId')]"
+              "actionGroupId": "[variables('actionGroupId')]"
             }
           ]
         }
@@ -159,7 +160,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -200,7 +201,7 @@
           },
           "actions": [
             {
-              "actionGroupId": "[parameters('actionGroupId')]"
+              "actionGroupId": "[variables('actionGroupId')]"
             }
           ]
         }
@@ -227,7 +228,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -268,7 +269,7 @@
           },
           "actions": [
             {
-              "actionGroupId": "[parameters('actionGroupId')]"
+              "actionGroupId": "[variables('actionGroupId')]"
             }
           ]
         }
@@ -295,7 +296,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -336,7 +337,7 @@
           },
           "actions": [
             {
-              "actionGroupId": "[parameters('actionGroupId')]"
+              "actionGroupId": "[variables('actionGroupId')]"
             }
           ]
         }
@@ -363,7 +364,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -404,7 +405,7 @@
           },
           "actions": [
             {
-              "actionGroupId": "[parameters('actionGroupId')]"
+              "actionGroupId": "[variables('actionGroupId')]"
             }
           ]
         }
@@ -431,7 +432,7 @@
           "severity": 1,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
-            "[parameters('resourceId')]"
+            "[variables('aksResourceId')]"
           ],
           "evaluationFrequency": "PT5M",
           "windowSize": "PT15M",
@@ -472,7 +473,7 @@
           },
           "actions": [
             {
-              "actionGroupId": "[parameters('actionGroupId')]"
+              "actionGroupId": "[variables('actionGroupId')]"
             }
           ]
         }

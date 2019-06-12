@@ -15,16 +15,16 @@
                 "description": "Specifies whether the alert is enabled"
             }
         },
-        "resourceId": {
+        "infraResourceGroup": {
             "type": "string",
             "metadata": {
-                "description": "Resource ID of the resource emitting the metric that will be used for the comparison."
+                "description": "Infra Resource Group"
             }
         },
-        "actionGroupId": {
+        "actionGroupName": {
             "type": "string",
             "metadata": {
-                "description": "The ID of the action group that is triggered when the alert is activated or deactivated"
+                "description": "Action Group for AKS alerts"
             }
         },
         "environmentName": {
@@ -72,7 +72,9 @@
         "Query004": "let endDateTime = now();\r\nlet startDateTime = ago(6h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'cpuCapacityNanoCores';\r\nlet usageCounterName = 'cpuUsageNanoCores';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 95\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName",
         "Query005": "let endDateTime = now();\r\nlet startDateTime = ago(1h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'memoryCapacityBytes';\r\nlet usageCounterName = 'memoryRssBytes';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 90\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName",
         "Query006": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, TimeGenerated\r\n| summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize), ClusterName | join hint.strategy=broadcast (\r\n  KubePodInventory\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | distinct ClusterName, Computer, PodUid, TimeGenerated, PodStatus | summarize TotalCount = count(), CountPendingCount = sumif(1, PodStatus =~ 'Pending'), RunningCount = sumif(1, PodStatus =~ 'Running'), SucceededCount = sumif(1, PodStatus =~ 'Succeeded'), FailedCount = sumif(1, PodStatus =~ 'Failed') by ClusterName, bin(TimeGenerated, trendBinSize)\r\n) on ClusterName, TimeGenerated \r\n | extend UnknownCount = TotalCount - PendingCount - RunningCount - SucceededCount - FailedCount\r\n | project TimeGenerated, TotalCount = todouble(TotalCount) / ClusterSnapshotCount, PendingCount = todouble(PendingCount) / ClusterSnapshotCount, RunningCount = todouble(RunningCount) / ClusterSnapshotCount, SucceededCount = todouble(SucceededCount) / ClusterSnapshotCount, FailedCount = todouble(FailedCount) / ClusterSnapshotCount, UnknownCount = todouble(UnknownCount) / ClusterSnapshotCount\r\n| summarize AggregatedPendingCount = avg(PendingCount), AggregatedFailedCount = avg(FailedCount), AggregatedUnknownCount = avg(UnknownCount) by bin(TimeGenerated, trendBinSize)",
-        "Query007": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nInsightsMetrics\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, TimeGenerated\r\n| summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize), ClusterName | join hint.strategy=broadcast (\r\n  KubePodInventory\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where Origin == 'container.azm.ms/telegraf'\r\n | where Namespace == 'disk'\r\n | extend Tags = todynamic(Tags)\r\n | project TimeGenerated, ClusterId = Tags['container.azm.ms/clusterId'], Computer = tostring(Tags.hostName), Device = tostring(Tags.device), Path = tostring(Tags.path), DiskMetricName = Name, DiskMetricValue = Val\r\n | where tostring(ClusterId) contains 'CLUSTER_NAME'\r\n | where DiskMetricName == 'used_percent'\r\n | summarize AggregatedValue = max(DiskMetricValue) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedValue >= 90" 
+        "Query007": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nInsightsMetrics\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, TimeGenerated\r\n| summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize), ClusterName | join hint.strategy=broadcast (\r\n  KubePodInventory\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where Origin == 'container.azm.ms/telegraf'\r\n | where Namespace == 'disk'\r\n | extend Tags = todynamic(Tags)\r\n | project TimeGenerated, ClusterId = Tags['container.azm.ms/clusterId'], Computer = tostring(Tags.hostName), Device = tostring(Tags.device), Path = tostring(Tags.path), DiskMetricName = Name, DiskMetricValue = Val\r\n | where tostring(ClusterId) contains 'CLUSTER_NAME'\r\n | where DiskMetricName == 'used_percent'\r\n | summarize AggregatedValue = max(DiskMetricValue) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedValue >= 90",
+        "aksResourceId": "[resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksName'))]",
+        "actionGroupId": "[resourceId(parameters('infraResourceGroup'),'Microsoft.Insights/actiongroups/', parameters('actionGroupName'))]"
     },
     "resources": [
         {
@@ -97,7 +99,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {         
                     "query": "[replace(variables('Query001'),'CLUSTER_NAME', parameters('aksName'))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -108,7 +110,7 @@
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
                     "severity": "2",
                     "aznsAction": {
-                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                        "actionGroup": "[array(variables('actionGroupId'))]"
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
@@ -139,7 +141,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query002'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -150,7 +152,7 @@
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
                     "severity": "4",
                     "aznsAction": {
-                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                        "actionGroup": "[array(variables('actionGroupId'))]"
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
@@ -169,7 +171,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query003'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -180,7 +182,7 @@
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
                     "severity": "4",
                     "aznsAction": {
-                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                        "actionGroup": "[array(variables('actionGroupId'))]"
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
@@ -211,7 +213,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query004'),'CLUSTER_NAME', parameters('aksName'))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -222,7 +224,7 @@
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
                     "severity": "0",
                     "aznsAction": {
-                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                        "actionGroup": "[array(variables('actionGroupId'))]"
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
@@ -253,7 +255,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query005'),'CLUSTER_NAME', parameters('aksName'))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -264,7 +266,7 @@
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
                     "severity": "0",
                     "aznsAction": {
-                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                        "actionGroup": "[array(variables('actionGroupId'))]"
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
@@ -295,7 +297,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {         
                     "query": "[replace(variables('Query006'),'CLUSTER_NAME', parameters('aksName'))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -306,7 +308,7 @@
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
                     "severity": "0",
                     "aznsAction": {
-                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                        "actionGroup": "[array(variables('actionGroupId'))]"
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
@@ -337,7 +339,7 @@
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query007'),'CLUSTER_NAME', parameters('aksName'))]",
-                    "dataSourceId": "[parameters('resourceId')]",
+                    "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
                 "schedule": {
@@ -348,7 +350,7 @@
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
                     "severity": "0",
                     "aznsAction": {
-                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                        "actionGroup": "[array(variables('actionGroupId'))]"
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
