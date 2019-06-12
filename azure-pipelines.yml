@@ -8,6 +8,15 @@ pool:
   name: Hosted Ubuntu 1604
 steps:
 - task: PowerShell@2
+  displayName: 'Set build number'
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host "##vso[build.updatebuildnumber]$(pullrequest.pullRequestNumber)_$(Date:yyyyMMdd)$(Rev:.r)"
+    failOnStderr: true
+    pwsh: true
+
+- task: PowerShell@2
   displayName: 'Run tests'
   inputs:
     targetType: 'inline'
