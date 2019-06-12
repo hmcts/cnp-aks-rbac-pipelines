@@ -3,7 +3,7 @@
 
 trigger:
   - master
-name: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+name: $(Rev:.r)
 pool:
   name: Hosted Ubuntu 1604
 steps:
@@ -16,7 +16,6 @@ steps:
   displayName: "Set build number"
   inputs:
     filePath: 'ci/set-build-pipeline-name.sh'
-    arguments: '$(Rev:.r)'
 
 - task: PowerShell@2
   displayName: 'Run tests'
