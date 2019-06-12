@@ -308,7 +308,7 @@
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
                     "severity": "0",
                     "aznsAction": {
-                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                        "actionGroup": "[array(variables('actionGroupId'))]"
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
@@ -350,7 +350,7 @@
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
                     "severity": "0",
                     "aznsAction": {
-                        "actionGroup": "[array(parameters('actionGroupId'))]"
+                        "actionGroup": "[array(variables('actionGroupId'))]"
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
