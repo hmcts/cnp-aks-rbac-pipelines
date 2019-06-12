@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-REV=${BUILD_BUILDNUMBER}
+REV=${BUILD_BUILDID}
 
 VSTS_COMMAND="vso[build.updatebuildnumber]"
 DATE=$(date "+%Y-%m-%d")

@@ -3,7 +3,6 @@
 
 trigger:
   - master
-name: $(Rev:.r)
 pool:
   name: Hosted Ubuntu 1604
 steps:
