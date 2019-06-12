@@ -7,11 +7,6 @@ pool:
   name: Hosted Ubuntu 1604
 steps:
 - task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'env'
-
-- task: Bash@3
   displayName: "Set build number"
   inputs:
     filePath: 'ci/set-build-pipeline-name.sh'
