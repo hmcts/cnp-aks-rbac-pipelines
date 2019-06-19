@@ -20,6 +20,6 @@ then
 fi
 
 helm upgrade sealed-secrets stable/sealed-secrets --version ${VERSION} --install --recreate-pods --namespace ${NAMESPACE} \
-    --wait \
+    --set image.tag=nginx --set secretName=sealed-secrets-pki --wait \
      "${helm_tls_params[@]}"
 
