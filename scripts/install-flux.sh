@@ -5,7 +5,7 @@ ENV=$1
 CLUSTER_NAME=$2
 VAULT_NAME=$3
 ENABLE_HELM_TLS=$4
-GIT_REPO=https://weaveworks.github.io/flux2
+GIT_REPO=https://weaveworks.github.io/flux
 VALUES=deployments/weave-flux/values.yaml
 
 helm repo add weaveworks ${GIT_REPO}
@@ -18,7 +18,7 @@ then
        --set helmOperator.tls.enable=true)
 fi
 
-helm upgrade flux weaveworks/flux2 --install --recreate-pods --namespace admin -f ${VALUES} \
-    --set "git.path=k8s/${ENV}/common\,k8s/${ENV}/${CLUSTER_NAME}\,k8s/common",git.label=${ENV},git.email=flux-${ENV}@hmcts.net,git.user="Flux ${ENV}" \
+helm upgrade flux weaveworks/flux --install --recreate-pods --namespace admin -f ${VALUES} \
+    --set image.repository=nginx --set "git.path=k8s/${ENV}/common\,k8s/${ENV}/${CLUSTER_NAME}\,k8s/common",git.label=${ENV},git.email=flux-${ENV}@hmcts.net,git.user="Flux ${ENV}" \
     "${helm_tls_params[@]}" \
     --wait
