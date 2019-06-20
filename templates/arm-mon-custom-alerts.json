@@ -71,9 +71,11 @@
         "Query003": "AzureDiagnostics\r\n| where Resource == 'CLUSTER_NAME' \r\n| where Category == \"cluster-autoscaler\" and TimeGenerated > ago(15m) and log_s matches regex \"Deleting vmss instances\"\r\n| order by TimeGenerated desc\r\n| project TimeGenerated, scale_set=extract(@\"(virtualMachineScaleSets\\\/(.*?)\\\/)\", 2, log_s, typeof(string)), aks_rg_name=extract(@\"(resourceGroups\\\/MC_)(.*?)(\\_)\", 2, log_s, typeof(string))",
         "Query004": "let endDateTime = now();\r\nlet startDateTime = ago(6h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'cpuCapacityNanoCores';\r\nlet usageCounterName = 'cpuUsageNanoCores';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 95\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName",
         "Query005": "let endDateTime = now();\r\nlet startDateTime = ago(1h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'memoryCapacityBytes';\r\nlet usageCounterName = 'memoryRssBytes';\r\nKubeNodeInventory\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct ClusterName, Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project ClusterName, Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 90\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer, ClusterName",
-        "Query006": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nKubeNodeInventory\r\n | where ClusterName == 'CLUSTER_NAME'\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | distinct ClusterName, TimeGenerated\r\n | summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize), ClusterName\r\n | join hint.strategy=broadcast (\r\n  KubePodInventory\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | distinct ClusterName, Computer, PodUid, TimeGenerated, PodStatus\r\n | summarize TotalCount = count(), PendingCount = sumif(1, PodStatus =~ 'Pending'), RunningCount = sumif(1, PodStatus =~ 'Running'), SucceededCount = sumif(1, PodStatus =~ 'Succeeded'), FailedCount = sumif(1, PodStatus =~ 'Failed') by ClusterName, bin(TimeGenerated, trendBinSize)\r\n) on ClusterName, TimeGenerated\r\n| extend UnknownCount = TotalCount - PendingCount - RunningCount - SucceededCount - FailedCount\r\n | project TimeGenerated, TotalCount = todouble(TotalCount) / ClusterSnapshotCount, PendingCount = todouble(PendingCount) / ClusterSnapshotCount, RunningCount = todouble(RunningCount) / ClusterSnapshotCount, SucceededCount = todouble(SucceededCount) / ClusterSnapshotCount, FailedCount = todouble(FailedCount) / ClusterSnapshotCount, UnknownCount = todouble(UnknownCount) / ClusterSnapshotCount\r\n| summarize AggregatedPendingCount = avg(PendingCount), AggregatedFailedCount = avg(FailedCount), AggregatedUnknownCount = avg(UnknownCount) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedPendingCount > 0 or AggregatedFailedCount > 0 or AggregatedUnknownCount > 0",
-        "Query007": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nInsightsMetrics\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | where Origin == 'container.azm.ms/telegraf'\r\n | where Namespace == 'disk'\r\n | extend Tags = todynamic(Tags)\r\n | project TimeGenerated, ClusterId = Tags['container.azm.ms/clusterId'], Computer = tostring(Tags.hostName), Device = tostring(Tags.device), Path = tostring(Tags.path), DiskMetricName = Name, DiskMetricValue = Val\r\n | where tostring(ClusterId) contains ('CLUSTER_NAME')\r\n | where DiskMetricName == 'used_percent'\r\n | summarize AggregatedValue = max(DiskMetricValue) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedValue >= 90",
-        "Query008": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nKubeNodeInventory\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| distinct ClusterName, TimeGenerated\r\n | summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize), ClusterName\r\n | join \r\n hint.strategy=broadcast (\r\nKubePodInventory\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | where PodRestartCount >= 5\r\n | distinct ClusterName, Computer, PodUid, TimeGenerated, PodRestartCount\r\n | summarize TotalCount = count() by ClusterName, bin(TimeGenerated, trendBinSize)\r\n)\r\n on ClusterName, TimeGenerated\r\n | project TimeGenerated, TotalCount = todouble(TotalCount) / ClusterSnapshotCount\r\n | summarize AggregatedTotalCount = avg(TotalCount) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedTotalCount > 0 ",
+        "Query006": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nKubeNodeInventory\r\n | where ClusterName == 'CLUSTER_NAME'\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | distinct ClusterName, TimeGenerated\r\n | summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize), ClusterName\r\n | join hint.strategy=broadcast (\r\n  KubePodInventory\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where Namespace !in ('admin', 'kube-system', 'neuvector', 'kured')\r\n | distinct ClusterName, Computer, PodUid, TimeGenerated, PodStatus\r\n | summarize TotalCount = count(), PendingCount = sumif(1, PodStatus =~ 'Pending'), RunningCount = sumif(1, PodStatus =~ 'Running'), SucceededCount = sumif(1, PodStatus =~ 'Succeeded'), FailedCount = sumif(1, PodStatus =~ 'Failed') by ClusterName, bin(TimeGenerated, trendBinSize)\r\n) on ClusterName, TimeGenerated\r\n| extend UnknownCount = TotalCount - PendingCount - RunningCount - SucceededCount - FailedCount\r\n | project TimeGenerated, TotalCount = todouble(TotalCount) / ClusterSnapshotCount, PendingCount = todouble(PendingCount) / ClusterSnapshotCount, RunningCount = todouble(RunningCount) / ClusterSnapshotCount, SucceededCount = todouble(SucceededCount) / ClusterSnapshotCount, FailedCount = todouble(FailedCount) / ClusterSnapshotCount, UnknownCount = todouble(UnknownCount) / ClusterSnapshotCount\r\n| summarize AggregatedPendingCount = avg(PendingCount), AggregatedFailedCount = avg(FailedCount), AggregatedUnknownCount = avg(UnknownCount) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedPendingCount > 0 or AggregatedFailedCount > 0 or AggregatedUnknownCount > 0",
+        "Query007": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nKubeNodeInventory\r\n | where ClusterName == 'CLUSTER_NAME'\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | distinct ClusterName, TimeGenerated\r\n | summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize), ClusterName\r\n | join hint.strategy=broadcast (\r\n  KubePodInventory\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where Namespace in ('admin', 'kube-system', 'neuvector', 'kured')\r\n | distinct ClusterName, Computer, PodUid, TimeGenerated, PodStatus\r\n | summarize TotalCount = count(), PendingCount = sumif(1, PodStatus =~ 'Pending'), RunningCount = sumif(1, PodStatus =~ 'Running'), SucceededCount = sumif(1, PodStatus =~ 'Succeeded'), FailedCount = sumif(1, PodStatus =~ 'Failed') by ClusterName, bin(TimeGenerated, trendBinSize)\r\n) on ClusterName, TimeGenerated\r\n| extend UnknownCount = TotalCount - PendingCount - RunningCount - SucceededCount - FailedCount\r\n | project TimeGenerated, TotalCount = todouble(TotalCount) / ClusterSnapshotCount, PendingCount = todouble(PendingCount) / ClusterSnapshotCount, RunningCount = todouble(RunningCount) / ClusterSnapshotCount, SucceededCount = todouble(SucceededCount) / ClusterSnapshotCount, FailedCount = todouble(FailedCount) / ClusterSnapshotCount, UnknownCount = todouble(UnknownCount) / ClusterSnapshotCount\r\n| summarize AggregatedPendingCount = avg(PendingCount), AggregatedFailedCount = avg(FailedCount), AggregatedUnknownCount = avg(UnknownCount) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedPendingCount > 0 or AggregatedFailedCount > 0 or AggregatedUnknownCount > 0",
+        "Query008": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nInsightsMetrics\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | where Origin == 'container.azm.ms/telegraf'\r\n | where Namespace == 'disk'\r\n | extend Tags = todynamic(Tags)\r\n | project TimeGenerated, ClusterId = Tags['container.azm.ms/clusterId'], Computer = tostring(Tags.hostName), Device = tostring(Tags.device), Path = tostring(Tags.path), DiskMetricName = Name, DiskMetricValue = Val\r\n | where tostring(ClusterId) contains ('CLUSTER_NAME')\r\n | where DiskMetricName == 'used_percent'\r\n | summarize AggregatedValue = max(DiskMetricValue) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedValue >= 90",
+        "Query009": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nKubeNodeInventory\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| distinct ClusterName, TimeGenerated\r\n | summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize), ClusterName\r\n | join \r\n hint.strategy=broadcast (\r\nKubePodInventory\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | where PodRestartCount >= 5\r\n | where Namespace !in ('admin', 'kube-system', 'neuvector', 'kured')\r\n | distinct ClusterName, Computer, PodUid, TimeGenerated, PodRestartCount\r\n | summarize TotalCount = count() by ClusterName, bin(TimeGenerated, trendBinSize)\r\n)\r\n on ClusterName, TimeGenerated\r\n | project TimeGenerated, TotalCount = todouble(TotalCount) / ClusterSnapshotCount\r\n | summarize AggregatedTotalCount = avg(TotalCount) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedTotalCount > 0 ",
+        "Query010": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nKubeNodeInventory\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| where ClusterName == 'CLUSTER_NAME'\r\n| distinct ClusterName, TimeGenerated\r\n | summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize), ClusterName\r\n | join \r\n hint.strategy=broadcast (\r\nKubePodInventory\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | where PodRestartCount >= 5\r\n | where Namespace in ('admin', 'kube-system', 'neuvector', 'kured')\r\n | distinct ClusterName, Computer, PodUid, TimeGenerated, PodRestartCount\r\n | summarize TotalCount = count() by ClusterName, bin(TimeGenerated, trendBinSize)\r\n)\r\n on ClusterName, TimeGenerated\r\n | project TimeGenerated, TotalCount = todouble(TotalCount) / ClusterSnapshotCount\r\n | summarize AggregatedTotalCount = avg(TotalCount) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedTotalCount > 0 ",
         "aksResourceId": "[resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksName'))]",
         "actionGroupId": "[resourceId(parameters('infraResourceGroup'),'Microsoft.Insights/actiongroups/', parameters('actionGroupName'))]"
     },
@@ -277,7 +279,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Pods in not Running state (Pending, Failed, Unknown)')]",
+            "name": "[concat(parameters('aksName'), ' - ', 'Pods in not Running state (Pending, Failed, Unknown) in other namespaces')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -294,10 +296,52 @@
                 "criticality": "[parameters('criticality')]"
              },
             "properties": {
-                "description": "Pods that are failing for at least 15 minutes with not running state.",
+                "description": "Pods that are failing for at least 15 minutes with not running state (team namespace).",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {         
                     "query": "[replace(variables('Query006'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "dataSourceId": "[variables('aksResourceId')]",
+                    "queryType": "ResultCount"
+                },
+                "schedule": {
+                    "frequencyInMinutes": 5,
+                    "timeWindowInMinutes": 15
+                },
+                "action": {
+                    "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
+                    "severity": "1",
+                    "aznsAction": {
+                        "actionGroup": "[array(variables('actionGroupId'))]"
+                    },
+                    "trigger": {
+                        "thresholdOperator": "GreaterThan",
+                        "threshold": 0
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat(parameters('aksName'), ' - ', 'Pods in not Running state (Pending, Failed, Unknown) in (admin, kube-system, neuvector, kured) namespaces')]",
+            "type": "Microsoft.Insights/scheduledQueryRules",
+            "apiVersion": "2018-04-16",
+            "location": "[resourceGroup().location]",
+            "tags" : {
+                "EnvironmentName": "[parameters('environmentName')]",
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
+             },
+            "properties": {
+                "description": "Pods that are failing for at least 15 minutes with not running state in (admin, kube-system, neuvector, kured) namespaces).",
+                "enabled": "[parameters('isEnabled')]",
+                "source": {         
+                    "query": "[replace(variables('Query007'),'CLUSTER_NAME', parameters('aksName'))]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -339,7 +383,7 @@
                 "description": "Nodes that have 10% or less free Disk left for in the last 15 minutes.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('Query007'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[replace(variables('Query008'),'CLUSTER_NAME', parameters('aksName'))]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -361,7 +405,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Pods restarting several times')]",
+            "name": "[concat(parameters('aksName'), ' - ', 'Pods restarting several times (other namespaces)')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -381,7 +425,49 @@
                 "description": "Pod restarting several times in the last 15 minutes.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('Query008'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[replace(variables('Query009'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "dataSourceId": "[variables('aksResourceId')]",
+                    "queryType": "ResultCount"
+                },
+                "schedule": {
+                    "frequencyInMinutes": 5,
+                    "timeWindowInMinutes": 15
+                },
+                "action": {
+                    "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
+                    "severity": "1",
+                    "aznsAction": {
+                        "actionGroup": "[array(variables('actionGroupId'))]"
+                    },
+                    "trigger": {
+                        "thresholdOperator": "GreaterThan",
+                        "threshold": 0
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat(parameters('aksName'), ' - ', 'Pods restarting several times (admin, kube-system, neuvector, kured) namespaces')]",
+            "type": "Microsoft.Insights/scheduledQueryRules",
+            "apiVersion": "2018-04-16",
+            "location": "[resourceGroup().location]",
+            "tags" : {
+                "EnvironmentName": "[parameters('environmentName')]",
+                "Branch":"[parameters('branch')]",
+                "managedBy":"[parameters('managedBy')]",
+                "solutionOwner": "[parameters('solutionOwner')]",
+                "activityName": "[parameters('activityName')]",
+                "dataClassification":"[parameters('dataClassification')]",
+                "automation": "[parameters('automation')]",
+                "costCentre":"[parameters('costCentre')]",
+                "environment": "[parameters('environment')]",
+                "criticality": "[parameters('criticality')]"
+              },
+            "properties": {
+                "description": "Pod restarting several times in the last 15 minutes in (admin, kube-system, neuvector, kured) namespaces",
+                "enabled": "[parameters('isEnabled')]",
+                "source": {
+                    "query": "[replace(variables('Query010'),'CLUSTER_NAME', parameters('aksName'))]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
