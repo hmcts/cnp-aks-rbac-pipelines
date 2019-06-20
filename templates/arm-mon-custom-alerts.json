@@ -296,7 +296,7 @@
                 "criticality": "[parameters('criticality')]"
              },
             "properties": {
-                "description": "Pods that are failing for at least 15 minutes with not running state (other namespaces).",
+                "description": "Pods that are failing for at least 15 minutes with not running state (team namespace).",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {         
                     "query": "[replace(variables('Query006'),'CLUSTER_NAME', parameters('aksName'))]",
