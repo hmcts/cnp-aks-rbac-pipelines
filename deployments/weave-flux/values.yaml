@@ -9,3 +9,5 @@ registry:
 git:
   url: git@github.com:hmcts/cnp-flux-config
   pollInterval: 1m
+additionalArgs:
+  - --manifest-generation=true
