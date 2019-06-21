@@ -279,7 +279,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Pods in not Running state (Pending, Failed, Unknown) in other namespaces')]",
+            "name": "[concat(parameters('aksName'), ' - ', 'Pods in not Running state (Pending, Failed, Unknown) in team namespaces')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -405,7 +405,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Pods restarting several times (other namespaces)')]",
+            "name": "[concat(parameters('aksName'), ' - ', 'Pods restarting several times (team namespace)')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -422,7 +422,7 @@
                 "criticality": "[parameters('criticality')]"
               },
             "properties": {
-                "description": "Pod restarting several times in the last 15 minutes.",
+                "description": "Pod restarting several times in the last 15 minutes (team namespace).",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[replace(variables('Query009'),'CLUSTER_NAME', parameters('aksName'))]",
