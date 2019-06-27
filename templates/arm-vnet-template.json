@@ -73,6 +73,14 @@
     },
     "criticality": {
       "type": "string"
+    },
+    "aksNsgName": {
+      "type": "string",
+      "defaultValue": "aks-nsg"
+    },
+    "appgwNsgName": {
+      "type": "string",
+      "defaultValue": "aks-appgw-nsg"
     }
   },
   "variables": {
@@ -81,9 +89,21 @@
   },
   "resources": [
     {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('aksNsgName')]",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2019-04-01"
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('appgwNsgName')]",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2019-04-01"
+    },
+    {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('aksVnetName')]",
-      "apiVersion": "2018-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
@@ -119,7 +139,10 @@
                 {
                   "service": "Microsoft.Storage"
                 }
-              ]
+              ],
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
+              }
             }
           },
           {
@@ -133,18 +156,27 @@
                 {
                   "service": "Microsoft.Storage"
                 }
-              ]
+              ],
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
+              }
             }
           },
           {
             "name": "[parameters('appgwSubnetName')]",
             "properties": {
-              "addressPrefix": "[parameters('appgwSubnetCIDR')]"
+              "addressPrefix": "[parameters('appgwSubnetCIDR')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
+              }
             }
           }
         ]
       },
-      "dependsOn": []
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
+      ]
     } 
   ],
   "outputs": {
