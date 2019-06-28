@@ -53,6 +53,12 @@
     "invalidHostForProbe": {
       "type": "string",
       "defaultValue": "host.never.exists.rr"
+    },
+    "logAnalyticsWorkSpaceName": {
+      "type": "string"
+    },
+    "logAnalyticsResourceGroup": {
+      "type": "string"
     }
   },
   "variables": {
@@ -180,7 +186,58 @@
         ],
         "enableHttp2": "[parameters('enableHttp2')]",
         "sslCertificates": []
-      }
+      },
+      "resources": [
+        {
+          "type": "providers/diagnosticSettings",
+          "name": "[concat('Microsoft.Insights/', parameters('appgwName'))]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/applicationGateways', parameters('appgwName'))]"
+          ],
+          "apiVersion": "2017-05-01-preview",
+          "properties": {
+            "name": "[parameters('appgwName')]",
+            "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
+            "logs": [
+              {
+                "category": "ApplicationGatewayAccessLog",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                }
+              },
+              {
+                "category": "ApplicationGatewayPerformanceLog",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                }
+              },
+              {
+                "category": "ApplicationGatewayFirewallLog",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                }
+              }
+            ],
+            "metrics": [
+              {
+                "timeGrain": "PT1M",
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }
