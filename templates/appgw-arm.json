@@ -196,7 +196,7 @@
           ],
           "apiVersion": "2017-05-01-preview",
           "properties": {
-            "name": "[parameters('aksVnetName')]",
+            "name": "[parameters('appgwName')]",
             "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
             "logs": [
               {
