@@ -81,6 +81,12 @@
     "appgwNsgName": {
       "type": "string",
       "defaultValue": "aks-appgw-nsg"
+    },
+    "logAnalyticsWorkSpaceName": {
+      "type": "string",
+    },
+    "logAnalyticsResourceGroup": {
+      "type": "string",
     }
   },
   "variables": {
@@ -92,13 +98,77 @@
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[parameters('aksNsgName')]",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2019-04-01"
+      "apiVersion": "2019-04-01",
+      "resources": [
+        {
+          "type": "providers/diagnosticSettings",
+          "name": "[concat('Microsoft.Insights/', parameters('aksNsgName'))]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('aksNsgName'))]"
+          ],
+          "apiVersion": "2017-05-01-preview",
+          "properties": {
+            "name": "[parameters('aksNsgName')]",
+            "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
+            "logs": [
+              {
+                "category": "NetworkSecurityGroupEvent",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                }
+              },
+              {
+                "category": "NetworkSecurityGroupRuleCounter",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                }
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[parameters('appgwNsgName')]",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2019-04-01"
+      "apiVersion": "2019-04-01",
+      "resources": [
+        {
+          "type": "providers/diagnosticSettings",
+          "name": "[concat('Microsoft.Insights/', parameters('appgwNsgName'))]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('appgwNsgName'))]"
+          ],
+          "apiVersion": "2017-05-01-preview",
+          "properties": {
+            "name": "[parameters('aksNsgName')]",
+            "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
+            "logs": [
+              {
+                "category": "NetworkSecurityGroupEvent",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                }
+              },
+              {
+                "category": "NetworkSecurityGroupRuleCounter",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                }
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "type": "Microsoft.Network/virtualNetworks",

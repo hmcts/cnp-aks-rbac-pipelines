@@ -55,8 +55,11 @@
     "serverAppSecret": {
       "type": "string"
     },
-    "aksLogAnalyticsId": {
-      "type": "string"
+    "logAnalyticsWorkSpaceName": {
+      "type": "string",
+    },
+    "logAnalyticsResourceGroup": {
+      "type": "string",
     },
     "environmentName": {
         "type": "string",
@@ -156,7 +159,7 @@
           "omsagent": {
               "enabled": true,
               "config": {
-                  "logAnalyticsWorkspaceResourceID": "[parameters('aksLogAnalyticsId')]"
+                  "logAnalyticsWorkspaceResourceID": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]"
               }
           }
         },           
