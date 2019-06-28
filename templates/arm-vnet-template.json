@@ -83,10 +83,10 @@
       "defaultValue": "aks-appgw-nsg"
     },
     "logAnalyticsWorkSpaceName": {
-      "type": "string",
+      "type": "string"
     },
     "logAnalyticsResourceGroup": {
-      "type": "string",
+      "type": "string"
     }
   },
   "variables": {
@@ -243,6 +243,41 @@
           }
         ]
       },
+      "resources": [
+        {
+          "type": "providers/diagnosticSettings",
+          "name": "[concat('Microsoft.Insights/', parameters('aksVnetName'))]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
+          ],
+          "apiVersion": "2017-05-01-preview",
+          "properties": {
+            "name": "[parameters('aksVnetName')]",
+            "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
+            "logs": [
+              {
+                "category": "VMProtectionAlerts",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                }
+              }
+            ],
+            "metrics": [
+              {
+                "timeGrain": "PT1M",
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]",
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
