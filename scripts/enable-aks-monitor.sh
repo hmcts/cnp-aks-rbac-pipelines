@@ -6,7 +6,7 @@ AKS_ID=$1
 WORKSPACE_RG=$2
 WORKSPACE_NAME=$3
 
-WORKSPACE_ID= $(az resource list --resource-group ${WORKSPACE_RG} --subscription DCD-CFTAPPS-SBOX --name ${WORKSPACE_NAME} --resource-type Microsoft.OperationalInsights/workspaces --query [0].id -o tsv)
+WORKSPACE_ID=$(az resource list --resource-group ${WORKSPACE_RG} --subscription DCD-CFTAPPS-SBOX --name ${WORKSPACE_NAME} --resource-type Microsoft.OperationalInsights/workspaces --query [0].id -o tsv)
 
 az monitor diagnostic-settings create \
     -n DiagLogAnalytics \
