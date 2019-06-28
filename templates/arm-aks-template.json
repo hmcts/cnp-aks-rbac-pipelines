@@ -56,10 +56,10 @@
       "type": "string"
     },
     "logAnalyticsWorkSpaceName": {
-      "type": "string",
+      "type": "string"
     },
     "logAnalyticsResourceGroup": {
-      "type": "string",
+      "type": "string"
     },
     "environmentName": {
         "type": "string",
