@@ -2,7 +2,7 @@
 set -e
 
 MODE=$1
-export PATH=$PATH:$HOME/go/bin
+export PATH="${PATH}:${HOME}/go/bin"
 go get -u -v github.com/heptio/sonobuoy
 sonobuoy delete --wait
 
