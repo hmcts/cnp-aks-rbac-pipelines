@@ -13,7 +13,7 @@ import (
 
 var _ = Describe("AKS-Deployment Tests : ", func() {
 
-		Context("Flux deployment is running", func() {
+		Context("Flux deployment", func() {
 			deployment := getDeployment(clientset,"flux", "admin")
 			It("should have at least 1 replica", func() {
 				Expect(deployment.Status.ReadyReplicas).To(
@@ -21,20 +21,20 @@ var _ = Describe("AKS-Deployment Tests : ", func() {
 			})
 		})
 
-		Context("Sealed Secrets deployment is running", func() {
+		Context("Sealed Secrets deployment", func() {
 			deployment := getDeployment(clientset,"sealed-secrets", "admin")
 			It("should have at least 1 replica", func() {
 				Expect(deployment.Status.ReadyReplicas).To(
 					BeNumerically(">", 0))
 			})
 			_, err := clientset.CoreV1().Secrets("admin").Get("fluxcloud-values", metav1.GetOptions{})
-			It("should have fluxcloud-values secret", func() {
+			It("should have created fluxcloud-values secret", func() {
 				Expect(err).ShouldNot(HaveOccurred())
 			})
 
 		})
 
-		Context("traefik deployment is running", func() {
+		Context("traefik deployment", func() {
 			deployment := getDeployment(clientset,"traefik", "admin")
 			It("should have at least 1 replica", func() {
 				Expect(deployment.Status.ReadyReplicas).To(
