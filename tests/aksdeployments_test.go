@@ -26,12 +26,12 @@ var _ = Describe("AKS-Deployment Tests : ", func() {
 
 		Context("Sealed Secrets deployment is running", func() {
 			deployment := getDeployment(clientset,"sealed-secrets", "admin")
-			It("should be having atleast 1 replica", func() {
+			It("should have atleast 1 replica", func() {
 				Expect(deployment.Status.ReadyReplicas).To(
 					BeNumerically(">", 0))
 			})
 			_, err := clientset.CoreV1().Secrets("admin").Get("fluxcloud-values", metav1.GetOptions{})
-			It("should be having fluxcloud-values secret", func() {
+			It("should have fluxcloud-values secret", func() {
 				Expect(err).ShouldNot(HaveOccurred())
 			})
 
@@ -39,7 +39,7 @@ var _ = Describe("AKS-Deployment Tests : ", func() {
 
 		Context("traefik deployment is running", func() {
 			deployment := getDeployment(clientset,"traefik", "admin")
-			It("should be having atleast 1 replica", func() {
+			It("should have atleast 1 replica", func() {
 				Expect(deployment.Status.ReadyReplicas).To(
 					BeNumerically(">", 0))
 			})

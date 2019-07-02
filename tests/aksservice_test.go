@@ -18,7 +18,7 @@ var _ = Describe("AKS-Service Tests : ", func() {
 
 		Context("Traefik service is running", func() {
 			service := getService(clientset,"traefik", "admin")
-			It("should be having atleast 1 replica", func() {
+			It("should have loadbalancer ip set", func() {
 				Expect(service.Status.LoadBalancer.Ingress[0].IP).ShouldNot(BeNil())
 			})
 		})
