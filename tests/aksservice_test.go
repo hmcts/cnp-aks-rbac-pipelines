@@ -2,7 +2,6 @@ package aks_test
 
 import (
 	"fmt"
-	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -13,8 +12,6 @@ import (
 )
 
 var _ = Describe("AKS-Service Tests : ", func() {
-	//Adding delay just to let flux deploy the manifests.
-	time.Sleep(30 * time.Second)
 
 		Context("Traefik service is running", func() {
 			service := getService(clientset,"traefik", "admin")

@@ -2,7 +2,6 @@ package aks_test
 
 import (
 	"fmt"
-	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -13,8 +12,6 @@ import (
 )
 
 var _ = Describe("AKS-Deployment Tests : ", func() {
-	//Adding delay just to let flux deploy the manifests.
-	time.Sleep(30 * time.Second)
 
 		Context("Flux deployment is running", func() {
 			deployment := getDeployment(clientset,"flux", "admin")
