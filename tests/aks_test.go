@@ -25,7 +25,7 @@ var _ = Describe("AKS-Pipeline Tests : ", func() {
 
 		Context("Flux deployment is running", func() {
 			deployment := getDeployment(clientset,"flux", "admin")
-			It("should be having atleast 1 replica", func() {
+			It("should have at least 1 replica", func() {
 				Expect(deployment.Status.ReadyReplicas).To(
 					BeNumerically(">", 0))
 			})
