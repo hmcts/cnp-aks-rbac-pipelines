@@ -1,4 +1,4 @@
-module aks-tests
+module aks
 
 go 1.12
 

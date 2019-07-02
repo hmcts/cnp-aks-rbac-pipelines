@@ -1,10 +1,7 @@
 package aks_test
 
 import (
-	"flag"
 	"fmt"
-	"os"
-	"path/filepath"
 	"time"
 
 	. "github.com/onsi/ginkgo"
@@ -13,15 +10,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	v1 "k8s.io/api/apps/v1"
-	"k8s.io/client-go/tools/clientcmd"
-	_ "k8s.io/client-go/plugin/pkg/client/auth/azure"
 )
 
-var _ = Describe("AKS-Pipeline Tests : ", func() {
+var _ = Describe("AKS-Deployment Tests : ", func() {
 	//Adding delay just to let flux deploy the manifests.
 	time.Sleep(30 * time.Second)
-	
-	   clientset := getClientSet()
 
 		Context("Flux deployment is running", func() {
 			deployment := getDeployment(clientset,"flux", "admin")
@@ -53,36 +46,6 @@ var _ = Describe("AKS-Pipeline Tests : ", func() {
 		})
 
 })
-
-func homeDir() string {
-	if h := os.Getenv("HOME"); h != "" {
-		return h
-	}
-	return os.Getenv("USERPROFILE") // windows
-}
-
-func getClientSet() *kubernetes.Clientset{
-	var kubeconfig *string
-	if home := homeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		panic("Unable to Find Home Dir")
-	}
-	flag.Parse()
-
-	// use the current context in kubeconfig
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	// create the clientset
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
-	}
-	return clientset
-}
 
 func getDeployment(clientset *kubernetes.Clientset, deploymentName string, namespace string) (deployment *v1.Deployment){
 
