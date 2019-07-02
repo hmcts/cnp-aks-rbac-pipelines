@@ -39,7 +39,7 @@
     },
     "iaasSubnetCIDR": {
       "type": "string",
-      "defaultValue": "10.10.3.0/24"
+      "defaultValue": "10.10.4.0/24"
     },
     "aksVnetDnsServers": {
       "type": "array",
