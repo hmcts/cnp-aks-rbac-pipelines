@@ -26,7 +26,7 @@ var _ = Describe("AKS-Deployment Tests : ", func() {
 
 		Context("Sealed Secrets deployment is running", func() {
 			deployment := getDeployment(clientset,"sealed-secrets", "admin")
-			It("should have atleast 1 replica", func() {
+			It("should have at least 1 replica", func() {
 				Expect(deployment.Status.ReadyReplicas).To(
 					BeNumerically(">", 0))
 			})
