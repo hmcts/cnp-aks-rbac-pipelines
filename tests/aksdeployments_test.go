@@ -39,7 +39,7 @@ var _ = Describe("AKS-Deployment Tests : ", func() {
 
 		Context("traefik deployment is running", func() {
 			deployment := getDeployment(clientset,"traefik", "admin")
-			It("should have atleast 1 replica", func() {
+			It("should have at least 1 replica", func() {
 				Expect(deployment.Status.ReadyReplicas).To(
 					BeNumerically(">", 0))
 			})
