@@ -5,12 +5,14 @@ trigger:
   - master
 pool:
   name: Hosted Ubuntu 1604
+variables:
+  serviceConnection: azurerm-nonprod
+  keyvaultName: infra-vault-nonprod
 steps:
 - task: Bash@3
   displayName: "Set build number"
   inputs:
     filePath: 'ci/set-build-pipeline-name.sh'
-
 - task: PowerShell@2
   displayName: 'Run tests'
   inputs:
@@ -20,6 +22,21 @@ steps:
       Invoke-Pester ./ci -OutputFormat NUnitXml -OutputFile ./TEST-CI.xml -EnableExit
     failOnStderr: true
     pwsh: true
+- task: AzureKeyVault@1
+  displayName: 'Get azure devops API token from Keyvault'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    azureSubscription: ${{ variables.serviceConnection }}
+    keyVaultName: ${{ variables.keyvaultName }}
+    secretsFilter: 'azure-devops-token'
+
+- task: Bash@3
+  displayName: "Update or Create Variable Groups"
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    filePath: 'variablegroups/scripts/update-variable-groups.sh'
+    arguments: '$(azure-devops-token)'
+    workingDirectory: 'variablegroups/'
 
 - task: PublishTestResults@2
   displayName: 'Publish Test Results **/TEST-*.xml'
