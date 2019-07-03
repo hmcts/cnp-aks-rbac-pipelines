@@ -1,0 +1,42 @@
+{
+  "variables": {
+    "AKS.AG.Name": {
+      "value": "aks_$(Subscription.AKS.Environment.Name)_action_group"
+    },
+    "AKS.Appgw.Name": {
+      "value": "aks-$(Subscription.AKS.Environment.Name)-appgw"
+    },
+    "AKS.Cluster.MI.Name": {
+      "value": "$(AKS.Cluster.Name)-mi"
+    },
+    "AKS.Cluster.Name": {
+      "value": "$(Subscription.AKS.Environment.Name)-$(Clusters)-aks"
+    },
+    "AKS.Cluster.ResourceGroup": {
+      "value": "$(Subscription.AKS.Environment.Name)-$(Clusters)-rg"
+    },
+    "AKS.Cluster.Subnet.Name": {
+      "value": "aks-$(Clusters)"
+    },
+    "AKS.Monitoring.LogicApp.Name": {
+      "value": "core-$(Subscription.AKS.Environment.Name)-monitoring-la"
+    },
+    "AKS.VNet.Name": {
+      "value": "core-$(Subscription.AKS.Environment.Name)-vnet"
+    },
+    "AKS.VNet.ResourceGroup": {
+      "value": "aks-infra-$(Subscription.AKS.Environment.Name)-rg"
+    },
+    "AKS.LogAnalytics.Name": {
+      "value": "hmcts-$(Subscription.AKS.Environment.Name)-law"
+    },
+    "AKS.LogAnalytics.ResourceGroup": {
+      "value": "oms-automation-rg"
+    }
+  },
+  "id": 32,
+  "type": "Vsts",
+  "name": "AKS-Common",
+  "description": "Common variables  used across AKS deployments",
+  "isShared": false
+}
