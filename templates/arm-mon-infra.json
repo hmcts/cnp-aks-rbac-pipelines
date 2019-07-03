@@ -2,9 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "agEmailReceivers": {
-            "type": "object"
-        },
+            "agEmailReceivers": {
+                "type": "object"
+            },
         "slackUri": {
             "type": "string",
             "metadata": {
@@ -303,16 +303,16 @@
                                                             {
                                                                 "short": true,
                                                                 "title": "Results",
-                                                                "value": "@{body('Parse_JSON')?['ResultCount']}"
+                                                                "value": "@{body('Parse_JSON')?['data']?['ResultCount']}"
                                                             },
                                                             {
                                                                 "short": true,
                                                                 "title": "Severity",
-                                                                "value": "@{body('Parse_JSON')?['Severity']}"
+                                                                "value": "@{body('Parse_JSON')?['data']?['Severity']}"
                                                             }
                                                         ],
-                                                        "text": "Description: _@{body('Parse_JSON')?['Description']}_",
-                                                        "title": "Alert - @{body('Parse_JSON')?['AlertRuleName']}"
+                                                        "text": "Description: _@{body('Parse_JSON')?['data']?['Description']}_",
+                                                        "title": "Alert - @{body('Parse_JSON')?['data']?['AlertRuleName']}"
                                                     }
                                                 ],
                                                 "channel": "[parameters('slackChannel')]",
@@ -332,90 +332,122 @@
                                             "content": "@triggerBody()",
                                             "schema": {
                                                 "properties": {
-                                                    "AlertRuleName": {
+                                                  "data": {
+                                                    "properties": {
+                                                      "AlertRuleName": {
                                                         "type": "string"
-                                                    },
-                                                    "AlertThresholdOperator": {
+                                                      },
+                                                      "AlertThresholdOperator": {
                                                         "type": "string"
-                                                    },
-                                                    "AlertThresholdValue": {
+                                                      },
+                                                      "AlertThresholdValue": {
                                                         "type": "integer"
-                                                    },
-                                                    "Description": {
+                                                      },
+                                                      "AlertType": {
                                                         "type": "string"
-                                                    },
-                                                    "LinkToSearchResults": {
+                                                      },
+                                                      "Description": {
                                                         "type": "string"
-                                                    },
-                                                    "ResultCount": {
+                                                      },
+                                                      "LinkToSearchResults": {
+                                                        "type": "string"
+                                                      },
+                                                      "ResourceId": {
+                                                        "type": "string"
+                                                      },
+                                                      "ResultCount": {
                                                         "type": "integer"
-                                                    },
-                                                    "SearchIntervalEndtimeUtc": {
+                                                      },
+                                                      "SearchIntervalEndtimeUtc": {
                                                         "type": "string"
-                                                    },
-                                                    "SearchIntervalInSeconds": {
+                                                      },
+                                                      "SearchIntervalInSeconds": {
                                                         "type": "integer"
-                                                    },
-                                                    "SearchIntervalStartTimeUtc": {
+                                                      },
+                                                      "SearchIntervalStartTimeUtc": {
                                                         "type": "string"
-                                                    },
-                                                    "SearchQuery": {
+                                                      },
+                                                      "SearchQuery": {
                                                         "type": "string"
-                                                    },
-                                                    "SearchResult": {
+                                                      },
+                                                      "SearchResult": {
                                                         "properties": {
-                                                            "tables": {
-                                                                "items": {
+                                                          "dataSources": {
+                                                            "items": {
+                                                              "properties": {
+                                                                "resourceId": {
+                                                                  "type": "string"
+                                                                },
+                                                                "tables": {
+                                                                  "items": {
+                                                                    "type": "string"
+                                                                  },
+                                                                  "type": "array"
+                                                                }
+                                                              },
+                                                              "required": [
+                                                                "resourceId",
+                                                                "tables"
+                                                              ],
+                                                              "type": "object"
+                                                            },
+                                                            "type": "array"
+                                                          },
+                                                          "tables": {
+                                                            "items": {
+                                                              "properties": {
+                                                                "columns": {
+                                                                  "items": {
                                                                     "properties": {
-                                                                        "columns": {
-                                                                            "items": {
-                                                                                "properties": {
-                                                                                    "name": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "type": {
-                                                                                        "type": "string"
-                                                                                    }
-                                                                                },
-                                                                                "required": [
-                                                                                    "name",
-                                                                                    "type"
-                                                                                ],
-                                                                                "type": "object"
-                                                                            },
-                                                                            "type": "array"
-                                                                        },
-                                                                        "name": {
-                                                                            "type": "string"
-                                                                        },
-                                                                        "rows": {
-                                                                            "items": {
-                                                                                "type": "array"
-                                                                            },
-                                                                            "type": "array"
-                                                                        }
+                                                                      "name": {
+                                                                        "type": "string"
+                                                                      },
+                                                                      "type": {
+                                                                        "type": "string"
+                                                                      }
                                                                     },
                                                                     "required": [
-                                                                        "name",
-                                                                        "columns",
-                                                                        "rows"
+                                                                      "name",
+                                                                      "type"
                                                                     ],
                                                                     "type": "object"
+                                                                  },
+                                                                  "type": "array"
                                                                 },
-                                                                "type": "array"
-                                                            }
+                                                                "name": {
+                                                                  "type": "string"
+                                                                },
+                                                                "rows": {
+                                                                  "items": {
+                                                                    "type": "array"
+                                                                  },
+                                                                  "type": "array"
+                                                                }
+                                                              },
+                                                              "required": [
+                                                                "name",
+                                                                "columns",
+                                                                "rows"
+                                                              ],
+                                                              "type": "object"
+                                                            },
+                                                            "type": "array"
+                                                          }
                                                         },
                                                         "type": "object"
-                                                    },
-                                                    "Severity": {
+                                                      },
+                                                      "Severity": {
                                                         "type": "string"
-                                                    },
-                                                    "SubscriptionId": {
+                                                      },
+                                                      "SubscriptionId": {
                                                         "type": "string"
+                                                      }
                                                     },
-                                                    "WorkspaceId": {
-                                                        "type": "string"
-                                                    }
+                                                    "type": "object"
+                                                  },
+                                                  "schemaId": {
+                                                    "type": "string"
+                                                  }
                                                 },
                                                 "type": "object"
                                             }
