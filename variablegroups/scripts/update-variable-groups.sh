@@ -10,7 +10,7 @@ ACCESSTOKEN=$1
 USERNAME=${2:azuredevops}
 
 
-for fileName in /*.json; do
+for fileName in *.json; do
 
 groupName=$(cat ${fileName} | jq -r .name)
 groupId=$(curl -s -X GET -u ${USERNAME}:${ACCESSTOKEN} "https://dev.azure.com/hmcts/cnp/_apis/distributedtask/variablegroups/?groupName=${groupName}&api-version=5.0-preview.1" | jq -r "if (.count == 1 ) then .value[0].id else empty end")
