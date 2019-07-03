@@ -33,6 +33,14 @@
       "type": "string",
       "defaultValue": "10.10.2.0/28"
     },
+    "iaasSubnetName": {
+      "type": "string",
+      "defaultValue": "iaas"
+    },
+    "iaasSubnetCIDR": {
+      "type": "string",
+      "defaultValue": "10.10.4.0/24"
+    },
     "aksVnetDnsServers": {
       "type": "array",
       "defaultValue": []
@@ -81,6 +89,10 @@
     "appgwNsgName": {
       "type": "string",
       "defaultValue": "aks-appgw-nsg"
+    },
+    "iaasNsgName": {
+      "type": "string",
+      "defaultValue": "iaas-nsg"
     },
     "logAnalyticsWorkSpaceName": {
       "type": "string"
@@ -143,6 +155,44 @@
           "name": "[concat('Microsoft.Insights/', parameters('appgwNsgName'))]",
           "dependsOn": [
             "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('appgwNsgName'))]"
+          ],
+          "apiVersion": "2017-05-01-preview",
+          "properties": {
+            "name": "[parameters('aksNsgName')]",
+            "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
+            "logs": [
+              {
+                "category": "NetworkSecurityGroupEvent",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                }
+              },
+              {
+                "category": "NetworkSecurityGroupRuleCounter",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('iaasNsgName')]",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2019-04-01",
+      "resources": [
+        {
+          "type": "providers/diagnosticSettings",
+          "name": "[concat('Microsoft.Insights/', parameters('iaasNsgName'))]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('iaasNsgName'))]"
           ],
           "apiVersion": "2017-05-01-preview",
           "properties": {
@@ -240,6 +290,15 @@
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
               }
             }
+          },
+          {
+            "name": "[parameters('iaasSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('iaasSubnetCIDR')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
+              }
+            }
           }
         ]
       },
@@ -280,7 +339,8 @@
       ],
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]",
-        "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
+        "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
       ]
     } 
   ],
