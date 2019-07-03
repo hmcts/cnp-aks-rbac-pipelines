@@ -1,7 +1,7 @@
 {
   "variables": {
     "Environment.name": {
-      "value": "test"
+      "value": "sandbox"
     },
     "Subscription.acrName": {
       "value": "hmcts"
@@ -49,8 +49,8 @@
       "value": "cftapps$(Subscription.AKS.Environment.Name)"
     }
   },
-  "id": "",
+  "id": 19,
   "type": "Vsts",
-  "name": "TEST-AKS-Common"
-
+  "name": "SBOX-AKS-Common",
+  "isShared": false
 }
