@@ -54,8 +54,7 @@
   "name": "SBOX-KeyVault",
   "providerData": {
     "serviceEndpointId": "a6794204-7cef-4b23-8dd4-fa8dd9c5ffe8",
-    "vault": "cftapps-sbox",
-    "lastRefreshedOn": "2019-07-03T13:11:52.817Z"
+    "vault": "cftapps-sbox"
   },
   "isShared": false
 }

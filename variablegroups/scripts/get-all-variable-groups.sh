@@ -15,6 +15,6 @@ groupList=$(curl -X GET -s -u ${USERNAME}:${ACCESSTOKEN} "https://dev.azure.com/
 
 for group in ${groupList} ; do
 
-curl -X GET -s -u ${USERNAME}:${ACCESSTOKEN} "https://dev.azure.com/hmcts/cnp/_apis/distributedtask/variablegroups/?groupName=${group}&api-version=5.0-preview.1" | jq -r '.value[0] | del(.createdOn, .modifiedBy , .createdBy, .modifiedOn)' > ${group}.json
+curl -X GET -s -u ${USERNAME}:${ACCESSTOKEN} "https://dev.azure.com/hmcts/cnp/_apis/distributedtask/variablegroups/?groupName=${group}&api-version=5.0-preview.1" | jq -r '.value[0] | del(.createdOn, .modifiedBy , .createdBy, .modifiedOn, .providerData.lastRefreshedOn)' > ${group}.json
 echo "Updated ${group}"
 done
