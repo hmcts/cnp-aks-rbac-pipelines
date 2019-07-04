@@ -12,6 +12,9 @@
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.36.0/25"
     },
+    "Subscription.AKS.Iass.subnet.cidr": {
+      "value": "10.10.37.0/24"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "ithc"
     },
