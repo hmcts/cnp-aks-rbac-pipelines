@@ -38,7 +38,7 @@ ARM|Add Custom Metric Alerts|Y|N|
 
 ### Variable Groups
 
-As maintaining Variable groups in UI is tedious , all AKS pipeline variable groups are managed as code in here.
+As maintaining Variable groups in UI is tedious, all AKS pipeline variable groups are managed as code in here.
 
 * To update repository with variable groups if changed through UI , run [Get All Script][variablegroups/scripts/get-all-variable-groups.sh] with a Personal Access Token.
 * Pipeline uses [Update Script][variablegroups/scripts/update-variable-groups.sh] to update all variable groups in [Variable Groups][variablegroups/] while building master branch.
