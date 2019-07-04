@@ -40,9 +40,9 @@ ARM|Add Custom Metric Alerts|Y|N|
 
 As maintaining Variable groups in UI is tedious, all AKS pipeline variable groups are managed as code in here.
 
-* To update repository with variable groups if changed through UI, run [Get All Script][variablegroups/scripts/get-all-variable-groups.sh] with a Personal Access Token.
-* Pipeline uses [Update Script][variablegroups/scripts/update-variable-groups.sh] to update all variable groups in [Variable Groups][variablegroups/] while building master branch.
-* To create a new environment, copy and rename [SBOX-AKS-COMMON.json][variablegroups/SBOX-AKS-COMMON.json] ,[SBOX-AKS-Tags.json][variablegroups/SBOX-AKS-Tags.json], [SBOX-AKS-KeyVault.json][variablegroups/SBOX-AKS-KeyVault.json] . Fill all fields with appropriate values before raising a PR.
-* You can get serviceEndpointId for keyvault variablegroup by running [Get Service End point Id script][variablegroups/scripts/get-service-end-point.sh] . If you don't have necessary privileges to list service connections, ask someone who has it. 
-* Refer [here][https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate] for generating personal access token to authenticate Azure Devops.  
+* To update repository with variable groups if changed through UI, run [Get All Script](variablegroups/scripts/get-all-variable-groups.sh) with a Personal Access Token.
+* Pipeline uses [Update Script](variablegroups/scripts/update-variable-groups.sh) to update all variable groups in [Variable Groups](variablegroups/) while building master branch.
+* To create a new environment, copy and rename [SBOX-AKS-COMMON.json](variablegroups/SBOX-AKS-COMMON.json) ,[SBOX-AKS-Tags.json](variablegroups/SBOX-AKS-Tags.json), [SBOX-AKS-KeyVault.json](variablegroups/SBOX-AKS-KeyVault.json) . Fill all fields with appropriate values before raising a PR.
+* You can get serviceEndpointId for keyvault variablegroup by running [Get Service End point Id script](variablegroups/scripts/get-service-end-point.sh) . If you don't have necessary privileges to list service connections, ask someone who has it. 
+* Refer [here](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate) for generating personal access token to authenticate Azure Devops.  
 
