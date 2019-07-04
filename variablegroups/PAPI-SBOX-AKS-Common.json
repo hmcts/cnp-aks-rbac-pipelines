@@ -12,6 +12,9 @@
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.79.0/25"
     },
+    "Subscription.AKS.Iass.subnet.cidr": {
+      "value": "10.10.80.0/24"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "papi-sbox"
     },

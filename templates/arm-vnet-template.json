@@ -6,40 +6,35 @@
       "type": "string"
     },
     "aksVnetCIDR": {
-      "type": "string",
-      "defaultValue": "10.10.0.0/16"
+      "type": "string"
     },
     "aksPrimarySubnetName": {
       "type": "string",
       "defaultValue": "00"
     },
     "aksPrimarySubnetCIDR": {
-      "type": "string",
-      "defaultValue": "10.10.0.0/24"
+      "type": "string"
     },
     "aksSecondarySubnetName": {
       "type": "string",
       "defaultValue": "01"
     },
     "aksSecondarySubnetCIDR": {
-      "type": "string",
-      "defaultValue": "10.10.1.0/24"
+      "type": "string"
     },
     "appgwSubnetName": {
       "type": "string",
       "defaultValue": "aks-appgw"
     },
     "appgwSubnetCIDR": {
-      "type": "string",
-      "defaultValue": "10.10.2.0/28"
+      "type": "string"
     },
     "iaasSubnetName": {
       "type": "string",
       "defaultValue": "iaas"
     },
     "iaasSubnetCIDR": {
-      "type": "string",
-      "defaultValue": "10.10.4.0/24"
+      "type": "string"
     },
     "aksVnetDnsServers": {
       "type": "array",
