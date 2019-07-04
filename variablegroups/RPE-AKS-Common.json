@@ -6,9 +6,6 @@
     "Subscription.acrName": {
       "value": "hmcts"
     },
-    "Subscription.AgEmailReceivers": {
-      "value": "{\"receivers\":[{\"name\":\"rhollins\",\"emailAddress\":\"rafal.hollins@hmcts.net\"}]}"
-    },
     "Subscription.AKS.Appgw.ingress": {
       "value": "[{ \"IpAddress\": \"10.10.1.250\" }, { \"IpAddress\": \"10.10.3.250\" }]"
     },
