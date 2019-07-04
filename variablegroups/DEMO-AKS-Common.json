@@ -46,7 +46,7 @@
       "value": "cftapps-demo"
     },
     "Subscription.ServiceConnection.Name": {
-      "value": "DCD-CFTAPPS-DEMO (aks-infra-demo)"
+      "value": "DCD-CFTAPPS-DEMO"
     },
     "Subscription.StorageAccount.Name": {
       "value": "cftapps$(Subscription.AKS.Environment.Name)"

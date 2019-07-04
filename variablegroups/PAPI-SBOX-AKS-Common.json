@@ -46,7 +46,7 @@
       "value": "papi-sbox"
     },
     "Subscription.ServiceConnection.Name": {
-      "value": "DCD-PAPI-SBOX (aks-infra-sbox)"
+      "value": "DCD-PAPI-SBOX"
     },
     "Subscription.StorageAccount.Name": {
       "value": "papisbox"
