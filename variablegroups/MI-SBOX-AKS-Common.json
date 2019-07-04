@@ -46,7 +46,7 @@
       "value": "mi-sbox"
     },
     "Subscription.ServiceConnection.Name": {
-      "value": "DCD-MI-SBOX (aks-infra-sbox)"
+      "value": "DCD-MI-SBOX"
     },
     "Subscription.StorageAccount.Name": {
       "value": "misbox"

@@ -46,7 +46,7 @@
       "value": "cftapps-sbox"
     },
     "Subscription.ServiceConnection.Name": {
-      "value": "DCD-CFTAPPS-SBOX (aks-infra-sbox)"
+      "value": "DCD-CFTAPPS-SBOX"
     },
     "Subscription.StorageAccount.Name": {
       "value": "cftapps$(Subscription.AKS.Environment.Name)"
