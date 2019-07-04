@@ -1,0 +1,56 @@
+{
+  "variables": {
+    "Environment.name": {
+      "value": "rpe"
+    },
+    "Subscription.acrName": {
+      "value": "hmcts"
+    },
+    "Subscription.AKS.Appgw.ingress": {
+      "value": "[{ \"IpAddress\": \"10.10.1.250\" }, { \"IpAddress\": \"10.10.3.250\" }]"
+    },
+    "Subscription.AKS.Appgw.subnet.cidr": {
+      "value": "10.10.7.0/25"
+    },
+    "Subscription.AKS.Environment.Name": {
+      "value": "rpe"
+    },
+    "Subscription.AKS.Helm.TLS": {
+      "value": "false"
+    },
+    "Subscription.AKS.Kubernetes.version": {
+      "value": "1.13.5"
+    },
+    "Subscription.AKS.nodeCount": {
+      "value": "2"
+    },
+    "Subscription.AKS.Subnet.Primary.Cidr": {
+      "value": "10.10.0.0/23"
+    },
+    "Subscription.AKS.Subnet.Secondary.Cidr": {
+      "value": "10.10.2.0/23"
+    },
+    "Subscription.AKS.vmSize": {
+      "value": "Standard_B4ms"
+    },
+    "Subscription.AKS.VNet.Cidr": {
+      "value": "10.10.0.0/21"
+    },
+    "Subscription.AKS.VNet.DnsServers": {
+      "value": "[\"10.100.139.254\"]"
+    },
+    "Subscription.keyvaultName": {
+      "value": "cftapps-rpe"
+    },
+    "Subscription.ServiceConnection.Name": {
+      "value": "azurerm-rpetemp"
+    },
+    "Subscription.StorageAccount.Name": {
+      "value": "cftapps$(Subscription.AKS.Environment.Name)"
+    }
+  },
+  "id": 41,
+  "type": "Vsts",
+  "name": "RPE-AKS-Common",
+  "isShared": false
+}

@@ -1,0 +1,35 @@
+{
+  "variables": {
+    "activityName": {
+      "value": "AKS"
+    },
+    "automation": {
+      "value": ""
+    },
+    "costCentre": {
+      "value": "10245117"
+    },
+    "criticality": {
+      "value": "Low"
+    },
+    "dataClassification": {
+      "value": "Internal"
+    },
+    "environment": {
+      "value": "papi-sbox"
+    },
+    "managedBy": {
+      "value": "$(System.TeamProject)"
+    },
+    "releasedBy": {
+      "value": "$(Release.RequestedForEmail)"
+    },
+    "solutionOwner": {
+      "value": "CFT"
+    }
+  },
+  "id": 23,
+  "type": "Vsts",
+  "name": "PAPI-SBOX-AKS-Tags",
+  "isShared": false
+}

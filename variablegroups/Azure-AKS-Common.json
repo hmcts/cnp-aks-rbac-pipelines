@@ -1,0 +1,15 @@
+{
+  "variables": {
+    "Env.Core.ResourceGroup": {
+      "value": "core-infra-$(Subscription.AKS.Environment.Name)-rg"
+    },
+    "Env.Location": {
+      "value": "UK South"
+    }
+  },
+  "id": 33,
+  "type": "Vsts",
+  "name": "Azure-AKS-Common",
+  "description": "Common variables for Azure deployments",
+  "isShared": false
+}

@@ -38,7 +38,7 @@
     },
     "slack-webhook-url": {
       "enabled": true,
-      "contentType": "AKS Slack Webhook URL",
+      "contentType": "",
       "value": null,
       "isSecret": true
     },
@@ -49,12 +49,13 @@
       "isSecret": true
     }
   },
-  "id": 18,
+  "id": 31,
   "type": "AzureKeyVault",
-  "name": "SBOX-KeyVault",
+  "name": "ITHC-AKS-KeyVault",
   "providerData": {
-    "serviceEndpointId": "a6794204-7cef-4b23-8dd4-fa8dd9c5ffe8",
-    "vault": "cftapps-sbox"
+    "serviceEndpointId": "74f2acf2-c151-400b-b3f4-aa6d583331ba",
+    "vault": "cftapps-ithc",
+    "lastRefreshedOn": "2019-07-03T13:24:49.024Z"
   },
   "isShared": false
 }

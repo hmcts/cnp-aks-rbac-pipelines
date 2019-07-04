@@ -1,0 +1,61 @@
+{
+  "variables": {
+    "aks-client-app-id": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "aks-server-app-id": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "aks-server-app-password": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "aks-sp-app-id": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "aks-sp-app-password": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "aks-ssh-pub-key": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "slack-webhook-url": {
+      "enabled": true,
+      "contentType": "AKS Slack Webhook URL",
+      "value": null,
+      "isSecret": true
+    },
+    "actionGroupEmailRecievers": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    }
+  },
+  "id": 28,
+  "type": "AzureKeyVault",
+  "name": "MI-SBOX-AKS-KeyVault",
+  "providerData": {
+    "serviceEndpointId": "847e8d41-ecae-4b6a-a827-61fc242e75d4",
+    "vault": "mi-sbox",
+    "lastRefreshedOn": "2019-07-03T13:27:28.894Z"
+  },
+  "isShared": false
+}

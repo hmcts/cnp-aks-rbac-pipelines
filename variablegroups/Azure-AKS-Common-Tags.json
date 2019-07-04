@@ -1,0 +1,38 @@
+{
+  "variables": {
+    "activityName": {
+      "value": "APIM"
+    },
+    "automation": {
+      "value": ""
+    },
+    "costCentre": {
+      "value": "10245117"
+    },
+    "criticality": {
+      "value": "Mid"
+    },
+    "dataClassification": {
+      "value": "Internal"
+    },
+    "environment": {
+      "value": "Development"
+    },
+    "managedBy": {
+      "value": "$(System.TeamProject)"
+    },
+    "releasedBy": {
+      "value": "$(Release.RequestedForEmail)"
+    },
+    "shortName": {
+      "value": "dev"
+    },
+    "solutionOwner": {
+      "value": "CFT"
+    }
+  },
+  "id": 37,
+  "type": "Vsts",
+  "name": "Azure-AKS-Common-Tags",
+  "isShared": false
+}

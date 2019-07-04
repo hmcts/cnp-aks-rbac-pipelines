@@ -1,0 +1,56 @@
+{
+  "variables": {
+    "Environment.name": {
+      "value": "ithc"
+    },
+    "Subscription.acrName": {
+      "value": "hmcts"
+    },
+    "Subscription.AKS.Appgw.ingress": {
+      "value": "[{ \"IpAddress\": \"10.10.33.250\" }, { \"IpAddress\": \"10.10.35.250\" }]"
+    },
+    "Subscription.AKS.Appgw.subnet.cidr": {
+      "value": "10.10.36.0/25"
+    },
+    "Subscription.AKS.Environment.Name": {
+      "value": "ithc"
+    },
+    "Subscription.AKS.Helm.TLS": {
+      "value": "true"
+    },
+    "Subscription.AKS.Kubernetes.version": {
+      "value": "1.13.5"
+    },
+    "Subscription.AKS.nodeCount": {
+      "value": "3"
+    },
+    "Subscription.AKS.Subnet.Primary.Cidr": {
+      "value": "10.10.32.0/23"
+    },
+    "Subscription.AKS.Subnet.Secondary.Cidr": {
+      "value": "10.10.34.0/23"
+    },
+    "Subscription.AKS.vmSize": {
+      "value": "Standard_D4s_v3"
+    },
+    "Subscription.AKS.VNet.Cidr": {
+      "value": "10.10.32.0/21"
+    },
+    "Subscription.AKS.VNet.DnsServers": {
+      "value": "[\"10.112.11.254\"]"
+    },
+    "Subscription.keyvaultName": {
+      "value": "cftapps-ithc"
+    },
+    "Subscription.ServiceConnection.Name": {
+      "value": "DCD-CFTAPPS-ITHC"
+    },
+    "Subscription.StorageAccount.Name": {
+      "value": "cftapps$(Subscription.AKS.Environment.Name)"
+    }
+  },
+  "id": 29,
+  "type": "Vsts",
+  "name": "ITHC-AKS-Common",
+  "isShared": false
+}

@@ -1,0 +1,56 @@
+{
+  "variables": {
+    "Environment.name": {
+      "value": "demo"
+    },
+    "Subscription.acrName": {
+      "value": "hmcts"
+    },
+    "Subscription.AKS.Appgw.ingress": {
+      "value": "[{ \"IpAddress\": \"51.145.127.93\" }, { \"IpAddress\": \"51.145.127.88\" }]"
+    },
+    "Subscription.AKS.Appgw.subnet.cidr": {
+      "value": "10.11.32.0/25"
+    },
+    "Subscription.AKS.Environment.Name": {
+      "value": "demo"
+    },
+    "Subscription.AKS.Helm.TLS": {
+      "value": "true"
+    },
+    "Subscription.AKS.Kubernetes.version": {
+      "value": "1.13.5"
+    },
+    "Subscription.AKS.nodeCount": {
+      "value": "4"
+    },
+    "Subscription.AKS.Subnet.Primary.Cidr": {
+      "value": "10.11.0.0/20"
+    },
+    "Subscription.AKS.Subnet.Secondary.Cidr": {
+      "value": "10.11.16.0/20"
+    },
+    "Subscription.AKS.vmSize": {
+      "value": "Standard_D4s_v3"
+    },
+    "Subscription.AKS.VNet.Cidr": {
+      "value": "10.11.0.0/18"
+    },
+    "Subscription.AKS.VNet.DnsServers": {
+      "value": "[\"10.97.129.254\"]"
+    },
+    "Subscription.keyvaultName": {
+      "value": "cftapps-demo"
+    },
+    "Subscription.ServiceConnection.Name": {
+      "value": "DCD-CFTAPPS-DEMO (aks-infra-demo)"
+    },
+    "Subscription.StorageAccount.Name": {
+      "value": "cftapps$(Subscription.AKS.Environment.Name)"
+    }
+  },
+  "id": 22,
+  "type": "Vsts",
+  "name": "DEMO-AKS-Common",
+  "isShared": false
+}

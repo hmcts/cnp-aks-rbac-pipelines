@@ -1,0 +1,56 @@
+{
+  "variables": {
+    "Environment.name": {
+      "value": "mi-sbox"
+    },
+    "Subscription.acrName": {
+      "value": "hmcts"
+    },
+    "Subscription.AKS.Appgw.ingress": {
+      "value": "{ \"IpAddress\": \"10.10.89.250\" }, { \"IpAddress\": \"10.10.91.250\" }"
+    },
+    "Subscription.AKS.Appgw.subnet.cidr": {
+      "value": "10.10.95.0/25"
+    },
+    "Subscription.AKS.Environment.Name": {
+      "value": "mi-sbox"
+    },
+    "Subscription.AKS.Helm.TLS": {
+      "value": "false"
+    },
+    "Subscription.AKS.Kubernetes.version": {
+      "value": "1.13.5"
+    },
+    "Subscription.AKS.nodeCount": {
+      "value": "2"
+    },
+    "Subscription.AKS.Subnet.Primary.Cidr": {
+      "value": "10.10.88.0/23"
+    },
+    "Subscription.AKS.Subnet.Secondary.Cidr": {
+      "value": "10.10.90.0/23"
+    },
+    "Subscription.AKS.vmSize": {
+      "value": "Standard_B4ms"
+    },
+    "Subscription.AKS.VNet.Cidr": {
+      "value": "10.10.88.0/21"
+    },
+    "Subscription.AKS.VNet.DnsServers": {
+      "value": "[]"
+    },
+    "Subscription.keyvaultName": {
+      "value": "mi-sbox"
+    },
+    "Subscription.ServiceConnection.Name": {
+      "value": "DCD-MI-SBOX (aks-infra-sbox)"
+    },
+    "Subscription.StorageAccount.Name": {
+      "value": "misbox"
+    }
+  },
+  "id": 27,
+  "type": "Vsts",
+  "name": "MI-SBOX-AKS-Common",
+  "isShared": false
+}

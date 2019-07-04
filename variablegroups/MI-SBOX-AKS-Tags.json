@@ -1,0 +1,35 @@
+{
+  "variables": {
+    "activityName": {
+      "value": "AKS"
+    },
+    "automation": {
+      "value": ""
+    },
+    "costCentre": {
+      "value": "10245117"
+    },
+    "criticality": {
+      "value": "Low"
+    },
+    "dataClassification": {
+      "value": "Internal"
+    },
+    "environment": {
+      "value": "Sandbox"
+    },
+    "managedBy": {
+      "value": "ReformDevOps"
+    },
+    "releasedBy": {
+      "value": "$(Release.RequestedForEmail)"
+    },
+    "solutionOwner": {
+      "value": "CFT"
+    }
+  },
+  "id": 24,
+  "type": "Vsts",
+  "name": "MI-SBOX-AKS-Tags",
+  "isShared": false
+}
