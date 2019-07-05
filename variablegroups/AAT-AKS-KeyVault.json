@@ -1,0 +1,60 @@
+{
+  "variables": {
+    "aks-client-app-id": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "aks-server-app-id": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "aks-server-app-password": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "aks-sp-app-id": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "aks-sp-app-password": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "aks-ssh-pub-key": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    },
+    "slack-webhook-url": {
+      "enabled": true,
+      "contentType": "AKS Slack Webhook URL",
+      "value": null,
+      "isSecret": true
+    },
+    "actionGroupEmailRecievers": {
+      "enabled": true,
+      "contentType": "",
+      "value": null,
+      "isSecret": true
+    }
+  },
+  "type": "AzureKeyVault",
+  "name": "AAT-AKS-KeyVault",
+  "providerData": {
+    "serviceEndpointId": "4efeca8d-a337-4b69-a0c1-d23a8c2b5d21",
+    "vault": "cftapps-stg",
+    "lastRefreshedOn": "2019-07-03T13:24:20.107Z"
+  },
+  "isShared": false
+}
