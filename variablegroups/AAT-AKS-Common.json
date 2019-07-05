@@ -37,7 +37,7 @@
       "value": "Standard_D4s_v3"
     },
     "Subscription.AKS.VNet.Cidr": {
-      "value": "10.10.0.0/21"
+      "value": "10.10.16.0/20"
     },
     "Subscription.AKS.VNet.DnsServers": {
       "value": "[\"10.100.139.254\"]"
