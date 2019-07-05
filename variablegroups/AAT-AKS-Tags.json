@@ -1,0 +1,34 @@
+{
+  "variables": {
+    "activityName": {
+      "value": "AKS"
+    },
+    "automation": {
+      "value": ""
+    },
+    "costCentre": {
+      "value": "10245117"
+    },
+    "criticality": {
+      "value": "Low"
+    },
+    "dataClassification": {
+      "value": "Internal"
+    },
+    "environment": {
+      "value": "aat"
+    },
+    "managedBy": {
+      "value": "PlatformEngineering"
+    },
+    "releasedBy": {
+      "value": "$(Release.RequestedForEmail)"
+    },
+    "solutionOwner": {
+      "value": "CFT"
+    }
+  },
+  "type": "Vsts",
+  "name": "AAT-AKS-Tags",
+  "isShared": false
+}
