@@ -50,6 +50,9 @@
     },
     "Subscription.StorageAccount.Name": {
       "value": "cftapps$(Subscription.AKS.Environment.Name)"
+    },
+    "Env.Core.ResourceGroup": {
+      "value": "core-infra-$(Subscription.AKS.Environment.Name)-rg"
     }
   },
   "id": 29,

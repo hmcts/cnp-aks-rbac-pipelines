@@ -32,6 +32,9 @@
     },
     "AKS.LogAnalytics.ResourceGroup": {
       "value": "oms-automation-rg"
+    },
+    "Env.Location": {
+      "value": "UK South"
     }
   },
   "id": 32,
