@@ -49,7 +49,14 @@
       "value": "DCD-CFTAPPS-STG"
     },
     "Subscription.StorageAccount.Name": {
-      "value": "cftapps$(Subscription.AKS.Environment.Name)"
+      "value": "cftapps$(Env.Override.Name)"
+    },
+    "Env.Core.ResourceGroup": {
+      "value": "core-infra-$(Env.Override.Name)-rg"
+    },
+    "Env.Override.Name": {
+      "description": "Override Name for AAT as actual subscription is stg",
+      "value": "stg"
     }
   },
   "type": "Vsts",
