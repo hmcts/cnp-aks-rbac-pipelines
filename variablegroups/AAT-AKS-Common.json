@@ -1,5 +1,11 @@
 {
   "variables": {
+    "Env.Core.ResourceGroup": {
+      "value": "core-infra-$(Env.Override.Name)-rg"
+    },
+    "Env.Override.Name": {
+      "value": "stg"
+    },
     "Environment.name": {
       "value": "aat"
     },
@@ -12,14 +18,14 @@
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.24.0/25"
     },
-    "Subscription.AKS.Iass.subnet.cidr": {
-      "value": "10.10.25.0/24"
-    },
     "Subscription.AKS.Environment.Name": {
       "value": "aat"
     },
     "Subscription.AKS.Helm.TLS": {
       "value": "true"
+    },
+    "Subscription.AKS.Iass.subnet.cidr": {
+      "value": "10.10.25.0/24"
     },
     "Subscription.AKS.Kubernetes.version": {
       "value": "1.13.5"
@@ -40,7 +46,7 @@
       "value": "10.10.16.0/20"
     },
     "Subscription.AKS.VNet.DnsServers": {
-      "value": "[\"10.100.139.254\"]"
+      "value": "[\"10.96.139.254\"]"
     },
     "Subscription.keyvaultName": {
       "value": "cftapps-stg"
@@ -50,15 +56,9 @@
     },
     "Subscription.StorageAccount.Name": {
       "value": "cftapps$(Env.Override.Name)"
-    },
-    "Env.Core.ResourceGroup": {
-      "value": "core-infra-$(Env.Override.Name)-rg"
-    },
-    "Env.Override.Name": {
-      "description": "Override Name for AAT as actual subscription is stg",
-      "value": "stg"
     }
   },
+  "id": 63,
   "type": "Vsts",
   "name": "AAT-AKS-Common",
   "isShared": false
