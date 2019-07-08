@@ -28,6 +28,7 @@
       "value": "CFT"
     }
   },
+  "id": 65,
   "type": "Vsts",
   "name": "AAT-AKS-Tags",
   "isShared": false
