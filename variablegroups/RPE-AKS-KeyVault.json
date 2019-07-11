@@ -36,13 +36,13 @@
       "value": null,
       "isSecret": true
     },
-    "sp-app-id": {
+    "slack-webhook-url": {
       "enabled": true,
-      "contentType": "",
+      "contentType": "AKS Slack Webhook URL",
       "value": null,
       "isSecret": true
     },
-    "sp-app-password": {
+    "actionGroupEmailRecievers": {
       "enabled": true,
       "contentType": "",
       "value": null,
