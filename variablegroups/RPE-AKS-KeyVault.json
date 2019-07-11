@@ -42,12 +42,6 @@
       "value": null,
       "isSecret": true
     },
-    "aks-ssh-private-key": {
-      "enabled": true,
-      "contentType": "",
-      "value": null,
-      "isSecret": true
-    },
     "aks-ssh-pub-key": {
       "enabled": true,
       "contentType": "",
