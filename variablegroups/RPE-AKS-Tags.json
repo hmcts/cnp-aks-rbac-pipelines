@@ -16,7 +16,7 @@
       "value": "Internal"
     },
     "environment": {
-      "value": "Rpe"
+      "value": "rpedev"
     },
     "managedBy": {
       "value": "PlatformEngineering"
