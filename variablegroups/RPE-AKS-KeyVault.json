@@ -18,12 +18,6 @@
       "value": null,
       "isSecret": true
     },
-    "aks-server-sp-object-id": {
-      "enabled": true,
-      "contentType": "",
-      "value": null,
-      "isSecret": true
-    },
     "aks-sp-app-id": {
       "enabled": true,
       "contentType": "",
@@ -31,12 +25,6 @@
       "isSecret": true
     },
     "aks-sp-app-password": {
-      "enabled": true,
-      "contentType": "",
-      "value": null,
-      "isSecret": true
-    },
-    "aks-sp-object-id": {
       "enabled": true,
       "contentType": "",
       "value": null,
@@ -55,12 +43,6 @@
       "isSecret": true
     },
     "sp-app-password": {
-      "enabled": true,
-      "contentType": "",
-      "value": null,
-      "isSecret": true
-    },
-    "sp-object-id": {
       "enabled": true,
       "contentType": "",
       "value": null,
