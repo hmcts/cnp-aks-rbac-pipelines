@@ -5,10 +5,11 @@ ENV=$1
 CLUSTER_NAME=$2
 VAULT_NAME=$3
 ENABLE_HELM_TLS=$4
-GIT_REPO=https://weaveworks.github.io/flux
-VALUES=deployments/weave-flux/values.yaml
+HELM_REPO=https://fluxcd.github.io/flux
+VALUES=deployments/fluxcd/values.yaml
+FLUX_HELM_CRD=deployments/fluxcd/flux-helm-release-crd.yaml
 
-helm repo add weaveworks ${GIT_REPO}
+helm repo add fluxcd ${HELM_REPO}
 
 if [[ ${ENABLE_HELM_TLS} == true ]]
 then
@@ -18,7 +19,9 @@ then
        --set helmOperator.tls.enable=true)
 fi
 
-helm upgrade flux weaveworks/flux --install --recreate-pods --namespace admin -f ${VALUES} \
+kubectl apply -f ${FLUX_HELM_CRD}
+
+helm upgrade flux fluxcd/flux --install --recreate-pods --namespace admin -f ${VALUES} \
     --set "git.path=k8s/${ENV}/common\,k8s/${ENV}/${CLUSTER_NAME}/static\,k8s/${ENV}/${CLUSTER_NAME}/static-overlay\,k8s/common",git.label=${ENV},git.email=flux-${ENV}@hmcts.net,git.user="Flux ${ENV}" \
     "${helm_tls_params[@]}" \
     --wait
