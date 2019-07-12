@@ -53,6 +53,9 @@
     },
     "Subscription.StorageAccount.Name": {
       "value": "cftapps$(Subscription.AKS.Environment.Name)"
+    },
+    "Subscription.AKS.Monitor.SlackChannel": {
+      "value": "#aks-monitor-prod"
     }
   },
   "id": 66,
