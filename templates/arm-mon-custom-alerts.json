@@ -73,7 +73,7 @@
         "Query005": "let endDateTime = now();\r\nlet startDateTime = ago(1h);\r\nlet trendBinSize = 1m;\r\nlet capacityCounterName = 'memoryCapacityBytes';\r\nlet usageCounterName = 'memoryRssBytes';\r\nKubeNodeInventory\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n| distinct Computer\r\n| join hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == capacityCounterName\r\n  | summarize LimitValue = max(CounterValue) by Computer, CounterName, bin(TimeGenerated, trendBinSize)\r\n  | project Computer, CapacityStartTime = TimeGenerated, CapacityEndTime = TimeGenerated + trendBinSize, LimitValue\r\n) on Computer\r\n| join kind=inner hint.strategy=shuffle (\r\n  Perf\r\n  | where TimeGenerated < endDateTime + trendBinSize\r\n  | where TimeGenerated >= startDateTime - trendBinSize\r\n  | where ObjectName == 'K8SNode'\r\n  | where CounterName == usageCounterName\r\n  | project Computer, UsageValue = CounterValue, TimeGenerated\r\n) on Computer\r\n| where TimeGenerated >= CapacityStartTime and TimeGenerated < CapacityEndTime\r\n| project Computer, TimeGenerated, UsagePercent = UsageValue * 100.0 \/ LimitValue\r\n| where UsagePercent > 90\r\n| summarize AggregatedValue = toint(avg(UsagePercent)) by Computer",
         "Query006": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nKubeNodeInventory\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | distinct TimeGenerated\r\n | summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize)\r\n | join hint.strategy=broadcast (\r\n  KubePodInventory\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where Namespace !in ('admin', 'kube-system', 'neuvector', 'kured')\r\n | distinct Computer, PodUid, TimeGenerated, PodStatus\r\n | summarize TotalCount = count(), PendingCount = sumif(1, PodStatus =~ 'Pending'), RunningCount = sumif(1, PodStatus =~ 'Running'), SucceededCount = sumif(1, PodStatus =~ 'Succeeded'), FailedCount = sumif(1, PodStatus =~ 'Failed') by bin(TimeGenerated, trendBinSize)\r\n) on TimeGenerated\r\n| extend UnknownCount = TotalCount - PendingCount - RunningCount - SucceededCount - FailedCount\r\n | project TimeGenerated, TotalCount = todouble(TotalCount) / ClusterSnapshotCount, PendingCount = todouble(PendingCount) / ClusterSnapshotCount, RunningCount = todouble(RunningCount) / ClusterSnapshotCount, SucceededCount = todouble(SucceededCount) / ClusterSnapshotCount, FailedCount = todouble(FailedCount) / ClusterSnapshotCount, UnknownCount = todouble(UnknownCount) / ClusterSnapshotCount\r\n| summarize AggregatedPendingCount = avg(PendingCount), AggregatedFailedCount = avg(FailedCount), AggregatedUnknownCount = avg(UnknownCount) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedPendingCount > 0 or AggregatedFailedCount > 0 or AggregatedUnknownCount > 0",
         "Query007": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nKubeNodeInventory\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | distinct TimeGenerated\r\n | summarize ClusterSnapshotCount = count() by bin(TimeGenerated, trendBinSize)\r\n | join hint.strategy=broadcast (\r\n  KubePodInventory\r\n  | where TimeGenerated < endDateTime\r\n  | where TimeGenerated >= startDateTime\r\n  | where Namespace in ('admin', 'kube-system', 'neuvector', 'kured')\r\n | distinct Computer, PodUid, TimeGenerated, PodStatus\r\n | summarize TotalCount = count(), PendingCount = sumif(1, PodStatus =~ 'Pending'), RunningCount = sumif(1, PodStatus =~ 'Running'), SucceededCount = sumif(1, PodStatus =~ 'Succeeded'), FailedCount = sumif(1, PodStatus =~ 'Failed') by bin(TimeGenerated, trendBinSize)\r\n) on TimeGenerated\r\n| extend UnknownCount = TotalCount - PendingCount - RunningCount - SucceededCount - FailedCount\r\n | project TimeGenerated, TotalCount = todouble(TotalCount) / ClusterSnapshotCount, PendingCount = todouble(PendingCount) / ClusterSnapshotCount, RunningCount = todouble(RunningCount) / ClusterSnapshotCount, SucceededCount = todouble(SucceededCount) / ClusterSnapshotCount, FailedCount = todouble(FailedCount) / ClusterSnapshotCount, UnknownCount = todouble(UnknownCount) / ClusterSnapshotCount\r\n| summarize AggregatedPendingCount = avg(PendingCount), AggregatedFailedCount = avg(FailedCount), AggregatedUnknownCount = avg(UnknownCount) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedPendingCount > 0 or AggregatedFailedCount > 0 or AggregatedUnknownCount > 0",
-        "Query008": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nInsightsMetrics\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | where Origin == 'container.azm.ms/telegraf'\r\n | where Namespace == 'disk'\r\n | extend Tags = todynamic(Tags)\r\n | project TimeGenerated, ClusterId = Tags['container.azm.ms/clusterId'], Computer = tostring(Tags.hostName), Device = tostring(Tags.device), Path = tostring(Tags.path), DiskMetricName = Name, DiskMetricValue = Val\r\n | where tostring(ClusterId) contains ('CLUSTER_NAME')\r\n | where DiskMetricName == 'used_percent'\r\n | summarize AggregatedValue = max(DiskMetricValue) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedValue >= 90",
+        "Query008": "let endDateTime = now();\r\nlet startDateTime = ago(15m);\r\nlet trendBinSize = 1m;\r\nInsightsMetrics\r\n | where TimeGenerated < endDateTime\r\n | where TimeGenerated >= startDateTime\r\n | where Origin == 'container.azm.ms/telegraf'\r\n | where Namespace == 'disk'\r\n | extend Tags = todynamic(Tags)\r\n | project TimeGenerated, ClusterId = Tags['container.azm.ms/clusterId'], Computer = tostring(Tags.hostName), Device = tostring(Tags.device), Path = tostring(Tags.path), DiskMetricName = Name, DiskMetricValue = Val\r\n | where DiskMetricName == 'used_percent'\r\n | summarize AggregatedValue = max(DiskMetricValue) by bin(TimeGenerated, trendBinSize)\r\n | where AggregatedValue >= 90",
         "teamPodRestartQuery": "KubePodInventory\n | where PodRestartCount >= 5\n | where ContainerStatus != \"running\" \n | where Namespace !in ('admin', 'kube-system', 'neuvector', 'kured')\n | distinct Name, Namespace",
         "adminPodRestartQuery": "KubePodInventory\n | where PodRestartCount >= 5\n | where ContainerStatus != \"running\" \n | where Namespace in ('admin', 'kube-system', 'neuvector', 'kured')\n | distinct Name, Namespace",
         "aksResourceId": "[resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksName'))]",
@@ -101,7 +101,7 @@
                 "description": "Pods that are unhealthy",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('unhealthyPodsQuery'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[variables('unhealthyPodsQuery')]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -143,7 +143,7 @@
                 "description": "Number of scale up events in last 15 minutes.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('Query002'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
+                    "query": "[variables('Query002')]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -173,7 +173,7 @@
                 "description": "Number of deleted nodes in last 15 minutes.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('Query003'),'CLUSTER_NAME', toUpper(parameters('aksName')))]",
+                    "query": "[variables('Query003')]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -215,7 +215,7 @@
                 "description": "Nodes that are using over 95% of CPU for at least the last 6 hours.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('Query004'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[variables('Query004')]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -257,7 +257,7 @@
                 "description": "Nodes that have 10% or less RAM left for at least the last hour.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('Query005'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[variables('Query005')]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -299,7 +299,7 @@
                 "description": "Pods that are failing for at least 15 minutes with not running state (team namespace).",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('Query006'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[variables('Query006')]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -341,7 +341,7 @@
                 "description": "Pods that are failing for at least 15 minutes with not running state in (admin, kube-system, neuvector, kured) namespaces).",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('Query007'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[variables('Query007')]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
@@ -383,7 +383,7 @@
                 "description": "Nodes that have 10% or less free Disk left for in the last 15 minutes.",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
-                    "query": "[replace(variables('Query008'),'CLUSTER_NAME', parameters('aksName'))]",
+                    "query": "[variables('Query008')]",
                     "dataSourceId": "[variables('aksResourceId')]",
                     "queryType": "ResultCount"
                 },
