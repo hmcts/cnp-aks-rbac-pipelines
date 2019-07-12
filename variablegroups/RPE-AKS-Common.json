@@ -21,6 +21,9 @@
     "Subscription.AKS.Helm.TLS": {
       "value": "true"
     },
+    "Subscription.AKS.Iass.subnet.cidr": {
+      "value": "10.10.4.0/24"
+    },
     "Subscription.AKS.Kubernetes.version": {
       "value": "1.13.5"
     },
@@ -52,7 +55,7 @@
       "value": "cftapps$(Subscription.AKS.Environment.Name)"
     },
     "Subscription.AKS.Monitor.SlackChannel": {
-      "value": "#cnp-monitoring"
+      "value": "#aks-monitor-rpedev"
     }
   },
   "id": 41,
