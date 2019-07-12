@@ -296,26 +296,46 @@
                                         "type": "Http",
                                         "inputs": {
                                             "body": {
-                                                "attachments": [
-                                                    {
-                                                        "color": "@{variables('color')}",
-                                                        "fields": [
-                                                            {
-                                                                "short": true,
-                                                                "title": "Results",
-                                                                "value": "@{body('Parse_JSON')?['data']?['ResultCount']}"
-                                                            },
-                                                            {
-                                                                "short": true,
-                                                                "title": "Severity",
-                                                                "value": "@{body('Parse_JSON')?['data']?['Severity']}"
-                                                            }
-                                                        ],
-                                                        "text": "Description: _@{body('Parse_JSON')?['data']?['Description']}_",
-                                                        "title": "Alert - @{body('Parse_JSON')?['data']?['AlertRuleName']}"
+                                                "blocks": [
+                                                  {
+                                                    "type": "section",
+                                                    "text": {
+                                                      "type": "mrkdwn",
+                                                      "text": "*Alert - @{body('Parse_JSON')?['data']?['AlertRuleName']}*\n_@{body('Parse_JSON')?['data']?['Description']}_"
                                                     }
+                                                  },
+                                                  {
+                                                    "type": "section",
+                                                    "fields": [
+                                                      {
+                                                        "type": "mrkdwn",
+                                                        "text": "*Results*"
+                                                      },
+                                                      {
+                                                        "type": "mrkdwn",
+                                                        "text": "*Severity*"
+                                                      },
+                                                      {
+                                                        "type": "plain_text",
+                                                        "text": "@{body('Parse_JSON')?['data']?['ResultCount']}"
+                                                      },
+                                                      {
+                                                        "type": "plain_text",
+                                                        "text": "@{body('Parse_JSON')?['data']?['Severity']}",
+                                                        "emoji": true
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "section",
+                                                    "text": {
+                                                      "type": "mrkdwn",
+                                                      "text": "<@{body('Parse_JSON')?['data']?['LinkToSearchResults']}|View results>"
+                                                    }
+                                                  }
                                                 ],
                                                 "channel": "[parameters('slackChannel')]",
+                                                "text": "Sev @{body('Parse_JSON')?['data']?['Severity']} - @{body('Parse_JSON')?['data']?['AlertRuleName']}",
                                                 "username": "Azure Monitoring"
                                             },
                                             "headers": {

@@ -56,6 +56,9 @@
     },
     "Subscription.StorageAccount.Name": {
       "value": "cftapps$(Env.Override.Name)"
+    },
+    "Subscription.AKS.Monitor.SlackChannel": {
+      "value": "#aks-monitor-aat"
     }
   },
   "id": 63,

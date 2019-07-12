@@ -53,6 +53,9 @@
     },
     "Env.Core.ResourceGroup": {
       "value": "core-infra-$(Subscription.AKS.Environment.Name)-rg"
+    },
+    "Subscription.AKS.Monitor.SlackChannel": {
+      "value": "#aks-monitor-papi"
     }
   },
   "id": 26,
