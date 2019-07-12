@@ -330,7 +330,7 @@
                                                     "type": "section",
                                                     "text": {
                                                       "type": "mrkdwn",
-                                                      "text": "<@{body('Parse_JSON')?['LinkToSearchResults']}|View results>"
+                                                      "text": "<@{body('Parse_JSON')?['data']?['LinkToSearchResults']}|View results>"
                                                     }
                                                   }
                                                 ],
