@@ -303,7 +303,7 @@
                 },
                 "schedule": {
                     "frequencyInMinutes": 5,
-                    "timeWindowInMinutes": 6
+                    "timeWindowInMinutes": 5
                 },
                 "action": {
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
@@ -345,7 +345,7 @@
                 },
                 "schedule": {
                     "frequencyInMinutes": 5,
-                    "timeWindowInMinutes": 6
+                    "timeWindowInMinutes": 5
                 },
                 "action": {
                     "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
