@@ -6,13 +6,13 @@ export PATH="${PATH}:${HOME}/go/bin"
 go get -u -v github.com/heptio/sonobuoy
 sonobuoy delete --wait
 
-sonobuoy run --mode ${MODE} --wait
+sonobuoy run --mode ${MODE} --wait --namespace admin
 results=$(sonobuoy retrieve)
-sonobuoy e2e $results
+sonobuoy e2e $results --namespace admin
 
 # unzipping results to publish as test artifacts
 mkdir results && tar -xf $results -C results
 
 
-sonobuoy delete --all
+sonobuoy delete --all --namespace admin
 
