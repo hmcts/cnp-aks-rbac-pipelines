@@ -267,21 +267,21 @@
               }
             ]
           }
-        },
-        {
-          "apiVersion": "2019-02-01",
-          "type": "Microsoft.Network/publicIPAddresses",
-          "name": "[parameters('publicIpAddressName')]",
-          "location": "[parameters('location')]",
-          "sku": {
-            "name": "[parameters('publicIpSku')]"
-          },
-          "zones": "[parameters('zones')]",
-          "properties": {
-            "publicIPAllocationMethod": "[parameters('allocationMethod')]"
-          }
         }
       ]
+    },
+    {
+      "apiVersion": "2019-02-01",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('publicIpAddressName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('publicIpSku')]"
+      },
+      "zones": "[parameters('zones')]",
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('allocationMethod')]"
+      }
     }
   ]
 }
