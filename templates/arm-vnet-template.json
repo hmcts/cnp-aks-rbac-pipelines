@@ -94,6 +94,10 @@
     },
     "logAnalyticsResourceGroup": {
       "type": "string"
+    },
+    "appgwNsgPortrange": {
+      "type": "string",
+      "defaultValue": "65200-65535"
     }
   },
   "variables": {
@@ -144,6 +148,24 @@
       "name": "[parameters('appgwNsgName')]",
       "location": "[resourceGroup().location]",
       "apiVersion": "2019-04-01",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "allow_ports_appgw_v2",
+            "properties": {
+              "description": "This port range is required for Azure infrastructure communication. These ports are protected (locked down) by Azure certificates",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "[parameters('appgwNsgPortrange')]",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      },
       "resources": [
         {
           "type": "providers/diagnosticSettings",
@@ -153,7 +175,7 @@
           ],
           "apiVersion": "2017-05-01-preview",
           "properties": {
-            "name": "[parameters('aksNsgName')]",
+            "name": "[parameters('appgwNsgName')]",
             "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
             "logs": [
               {
@@ -191,7 +213,7 @@
           ],
           "apiVersion": "2017-05-01-preview",
           "properties": {
-            "name": "[parameters('aksNsgName')]",
+            "name": "[parameters('iaasNsgName')]",
             "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
             "logs": [
               {
