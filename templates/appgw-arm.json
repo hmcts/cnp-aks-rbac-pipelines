@@ -73,7 +73,7 @@
       "defaultValue": "Static"
     },
     "privateIpAddress": {
-      "type": "String"
+      "type": "string"
     }
   },
   "variables": {
