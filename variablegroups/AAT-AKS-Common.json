@@ -59,6 +59,9 @@
     },
     "Subscription.AKS.Monitor.SlackChannel": {
       "value": "#aks-monitor-aat"
+    },
+    "Subscription.AKS.Appgw.privateIpAddress": {
+      "value": "10.10.24.120"
     }
   },
   "id": 63,

@@ -11,13 +11,13 @@
     },
     "tier": {
       "type": "string",
-      "defaultValue": "Standard"
+      "defaultValue": "Standard_v2"
     },
     "skuSize": {
       "type": "string",
-      "defaultValue": "Standard_Medium"
+      "defaultValue": "Standard_v2"
     },
-    "capacity": {
+    "autoScaleMinCapacity": {
       "type": "int",
       "defaultValue": 2
     },
@@ -59,11 +59,26 @@
     },
     "logAnalyticsResourceGroup": {
       "type": "string"
+    },
+    "publicIpAddressName": {
+      "type": "string",
+      "defaultValue": "aks-appgw-ip"
+    },
+    "publicIpSku": {
+      "type": "string",
+      "defaultValue": "Standard"
+    },
+    "allocationMethod": {
+      "type": "string",
+      "defaultValue": "Static"
+    },
+    "privateIpAddress": {
+      "type": "String"
     }
   },
   "variables": {
     "vnetId": "[resourceId(parameters('resourceGroup'),'Microsoft.Network/virtualNetworks/', parameters('appgwVirtualNetworkName'))]",
-    "publicIPRef": "",
+    "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses/', parameters('publicIpAddressName'))]",
     "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('appgwSubnetName'))]",
     "applicationGatewayID": "[resourceId('Microsoft.Network/applicationGateways', parameters('appgwName'))]"
   },
@@ -75,11 +90,17 @@
       "location": "[parameters('location')]",
       "zones": "[parameters('zones')]",
       "comments": "probes.host is set to host.never.exists.rr so that it is invalid so that traefik will ignore the hostname and pick default one",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', parameters('publicIpAddressName'))]"
+      ],
       "properties": {
         "sku": {
           "name": "[parameters('skuSize')]",
-          "tier": "[parameters('tier')]",
-          "capacity": "[parameters('capacity')]"
+          "tier": "[parameters('tier')]"
+        },
+        "autoscaleConfiguration":{
+          "minCapacity":"[parameters('autoScaleMinCapacity')]",
+          "maxCapacity": "[parameters('autoScaleMaxCapacity')]"
         },
         "gatewayIPConfigurations": [
           {
@@ -93,11 +114,21 @@
         ],
         "frontendIPConfigurations": [
           {
-            "name": "appGatewayFrontendIP",
+            "name": "appGwPublicFrontendIp",
+            "properties": {
+              "PublicIPAddress": {
+                "id": "[variables('publicIPRef')]"
+              }
+            }
+          },
+          {
+            "name": "appGwPrivateFrontendIp",
             "properties": {
               "subnet": {
                 "id": "[variables('subnetRef')]"
-              }
+              },
+              "privateIPAddress": "[parameters('privateIpAddress')]",
+              "privateIPAllocationMethod": "[parameters('allocationMethod')]"
             }
           }
         ],
@@ -157,7 +188,7 @@
             "name": "appGatewayHttpListener",
             "properties": {
               "FrontendIPConfiguration": {
-                "Id": "[concat(variables('applicationGatewayID'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+                "Id": "[concat(variables('applicationGatewayID'), '/frontendIPConfigurations/appGwPrivateFrontendIp')]"
               },
               "FrontendPort": {
                 "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/appGatewayFrontendPort')]"
@@ -238,6 +269,19 @@
           }
         }
       ]
+    },
+    {
+      "apiVersion": "2019-02-01",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('publicIpAddressName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('publicIpSku')]"
+      },
+      "zones": "[parameters('zones')]",
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('allocationMethod')]"
+      }
     }
   ]
 }
