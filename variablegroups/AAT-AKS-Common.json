@@ -13,7 +13,7 @@
       "value": "hmctspublic"
     },
     "Subscription.AKS.Appgw.ingress": {
-      "value": "[{ \"IpAddress\": \"10.10.23.250\" }]"
+      "value": "[{ \"IpAddress\": \"10.10.19.250\" }, { \"IpAddress\": \"10.10.23.250\" }]"
     },
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.24.0/25"
