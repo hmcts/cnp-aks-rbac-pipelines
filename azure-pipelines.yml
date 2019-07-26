@@ -112,7 +112,7 @@ stages:
                   inputs:
                     targetType: 'inline'
                     script: 'ls -lash && chmod +x .terraform/plugins/linux_amd64/*'
-                  workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
                 - task: TerraformInstaller@0
                   inputs:
                     terraformVersion: ${{ variables.terraformVersion }}
@@ -122,6 +122,6 @@ stages:
                     command: 'apply'
                     commandOptions: 'sandboxplan'
                     environmentServiceName: 'dcd-cftapps-sbox'
-                  workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
 
 
