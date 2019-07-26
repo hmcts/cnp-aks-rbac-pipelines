@@ -3,58 +3,125 @@
 
 trigger:
   - master
-pool:
-  name: Hosted Ubuntu 1604
 variables:
   serviceConnection: azurerm-nonprod
   keyvaultName: infra-vault-nonprod
-steps:
-- task: Bash@3
-  displayName: "Set build number"
-  inputs:
-    filePath: 'ci/set-build-pipeline-name.sh'
-- task: PowerShell@2
-  displayName: 'Run tests'
-  inputs:
-    targetType: 'inline'
-    script: |
-      Install-Module -Name Pester -Force -Verbose -Scope CurrentUser
-      Invoke-Pester ./ci -OutputFormat NUnitXml -OutputFile ./TEST-CI.xml -EnableExit
-    failOnStderr: true
-    pwsh: true
-- task: AzureKeyVault@1
-  displayName: 'Get azure devops API token from Keyvault'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  inputs:
-    azureSubscription: ${{ variables.serviceConnection }}
-    keyVaultName: ${{ variables.keyvaultName }}
-    secretsFilter: 'azure-devops-token'
+  terraformVersion: 0.12.5
+  agentPool: 'Ubuntu-16.04'
 
-- task: Bash@3
-  displayName: "Update or Create Variable Groups"
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  inputs:
-    filePath: 'variablegroups/scripts/update-variable-groups.sh'
-    arguments: '$(azure-devops-token)'
-    workingDirectory: 'variablegroups/'
+stages:
+  - stage: CI
+    jobs:
+      - job: Validate
+        pool:
+          vmImage: ${{ variables.agentPool }}
+        steps:
+          - task: Bash@3
+            displayName: "Set build number"
+            inputs:
+              filePath: 'ci/set-build-pipeline-name.sh'
+          - task: PowerShell@2
+            displayName: 'Run tests'
+            inputs:
+              targetType: 'inline'
+              script: |
+                Install-Module -Name Pester -Force -Verbose -Scope CurrentUser
+                Invoke-Pester ./ci -OutputFormat NUnitXml -OutputFile ./TEST-CI.xml -EnableExit
+              failOnStderr: true
+              pwsh: true
+          - task: AzureKeyVault@1
+            displayName: 'Get azure devops API token from Keyvault'
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            inputs:
+              azureSubscription: ${{ variables.serviceConnection }}
+              keyVaultName: ${{ variables.keyvaultName }}
+              secretsFilter: 'azure-devops-token'
 
-- task: PublishTestResults@2
-  displayName: 'Publish Test Results **/TEST-*.xml'
-  inputs:
-    testResultsFormat: NUnit
-    failTaskOnFailedTests: true
-  condition: always()
+          - task: Bash@3
+            displayName: "Update or Create Variable Groups"
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            inputs:
+              filePath: 'variablegroups/scripts/update-variable-groups.sh'
+              arguments: '$(azure-devops-token)'
+              workingDirectory: 'variablegroups/'
 
-- task: CopyFiles@2
-  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
-  inputs:
-    Contents: |
-     deployments/**
-     roles/**
-     scripts/**
-     templates/**
-     tests/**
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+          - task: PublishTestResults@2
+            displayName: 'Publish Test Results **/TEST-*.xml'
+            inputs:
+              testResultsFormat: NUnit
+              failTaskOnFailedTests: true
+            condition: always()
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: drop'
+          - task: TerraformInstaller@0
+            inputs:
+              terraformVersion: ${{ variables.terraformVersion }}
+
+          - task: TerraformCLI@0
+            displayName: Init - sandbox
+            inputs:
+              command: 'init'
+              backendType: 'azurerm'
+              backendServiceArm: 'dcd-cftapps-sbox'
+              backendAzureRmResourceGroupName: 'core-infra-sbox-rg'
+              backendAzureRmStorageAccountName: 'cftappssbox'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'appgw/sandbox.tfstate'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+          - task: TerraformCLI@0
+            displayName: Plan - Sandbox
+            inputs:
+              command: 'plan'
+              commandOptions: '-out=sandboxplan -var-file=sbox.tfvars'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              environmentServiceName: 'dcd-cftapps-sbox'
+          - task: CopyFiles@2
+            displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+            inputs:
+              Contents: |
+               deployments/**
+               roles/**
+               scripts/**
+               templates/**
+               tests/**
+               terraform/**
+               team-config/**
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifact: drop'
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  - stage: Sandbox
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+      - deployment: Deploy
+        pool:
+          vmImage: ${{ variables.agentPool }}
+        environment: 'sandbox'
+        strategy:
+          # default deployment strategy
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadPipelineArtifact@1
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'drop'
+                    targetPath: '$(System.DefaultWorkingDirectory)'
+                - task: Bash@3
+                  displayName: 'Show files'
+                  inputs:
+                    targetType: 'inline'
+                    script: 'ls -lash && chmod +x .terraform/plugins/linux_amd64/*'
+                  workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+                - task: TerraformInstaller@0
+                  inputs:
+                    terraformVersion: ${{ variables.terraformVersion }}
+                - task: TerraformCLI@0
+                  displayName: Apply
+                  inputs:
+                    command: 'apply'
+                    commandOptions: 'sandboxplan'
+                    environmentServiceName: 'dcd-cftapps-sbox'
+                  workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+
+
