@@ -46,7 +46,7 @@
       "value": "10.10.40.0/21"
     },
     "Subscription.AKS.VNet.DnsServers": {
-      "value": "[\"10.96.139.254\"]"
+      "value": "[\"10.112.139.254\"]"
     },
     "Subscription.keyvaultName": {
       "value": "cftapps-test"
