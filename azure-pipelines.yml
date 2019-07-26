@@ -73,12 +73,12 @@ stages:
                terraform/**
                team-config/**
               TargetFolder: '$(Build.ArtifactStagingDirectory)'
-            #condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Artifact: drop'
-            #condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   - stage: Sandbox
-    #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
       - template: devops-templates/terraform-apply-template.yaml
         parameters:
