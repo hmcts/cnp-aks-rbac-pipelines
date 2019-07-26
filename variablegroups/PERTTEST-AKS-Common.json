@@ -4,7 +4,7 @@
       "value": "core-infra-$(Env.Override.Name)-rg"
     },
     "Env.Override.Name": {
-      "value": "perftest"
+      "value": "test"
     },
     "Environment.name": {
       "value": "perftest"
