@@ -1,0 +1,19 @@
+steps:
+  - task: TerraformCLI@0
+    displayName: Init - ${{ parameters.environment }}
+    inputs:
+      command: 'init'
+      backendType: 'azurerm'
+      backendServiceArm: 'dcd-cftapps-${{ parameters.environment }}'
+      backendAzureRmResourceGroupName: 'core-infra-${{ parameters.environment }}-rg'
+      backendAzureRmStorageAccountName: 'cftapps${{ parameters.environment }}'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: '${{ parameters.resource_key }}/${{ parameters.environment }}.tfstate'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+  - task: TerraformCLI@0
+    displayName: Plan - Sandbox
+    inputs:
+      command: 'plan'
+      commandOptions: '-out=${{ parameters.environment }}plan -var-file=${{ parameters.environment }}.tfvars'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      environmentServiceName: 'dcd-cftapps-${{ parameters.environment }}'

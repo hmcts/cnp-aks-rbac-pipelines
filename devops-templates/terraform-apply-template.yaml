@@ -1,0 +1,27 @@
+- deployment: Deploy
+  pool:
+    vmImage: ${{ variables.agentPool }}
+  environment: ${{ parameters.environment }}
+  strategy:
+    # default deployment strategy
+    runOnce:
+      deploy:
+        steps:
+          - download: current
+            artifact: drop
+          - task: Bash@3
+            displayName: 'Show files'
+            inputs:
+              targetType: 'inline'
+              script: 'ls -lash && chmod +x .terraform/plugins/linux_amd64/*'
+              workingDirectory: '$(Pipeline.Workspace)/drop/terraform'
+          - task: TerraformInstaller@0
+            inputs:
+              terraformVersion: ${{ variables.terraformVersion }}
+          - task: TerraformCLI@0
+            displayName: Apply
+            inputs:
+              command: 'apply'
+              commandOptions: '${{ parameters.environment }}plan'
+              environmentServiceName: 'dcd-cftapps-${{ parameters.environment }}'
+              workingDirectory: '$(Pipeline.Workspace)/drop/terraform'
