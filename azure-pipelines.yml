@@ -56,24 +56,11 @@ stages:
             inputs:
               terraformVersion: ${{ variables.terraformVersion }}
 
-          - task: TerraformCLI@0
-            displayName: Init - sandbox
-            inputs:
-              command: 'init'
-              backendType: 'azurerm'
-              backendServiceArm: 'dcd-cftapps-sbox'
-              backendAzureRmResourceGroupName: 'core-infra-sbox-rg'
-              backendAzureRmStorageAccountName: 'cftappssbox'
-              backendAzureRmContainerName: 'tfstate'
-              backendAzureRmKey: 'appgw/sandbox.tfstate'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-          - task: TerraformCLI@0
-            displayName: Plan - Sandbox
-            inputs:
-              command: 'plan'
-              commandOptions: '-out=sandboxplan -var-file=sbox.tfvars'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-              environmentServiceName: 'dcd-cftapps-sbox'
+          - template: devops-templates/terraform-plan-template.yaml
+            parameters:
+              environment: 'sbox'
+              resource_key: 'appgw'
+
           - task: CopyFiles@2
             displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
             inputs:
@@ -93,32 +80,8 @@ stages:
   - stage: Sandbox
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
-      - deployment: Deploy
-        pool:
-          vmImage: ${{ variables.agentPool }}
-        environment: 'sandbox'
-        strategy:
-          # default deployment strategy
-          runOnce:
-            deploy:
-              steps:
-                - download: current
-                  artifact: drop
-                - task: Bash@3
-                  displayName: 'Show files'
-                  inputs:
-                    targetType: 'inline'
-                    script: 'ls -lash && chmod +x .terraform/plugins/linux_amd64/*'
-                    workingDirectory: '$(Pipeline.Workspace)/drop/terraform'
-                - task: TerraformInstaller@0
-                  inputs:
-                    terraformVersion: ${{ variables.terraformVersion }}
-                - task: TerraformCLI@0
-                  displayName: Apply
-                  inputs:
-                    command: 'apply'
-                    commandOptions: 'sandboxplan'
-                    environmentServiceName: 'dcd-cftapps-sbox'
-                    workingDirectory: '$(Pipeline.Workspace)/drop/terraform'
-
-
+      - template: devops-templates/terraform-apply-template.yaml
+        parameters:
+          environment: 'sbox'
+          agentPool: ${{ variables.agentPool }}
+          terraformVersion: ${{ variables.terraformVersion }}
