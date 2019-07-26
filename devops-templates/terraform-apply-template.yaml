@@ -1,7 +1,7 @@
 jobs:
   - deployment: Deploy
     pool:
-      vmImage: ${{ variables.agentPool }}
+      vmImage: ${{ parameters.agentPool }}
     environment: ${{ parameters.environment }}
     strategy:
       # default deployment strategy

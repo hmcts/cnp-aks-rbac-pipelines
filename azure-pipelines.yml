@@ -83,3 +83,4 @@ stages:
       - template: devops-templates/terraform-apply-template.yaml
         parameters:
           environment: 'sbox'
+          agentPool: ${{ variables.agentPool }}
