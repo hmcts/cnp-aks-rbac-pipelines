@@ -84,3 +84,4 @@ stages:
         parameters:
           environment: 'sbox'
           agentPool: ${{ variables.agentPool }}
+          terraformVersion: ${{ variables.terraformVersion }}

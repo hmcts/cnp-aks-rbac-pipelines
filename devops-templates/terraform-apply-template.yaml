@@ -18,7 +18,7 @@ jobs:
                 workingDirectory: '$(Pipeline.Workspace)/drop/terraform'
             - task: TerraformInstaller@0
               inputs:
-                terraformVersion: ${{ variables.terraformVersion }}
+                terraformVersion: ${{ parameters.terraformVersion }}
             - task: TerraformCLI@0
               displayName: Apply
               inputs:
