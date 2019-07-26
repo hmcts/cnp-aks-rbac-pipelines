@@ -102,11 +102,8 @@ stages:
           runOnce:
             deploy:
               steps:
-                - task: DownloadPipelineArtifact@1
-                  inputs:
-                    buildType: 'current'
-                    artifactName: 'drop'
-                    targetPath: '$(System.DefaultWorkingDirectory)'
+                - download: current
+                  artifact: drop
                 - task: Bash@3
                   displayName: 'Show files'
                   inputs:
