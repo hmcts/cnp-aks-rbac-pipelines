@@ -24,4 +24,4 @@ steps:
       targetType: 'inline'
       workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
       script: |
-        rm -f terraform.tfstate*
+        rm -f terraform.tfstate* && rm -rf .terraform/
