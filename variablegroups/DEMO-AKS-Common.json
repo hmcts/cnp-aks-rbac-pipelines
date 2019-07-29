@@ -6,9 +6,6 @@
     "Subscription.acrName": {
       "value": "hmcts"
     },
-    "Subscription.AKS.Appgw.ingress": {
-      "value": "[{ \"IpAddress\": \"51.145.127.93\" }, { \"IpAddress\": \"51.145.127.88\" }]"
-    },
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.11.32.0/25"
     },
@@ -56,9 +53,6 @@
     },
     "Subscription.AKS.Monitor.SlackChannel": {
       "value": "#aks-monitor-demo"
-    },
-    "Subscription.AKS.Appgw.privateIpAddress": {
-      "value": "10.11.32.120"
     }
   },
   "id": 22,
