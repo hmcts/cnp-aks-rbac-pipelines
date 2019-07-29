@@ -11,7 +11,7 @@ steps:
       backendAzureRmKey: '${{ parameters.resource_key }}/${{ parameters.environment }}.tfstate'
       workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
   - task: TerraformCLI@0
-    displayName: Plan - Sandbox
+    displayName: Plan - ${{ parameters.environment }}
     inputs:
       command: 'plan'
       commandOptions: '-out=${{ parameters.environment }}plan -var-file=${{ parameters.environment }}.tfvars'
