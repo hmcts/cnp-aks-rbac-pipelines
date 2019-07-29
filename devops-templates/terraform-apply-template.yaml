@@ -14,7 +14,18 @@ jobs:
               displayName: 'Show files'
               inputs:
                 targetType: 'inline'
-                script: 'ls -lash && chmod +x .terraform/plugins/linux_amd64/*'
+                script: 'ls -lash'
+                workingDirectory: '$(Pipeline.Workspace)/drop/terraform'
+            - task: TerraformCLI@0
+              displayName: Init - ${{ parameters.environment }}
+              inputs:
+                command: 'init'
+                backendType: 'azurerm'
+                backendServiceArm: 'dcd-cftapps-${{ parameters.environment }}'
+                backendAzureRmResourceGroupName: 'core-infra-${{ parameters.environment }}-rg'
+                backendAzureRmStorageAccountName: 'cftapps${{ parameters.environment }}'
+                backendAzureRmContainerName: 'tfstate'
+                backendAzureRmKey: '${{ parameters.resource_key }}/${{ parameters.environment }}.tfstate'
                 workingDirectory: '$(Pipeline.Workspace)/drop/terraform'
             - task: TerraformInstaller@0
               inputs:
