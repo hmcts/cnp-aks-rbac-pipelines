@@ -79,7 +79,7 @@
     },
     "aksNsgName": {
       "type": "string",
-      "defaultValue": "aks-nsg"
+      "defaultValue": "aks-cluster-nsg"
     },
     "appgwNsgName": {
       "type": "string",
@@ -87,7 +87,7 @@
     },
     "iaasNsgName": {
       "type": "string",
-      "defaultValue": "iaas-nsg"
+      "defaultValue": "aks-iaas-nsg"
     },
     "logAnalyticsWorkSpaceName": {
       "type": "string"
