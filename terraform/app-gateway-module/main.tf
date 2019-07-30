@@ -7,7 +7,7 @@ data "local_file" "configuration" {
 }
 
 resource "azurerm_application_gateway" "ag" {
-  name                = "aks${format("%02d", count.index)}-${var.env}-appgw"
+  name                = "aks${format("%02d", count.index)}-${var.env}-agw"
   resource_group_name = local.vnet_rg
   location            = var.location
   tags                = local.tags
