@@ -68,6 +68,10 @@ stages:
             parameters:
               environment: 'stg'
               resource_key: 'appgw'
+          - template: devops-templates/terraform-plan-template.yaml
+            parameters:
+              environment: 'test'
+              resource_key: 'appgw'
 
           - task: CopyFiles@2
             displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
@@ -111,4 +115,12 @@ stages:
           environment: 'stg'
           agentPool: ${{ variables.agentPool }}
           terraformVersion: ${{ variables.terraformVersion }}
-
+  - stage: PerfTest
+    dependsOn: Sandbox
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+      - template: devops-templates/terraform-apply-template.yaml
+        parameters:
+          environment: 'test'
+          agentPool: ${{ variables.agentPool }}
+          terraformVersion: ${{ variables.terraformVersion }}
