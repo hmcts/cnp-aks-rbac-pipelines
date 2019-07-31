@@ -70,7 +70,7 @@ stages:
               resource_key: 'appgw'
           - template: devops-templates/terraform-plan-template.yaml
             parameters:
-              environment: 'perftest'
+              environment: 'test'
               resource_key: 'appgw'
 
           - task: CopyFiles@2
@@ -121,6 +121,6 @@ stages:
     jobs:
       - template: devops-templates/terraform-apply-template.yaml
         parameters:
-          environment: 'perftest'
+          environment: 'test'
           agentPool: ${{ variables.agentPool }}
           terraformVersion: ${{ variables.terraformVersion }}
