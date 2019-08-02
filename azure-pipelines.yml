@@ -64,10 +64,10 @@ stages:
             parameters:
               environment: 'ithc'
               resource_key: 'appgw'
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
-              environment: 'stg'
-              resource_key: 'appgw'
+#          - template: devops-templates/terraform-plan-template.yaml
+#            parameters:
+#              environment: 'stg'
+#              resource_key: 'appgw'
           - template: devops-templates/terraform-plan-template.yaml
             parameters:
               environment: 'test'
