@@ -321,9 +321,6 @@
               "addressPrefix": "[parameters('appgwSubnetCIDR')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
-              },
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
