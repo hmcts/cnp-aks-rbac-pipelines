@@ -102,7 +102,8 @@
   },
   "variables": {
     "primarySubnetName": "[concat('aks-',parameters('aksPrimarySubnetName'))]",
-    "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]"
+    "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]",
+    "routeTableName": "aks-route-table"
   },
   "resources": [
     {
@@ -238,10 +239,19 @@
       ]
     },
     {
+      "type": "Microsoft.Network/routeTables",
+      "name": "[variables('routeTableName')]",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]"
+    },
+    {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('aksVnetName')]",
       "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/routeTables/', variables('routeTableName'))]"
+      ],
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
         "Branch":"[parameters('branch')]",
@@ -279,6 +289,9 @@
               ],
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
@@ -296,6 +309,9 @@
               ],
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
@@ -305,6 +321,9 @@
               "addressPrefix": "[parameters('appgwSubnetCIDR')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
@@ -314,6 +333,9 @@
               "addressPrefix": "[parameters('iaasSubnetCIDR')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           }
