@@ -16,6 +16,9 @@ terraform {
 
 variable "env" {}
 variable "app_gw_private_ip_address" {}
+variable "subscription" {
+  description = "subscription, will be used for looking up the keyvault details"
+}
 
 module "app-gw" {
   source    = "./app-gateway-module"
@@ -24,4 +27,5 @@ module "app-gw" {
 
   location           = var.location
   private_ip_address = var.app_gw_private_ip_address
+  subscription       = var.subscription
 }
