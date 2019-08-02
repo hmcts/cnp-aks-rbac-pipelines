@@ -6,6 +6,10 @@ variable "env" {
   description = "environment, will be used in resource names and for looking up the vnet details"
 }
 
+variable "subscription" {
+  description = "subscription, will be used for looking up the keyvault details"
+}
+
 variable "location" {
   description = "location to deploy resources to"
 }
