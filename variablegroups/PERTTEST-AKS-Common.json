@@ -1,62 +1,65 @@
 {
   "variables": {
+    "Env.Core.ResourceGroup": {
+      "value": "core-infra-$(Env.Override.Name)-rg"
+    },
+    "Env.Override.Name": {
+      "value": "test"
+    },
     "Environment.name": {
-      "value": "mi-sbox"
+      "value": "perftest"
     },
     "Subscription.acrName": {
-      "value": "hmcts"
+      "value": "hmctspublic"
     },
     "Subscription.AKS.Appgw.subnet.cidr": {
-      "value": "10.10.95.0/25"
-    },
-    "Subscription.AKS.Iass.subnet.cidr": {
-      "value": "10.10.96.0/24"
+      "value": "10.10.46.0/25"
     },
     "Subscription.AKS.Environment.Name": {
-      "value": "mi-sbox"
+      "value": "perftest"
     },
     "Subscription.AKS.Helm.TLS": {
-      "value": "false"
+      "value": "true"
+    },
+    "Subscription.AKS.Iass.subnet.cidr": {
+      "value": "10.10.47.0/24"
     },
     "Subscription.AKS.Kubernetes.version": {
       "value": "1.13.7"
     },
     "Subscription.AKS.nodeCount": {
-      "value": "2"
+      "value": "3"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
-      "value": "10.10.88.0/23"
+      "value": "10.10.40.0/23"
     },
     "Subscription.AKS.Subnet.Secondary.Cidr": {
-      "value": "10.10.90.0/23"
+      "value": "10.10.44.0/23"
     },
     "Subscription.AKS.vmSize": {
-      "value": "Standard_B4ms"
+      "value": "Standard_D4s_v3"
     },
     "Subscription.AKS.VNet.Cidr": {
-      "value": "10.10.88.0/21"
+      "value": "10.10.40.0/21"
     },
     "Subscription.AKS.VNet.DnsServers": {
-      "value": "[]"
+      "value": "[\"10.112.139.254\"]"
     },
     "Subscription.keyvaultName": {
-      "value": "mi-sbox"
+      "value": "cftapps-test"
     },
     "Subscription.ServiceConnection.Name": {
-      "value": "DCD-MI-SBOX"
+      "value": "DCD-CFTAPPS-TEST"
     },
     "Subscription.StorageAccount.Name": {
-      "value": "misbox"
-    },
-    "Env.Core.ResourceGroup": {
-      "value": "core-infra-$(Subscription.AKS.Environment.Name)-rg"
+      "value": "cftapps$(Env.Override.Name)"
     },
     "Subscription.AKS.Monitor.SlackChannel": {
-      "value": "#aks-monitor-mi"
+      "value": "#aks-monitor-test"
     }
   },
-  "id": 27,
+  "id": 63,
   "type": "Vsts",
-  "name": "MI-SBOX-AKS-Common",
+  "name": "PERFTEST-AKS-Common",
   "isShared": false
 }

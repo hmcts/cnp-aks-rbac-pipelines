@@ -336,7 +336,8 @@
                                                 ],
                                                 "channel": "[parameters('slackChannel')]",
                                                 "text": "Sev @{body('Parse_JSON')?['data']?['Severity']} - @{body('Parse_JSON')?['data']?['AlertRuleName']}",
-                                                "username": "Azure Monitoring"
+                                                "username": "Azure Monitoring",
+                                                "icon_emoji": ":azuremonitoring:"
                                             },
                                             "headers": {
                                                 "Content-Type": "application/json"

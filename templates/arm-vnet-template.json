@@ -79,7 +79,7 @@
     },
     "aksNsgName": {
       "type": "string",
-      "defaultValue": "aks-nsg"
+      "defaultValue": "aks-cluster-nsg"
     },
     "appgwNsgName": {
       "type": "string",
@@ -87,18 +87,23 @@
     },
     "iaasNsgName": {
       "type": "string",
-      "defaultValue": "iaas-nsg"
+      "defaultValue": "aks-iaas-nsg"
     },
     "logAnalyticsWorkSpaceName": {
       "type": "string"
     },
     "logAnalyticsResourceGroup": {
       "type": "string"
+    },
+    "appgwNsgPortrange": {
+      "type": "string",
+      "defaultValue": "65200-65535"
     }
   },
   "variables": {
     "primarySubnetName": "[concat('aks-',parameters('aksPrimarySubnetName'))]",
-    "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]"
+    "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]",
+    "routeTableName": "aks-route-table"
   },
   "resources": [
     {
@@ -144,6 +149,24 @@
       "name": "[parameters('appgwNsgName')]",
       "location": "[resourceGroup().location]",
       "apiVersion": "2019-04-01",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "AllowAzureMgmtPorts",
+            "properties": {
+              "description": "This port range is required for Azure infrastructure communication. These ports are protected (locked down) by Azure certificates",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "[parameters('appgwNsgPortrange')]",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      },
       "resources": [
         {
           "type": "providers/diagnosticSettings",
@@ -153,7 +176,7 @@
           ],
           "apiVersion": "2017-05-01-preview",
           "properties": {
-            "name": "[parameters('aksNsgName')]",
+            "name": "[parameters('appgwNsgName')]",
             "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
             "logs": [
               {
@@ -191,7 +214,7 @@
           ],
           "apiVersion": "2017-05-01-preview",
           "properties": {
-            "name": "[parameters('aksNsgName')]",
+            "name": "[parameters('iaasNsgName')]",
             "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
             "logs": [
               {
@@ -216,10 +239,19 @@
       ]
     },
     {
+      "type": "Microsoft.Network/routeTables",
+      "name": "[variables('routeTableName')]",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]"
+    },
+    {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('aksVnetName')]",
       "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/routeTables/', variables('routeTableName'))]"
+      ],
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
         "Branch":"[parameters('branch')]",
@@ -257,6 +289,9 @@
               ],
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
@@ -274,6 +309,9 @@
               ],
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
@@ -292,6 +330,9 @@
               "addressPrefix": "[parameters('iaasSubnetCIDR')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           }
