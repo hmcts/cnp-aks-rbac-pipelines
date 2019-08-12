@@ -130,7 +130,7 @@ data "azurerm_log_analytics_workspace" "log_analytics" {
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   name                       = "AppGw"
-  count = length(local.gateways)
+  count                      = length(local.gateways)
   target_resource_id         = azurerm_application_gateway.ag[count.index].id
   log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_analytics.id
 

@@ -10,6 +10,10 @@ variable "subscription" {
   description = "subscription, will be used for looking up the keyvault details"
 }
 
+variable "vault_name" {
+  description = "vault name"
+}
+
 variable "location" {
   description = "location to deploy resources to"
 }
