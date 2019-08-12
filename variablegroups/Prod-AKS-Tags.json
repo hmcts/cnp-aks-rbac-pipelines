@@ -16,10 +16,10 @@
       "value": "Internal"
     },
     "environment": {
-      "value": "aat"
+      "value": "prod"
     },
     "managedBy": {
-      "value": "PlatformEngineering"
+      "value": "DevOps"
     },
     "releasedBy": {
       "value": "$(Release.RequestedForEmail)"
@@ -28,8 +28,8 @@
       "value": "CFT"
     }
   },
-  "id": 65,
+  "id": 68,
   "type": "Vsts",
-  "name": "AAT-AKS-Tags",
+  "name": "Prod-AKS-Tags",
   "isShared": false
 }
