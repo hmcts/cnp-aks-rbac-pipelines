@@ -4,7 +4,7 @@
       "value": "papi-sbox"
     },
     "Subscription.acrName": {
-      "value": "hmcts"
+      "value": "hmctspublic"
     },
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.79.0/25"
