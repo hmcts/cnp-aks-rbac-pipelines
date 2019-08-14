@@ -156,6 +156,10 @@
           "secret": "[parameters('servicePrincipalSecret')]"
         },
         "addonProfiles": {
+          "kubeDashboard": {
+            "config": null,
+            "enabled": false
+          },
           "omsagent": {
               "enabled": true,
               "config": {
