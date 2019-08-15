@@ -98,6 +98,15 @@
     "appgwNsgPortrange": {
       "type": "string",
       "defaultValue": "65200-65535"
+    },
+    "aksNetworkSecurityGroupsSettings": {
+      "type": "object",
+      "metadata": {
+        "description": " AKS NSG settings "
+      },
+      "defaultValue": {
+        "securityRules": []
+      }
     }
   },
   "variables": {
@@ -143,6 +152,31 @@
           }
         }
       ]
+    },
+    {
+      "name": "[concat(parameters('aksNsgName') ,'/', parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].name)]",
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+      "apiVersion": "2018-08-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('aksNsgName'))]"
+      ],
+      "properties": {
+        "description": "[parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].description]",
+        "priority": "[parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].priority]",
+        "protocol": "[parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].protocol]",
+        "sourcePortRange": "[parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].sourcePortRange]",
+        "destinationPortRange": "[parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].destinationPortRange]",
+        "sourceAddressPrefix": "[parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].sourceAddressPrefix]",
+        "destinationAddressPrefix": "[parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].destinationAddressPrefix]",
+        "access": "[parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].access]",
+        "direction": "[parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].direction]"
+      },
+      "copy": {
+        "name": "securityRulesCopy",
+        "count": "[length(parameters('aksNetworkSecurityGroupsSettings').securityRules)]",
+        "mode": "Serial",
+        "batchSize": 1
+      }
     },
     {
       "type": "Microsoft.Network/networkSecurityGroups",
