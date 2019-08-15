@@ -155,7 +155,7 @@
     },
     {
       "name": "[concat(parameters('aksNsgName') ,'/', parameters('aksNetworkSecurityGroupsSettings').securityRules[copyIndex()].name)]",
-      "condition": "[greater(length(parameters('aksNetworkSecurityGroupsSettings').securityRules)), 0)]",
+      "condition": "[greater(length(parameters('aksNetworkSecurityGroupsSettings').securityRules), 0)]",
       "type": "Microsoft.Network/networkSecurityGroups/securityRules",
       "apiVersion": "2018-08-01",
       "dependsOn": [
