@@ -174,7 +174,7 @@
       },
       "copy": {
         "name": "securityRulesCopy",
-        "count": "[length(parameters('aksNetworkSecurityGroupsSettings').securityRules)]",
+        "count": "[if(greater(length(parameters('aksNetworkSecurityGroupsSettings').securityRules), 0), length(parameters('aksNetworkSecurityGroupsSettings').securityRules), 1)]",
         "mode": "Serial",
         "batchSize": 1
       }
