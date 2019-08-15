@@ -63,6 +63,13 @@
           },
           "criticality": {
             "type": "string"
+          },
+          "serviceOffering": {
+              "type": "string",
+              "defaultValue": "SVCOFF0001235",
+              "metadata": {
+                  "description": "The service offering in service now, the alerts must be prefixed with this to go to the right service offering and assignment group"
+              }
           }
     },
     "variables": {
@@ -79,7 +86,7 @@
     },
     "resources": [
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Pods in unhealthy state')]",
+            "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Pods in unhealthy state')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -121,7 +128,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Autoscaler adding instances')]",
+            "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Autoscaler adding instances')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -163,7 +170,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Autoscaler deleting Instance')]",
+            "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Autoscaler deleting Instance')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -193,7 +200,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Nodes with high CPU usage')]",
+            "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Nodes with high CPU usage')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -235,7 +242,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Nodes with low memory')]",
+            "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Nodes with low memory')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -277,7 +284,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Pods in not Running state (Pending, Failed, Unknown) in team namespace')]",
+            "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Pods in not Running state (Pending, Failed, Unknown) in team namespace')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -319,7 +326,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Pods in not Running state (Pending, Failed, Unknown) in (admin, kube-system, neuvector, kured) namespaces')]",
+            "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Pods in not Running state (Pending, Failed, Unknown) in (admin, kube-system, neuvector, kured) namespaces')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
@@ -361,7 +368,7 @@
             }
         },
         {
-            "name": "[concat(parameters('aksName'), ' - ', 'Nodes with low free disk available')]",
+            "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Nodes with low free disk available')]",
             "type": "Microsoft.Insights/scheduledQueryRules",
             "apiVersion": "2018-04-16",
             "location": "[resourceGroup().location]",
