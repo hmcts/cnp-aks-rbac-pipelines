@@ -176,6 +176,8 @@
         "sourcePortRange": "[variables('aksnsgSecurityRules')[copyIndex()].sourcePortRange]",
         "destinationPortRange": "[variables('aksnsgSecurityRules')[copyIndex()].destinationPortRange]",
         "sourceAddressPrefix": "[variables('aksnsgSecurityRules')[copyIndex()].sourceAddressPrefix]",
+        "destinationPortRanges": "[variables('aksnsgSecurityRules')[copyIndex()].destinationPortRanges]",
+        "sourcePortRanges": "[variables('aksnsgSecurityRules')[copyIndex()].sourcePortRanges]",
         "destinationAddressPrefix": "[variables('aksnsgSecurityRules')[copyIndex()].destinationAddressPrefix]",
         "access": "[variables('aksnsgSecurityRules')[copyIndex()].access]",
         "direction": "[variables('aksnsgSecurityRules')[copyIndex()].direction]"
