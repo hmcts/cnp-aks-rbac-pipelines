@@ -98,12 +98,29 @@
     "appgwNsgPortrange": {
       "type": "string",
       "defaultValue": "65200-65535"
+    },
+    "aksNetworkSecurityGroupsSettings": {
+      "type": "object",
+      "metadata": {
+        "description": " AKS NSG settings "
+      },
+      "defaultValue": {
+        "securityRules": []
+      }
     }
   },
   "variables": {
     "primarySubnetName": "[concat('aks-',parameters('aksPrimarySubnetName'))]",
     "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]",
-    "routeTableName": "aks-route-table"
+    "routeTableName": "aks-route-table",
+    "nsgRulesMapping": {
+      "true": "[parameters('aksNetworkSecurityGroupsSettings').securityRules]",
+      "false": [{
+        "name": "nsgRulesMapping",
+        "properties": {}
+      }]
+    },
+    "aksnsgSecurityRules": "[variables('nsgRulesMapping')[string(greater(length(parameters('aksNetworkSecurityGroupsSettings').securityRules), 0))]]"
   },
   "resources": [
     {
@@ -143,6 +160,34 @@
           }
         }
       ]
+    },
+    {
+      "name": "[concat(parameters('aksNsgName') ,'/', variables('aksnsgSecurityRules')[copyIndex()].name)]",
+      "condition": "[greater(length(parameters('aksNetworkSecurityGroupsSettings').securityRules), 0)]",
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+      "apiVersion": "2018-08-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('aksNsgName'))]"
+      ],
+      "properties": {
+        "description": "[variables('aksnsgSecurityRules')[copyIndex()].description]",
+        "priority": "[variables('aksnsgSecurityRules')[copyIndex()].priority]",
+        "protocol": "[variables('aksnsgSecurityRules')[copyIndex()].protocol]",
+        "sourcePortRange": "[variables('aksnsgSecurityRules')[copyIndex()].sourcePortRange]",
+        "destinationPortRange": "[variables('aksnsgSecurityRules')[copyIndex()].destinationPortRange]",
+        "sourceAddressPrefix": "[variables('aksnsgSecurityRules')[copyIndex()].sourceAddressPrefix]",
+        "destinationPortRanges": "[variables('aksnsgSecurityRules')[copyIndex()].destinationPortRanges]",
+        "sourcePortRanges": "[variables('aksnsgSecurityRules')[copyIndex()].sourcePortRanges]",
+        "destinationAddressPrefix": "[variables('aksnsgSecurityRules')[copyIndex()].destinationAddressPrefix]",
+        "access": "[variables('aksnsgSecurityRules')[copyIndex()].access]",
+        "direction": "[variables('aksnsgSecurityRules')[copyIndex()].direction]"
+      },
+      "copy": {
+        "name": "aksnsgSecurityRulesCopy",
+        "count": "[length(variables('aksnsgSecurityRules'))]",
+        "mode": "Serial",
+        "batchSize": 1
+      }
     },
     {
       "type": "Microsoft.Network/networkSecurityGroups",
@@ -378,7 +423,7 @@
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]",
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
       ]
-    } 
+    }
   ],
   "outputs": {
     "aksPrimarySubnetId": {

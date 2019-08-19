@@ -53,6 +53,9 @@
     },
     "Subscription.AKS.Monitor.SlackChannel": {
       "value": "#aks-monitor-mgmt-sbox"
+    },
+    "Subscription.AKS.NSG.Settings": {
+      "value": "{ \"securityRules\": [] }"
     }
   },
   "id": 38,
