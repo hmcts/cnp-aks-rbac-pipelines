@@ -301,7 +301,7 @@
                 "criticality": "[parameters('criticality')]"
              },
             "properties": {
-                "description": "Pods that are failing for at least 15 minutes with not running state (team namespace).",
+                "description": "Pods that are failing for at least 5 minutes with not running state (team namespace).",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[variables('nonRunningTeamNSQuery')]",
@@ -320,7 +320,7 @@
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
-                        "threshold": 0
+                        "threshold": 1
                     }
                 }
             }
@@ -343,7 +343,7 @@
                 "criticality": "[parameters('criticality')]"
              },
             "properties": {
-                "description": "Pods that are failing for at least 15 minutes with not running state in (admin, kube-system, neuvector, kured) namespaces).",
+                "description": "Pods that are failing for at least 5 minutes with not running state in (admin, kube-system, neuvector, kured) namespaces).",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[variables('nonRunningAdminNSQuery')]",
@@ -362,7 +362,7 @@
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
-                        "threshold": 0
+                        "threshold": 1
                     }
                 }
             }
