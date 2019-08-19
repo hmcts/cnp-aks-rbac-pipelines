@@ -103,7 +103,7 @@
                 "criticality": "[parameters('criticality')]"
              },
             "properties": {
-                "description": "Pods that are unhealthy",
+                "description": "Pods that are unhealthy for more than 1 minute in last 5 minutes",
                 "enabled": "[parameters('isEnabled')]",
                 "source": {
                     "query": "[variables('unhealthyPodsQuery')]",
@@ -122,7 +122,7 @@
                     },
                     "trigger": {
                         "thresholdOperator": "GreaterThan",
-                        "threshold": 0
+                        "threshold": 1
                     }
                 }
             }
