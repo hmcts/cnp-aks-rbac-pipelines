@@ -13,7 +13,8 @@ gateways:
       - product: cmc
         component: pdf-service
     # Probate
-
+      - product: probate
+        component: business-service
     # I&A
 
     # Reference DATA
