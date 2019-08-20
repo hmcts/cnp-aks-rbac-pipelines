@@ -7,5 +7,23 @@ gateways:
         - 10.10.23.250
       host_name_suffix: service.core-compute-aat.internal
     app_configuration:
+    # RPE
       - product: draft-store
         component: service
+      - product: cmc
+        component: pdf-service
+    # Probate
+      - product: probate
+        component: business-service
+    # I&A
+      - product: ia
+        component: case-api
+      - product: ia
+        component: case-notifications-api
+      - product: ia
+        component: case-documents-api
+    # Reference DATA
+
+    # Divorce
+      - product: div
+        component: emca
