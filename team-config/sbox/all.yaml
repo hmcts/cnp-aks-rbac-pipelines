@@ -16,6 +16,12 @@ gateways:
       - product: probate
         component: business-service
     # I&A
+      - product: ia
+        component: case-api
+      - product: ia
+        component: case-notifications-api
+      - product: ia
+        component: case-documents-api
 
     # Reference DATA
 
