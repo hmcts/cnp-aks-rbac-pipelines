@@ -19,5 +19,5 @@ gateways:
     # Reference DATA
 
     # Divorce
-    - product: evidence-management-client-api
+    - product: div-emca
       component: service
