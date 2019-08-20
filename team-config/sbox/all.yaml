@@ -14,7 +14,7 @@ gateways:
         component: pdf-service
     # Probate
       - product: probate
-        component: probate-business-service
+        component: business-service
     # I&A
       - product: ia
         component: case-api
