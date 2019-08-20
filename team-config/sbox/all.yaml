@@ -19,3 +19,5 @@ gateways:
     # Reference DATA
 
     # Divorce
+    - product: evidence-management-client-api
+      component: service
