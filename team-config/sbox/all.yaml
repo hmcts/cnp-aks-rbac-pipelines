@@ -10,8 +10,6 @@ gateways:
     # RPE
       - product: draft-store
         component: service
-      - product: cmc
-        component: pdf-service
     # Probate
       - product: probate
         component: business-service
