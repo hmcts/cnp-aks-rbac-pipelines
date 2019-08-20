@@ -7,5 +7,15 @@ gateways:
         - 10.10.35.250
       host_name_suffix: service.core-compute-ithc.internal
     app_configuration:
+    # RPE
       - product: draft-store
         component: service
+      - product: cmc
+        component: pdf-service
+    # Probate
+
+    # I&A
+
+    # Reference DATA
+
+    # Divorce

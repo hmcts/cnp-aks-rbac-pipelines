@@ -7,5 +7,15 @@ gateways:
         - 10.13.31.250
       host_name_suffix: service.core-compute-prod.internal
     app_configuration:
+    # RPE
       - product: draft-store
         component: service
+      - product: cmc
+        component: pdf-service
+    # Probate
+
+    # I&A
+
+    # Reference DATA
+
+    # Divorce
