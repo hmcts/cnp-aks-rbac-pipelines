@@ -22,6 +22,6 @@ fi
 kubectl apply -f ${FLUX_HELM_CRD}
 
 helm upgrade flux fluxcd/flux --install --recreate-pods --namespace admin -f ${VALUES} \
-    --set "git.path=k8s/${ENV}/common\,k8s/${ENV}/${CLUSTER_NAME}/static\,k8s/${ENV}/${CLUSTER_NAME}/static-overlay\,k8s/common",git.label=${ENV},git.email=flux-${ENV}@hmcts.net,git.user="Flux ${ENV}" \
+    --set "git.path=k8s/${ENV}/common\,k8s/${ENV}/${CLUSTER_NAME}\,k8s/${ENV}/${CLUSTER_NAME}-overlay\,k8s/common",git.label=${ENV},git.email=flux-${ENV}@hmcts.net,git.user="Flux ${ENV}" \
     "${helm_tls_params[@]}" \
     --wait

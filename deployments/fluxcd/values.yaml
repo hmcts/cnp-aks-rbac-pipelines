@@ -9,6 +9,7 @@ registry:
 git:
   url: git@github.com:hmcts/cnp-flux-config
   pollInterval: 1m
+  branch: movekustomizedir
   secretName: flux-git-deploy
 additionalArgs:
   - --manifest-generation=true
