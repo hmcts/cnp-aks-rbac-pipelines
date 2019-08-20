@@ -26,5 +26,5 @@ gateways:
     # Reference DATA
 
     # Divorce
-    - product: div-emca
-      component: service
+    - product: div
+      component: emca
