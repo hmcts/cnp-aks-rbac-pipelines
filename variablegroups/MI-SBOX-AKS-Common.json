@@ -37,7 +37,7 @@
       "value": "10.10.88.0/21"
     },
     "Subscription.AKS.VNet.DnsServers": {
-      "value": "[]"
+      "value": "[\"10.100.139.254\"]"
     },
     "Subscription.keyvaultName": {
       "value": "mi-sbox"
