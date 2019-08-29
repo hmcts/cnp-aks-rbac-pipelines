@@ -10,7 +10,7 @@
       "value": "10.10.95.0/25"
     },
     "Subscription.AKS.Iass.subnet.cidr": {
-      "value": "10.10.96.0/24"
+      "value": "10.10.92.0/24"
     },
     "Subscription.AKS.Environment.Name": {
       "value": "mi-sbox"
@@ -37,7 +37,7 @@
       "value": "10.10.88.0/21"
     },
     "Subscription.AKS.VNet.DnsServers": {
-      "value": "[]"
+      "value": "[\"10.100.139.254\"]"
     },
     "Subscription.keyvaultName": {
       "value": "mi-sbox"
