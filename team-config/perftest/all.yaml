@@ -28,3 +28,17 @@ gateways:
     # Divorce
       - product: div
         component: emca
+
+    # SSCS
+      - product: sscs
+        component: tribunals-api
+      - product: sscs
+        component: evidence-share
+
+    # FPLA
+      - product: fpl
+        component: case-service
+
+    # Fees and Pay
+      - product: payment
+        component: api
