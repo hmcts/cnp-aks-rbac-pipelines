@@ -95,12 +95,13 @@ resource "azurerm_application_gateway" "ag" {
       name = "${app.product}-${app.component}"
     }]
 
+    listener_host = "${http_listener.value.name}${var.env == "aat" && app.legacy_enabled != "true" ? "" : format("-.%s", var.env)}"
     content {
       name                           = http_listener.value.name
       frontend_ip_configuration_name = "appGwPrivateFrontendIp"
       frontend_port_name             = "http"
       protocol                       = "Http"
-      host_name                      = "${http_listener.value.name}-${var.env}.${local.gateways[count.index].gateway_configuration.host_name_suffix}"
+      host_name                      = "${listener_host}.${local.gateways[count.index].gateway_configuration.host_name_suffix}"
     }
   }
 

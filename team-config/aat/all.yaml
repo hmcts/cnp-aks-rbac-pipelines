@@ -10,34 +10,45 @@ gateways:
     # RPE
       - product: draft-store
         component: service
+        legacy_enabled: false
       - product: cmc
         component: pdf-service
+        legacy_enabled: true
     # Probate
       - product: probate
         component: business-service
+        legacy_enabled: true
     # I&A
       - product: ia
         component: case-api
+        legacy_enabled: true
       - product: ia
         component: case-notifications-api
+        legacy_enabled: true
       - product: ia
         component: case-documents-api
+        legacy_enabled: true
     # Reference DATA
 
     # Divorce
       - product: div
         component: emca
+        legacy_enabled: true
 
     # SSCS
       - product: sscs
         component: tribunals-api
+        legacy_enabled: true
       - product: sscs
         component: evidence-share
+        legacy_enabled: true
 
     # FPLA
       - product: fpl
         component: case-service
+        legacy_enabled: true
 
     # Fees and Pay
       - product: payment
         component: api
+        legacy_enabled: true
