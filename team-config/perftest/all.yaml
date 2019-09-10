@@ -28,6 +28,14 @@ gateways:
     # Divorce
       - product: div
         component: emca
+      - product: div
+        component: fps
+      - product: div
+        component: dgs
+      - product: div
+        component: cms
+      - product: div
+        component: cos   
 
     # SSCS
       - product: sscs
