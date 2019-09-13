@@ -103,6 +103,9 @@ stages:
     dependsOn: Sandbox
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
+      - task: TerraformInstaller@0
+        inputs:
+          terraformVersion: ${{ variables.terraformVersion }}
       - template: devops-templates/terraform-apply-template.yaml
         parameters:
           environment: 'ithc'
@@ -112,6 +115,9 @@ stages:
     dependsOn: Sandbox
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
+      - task: TerraformInstaller@0
+        inputs:
+          terraformVersion: ${{ variables.terraformVersion }}
       - template: devops-templates/terraform-apply-template.yaml
         parameters:
           environment: 'stg'
@@ -121,6 +127,9 @@ stages:
     dependsOn: Sandbox
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
+      - task: TerraformInstaller@0
+        inputs:
+          terraformVersion: ${{ variables.terraformVersion }}   
       - template: devops-templates/terraform-apply-template.yaml
         parameters:
           environment: 'test'
@@ -130,6 +139,9 @@ stages:
     dependsOn: Sandbox
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
+      - task: TerraformInstaller@0
+        inputs:
+          terraformVersion: ${{ variables.terraformVersion }}
       - template: devops-templates/terraform-apply-template.yaml
         parameters:
           environment: 'prod'
