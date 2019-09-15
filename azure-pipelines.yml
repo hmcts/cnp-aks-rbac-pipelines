@@ -92,7 +92,7 @@ stages:
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Artifact: drop'
   - stage: Sandbox
-#    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
       - template: devops-templates/terraform-apply-template.yaml
         parameters:
@@ -120,7 +120,7 @@ stages:
   - stage: PerfTest
     dependsOn: Sandbox
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    jobs: 
+    jobs:
       - template: devops-templates/terraform-apply-template.yaml
         parameters:
           environment: 'test'
