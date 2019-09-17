@@ -49,3 +49,7 @@ gateways:
     # Fees and Pay
       - product: payment
         component: api
+        
+    # Fees and Pay
+      - product: am
+        component: accessmgmt-api
