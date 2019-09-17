@@ -58,6 +58,10 @@ gateways:
       - product: payment
         component: api
         
+    # Access Management
+      - product: am
+        component: accessmgmt-api
+
     # Evidence Management
       - product: dg
         component: dg-docassembly
