@@ -50,6 +50,6 @@ gateways:
       - product: payment
         component: api
         
-    # Fees and Pay
+    # Access Management
       - product: am
         component: accessmgmt-api
