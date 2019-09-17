@@ -50,6 +50,10 @@ gateways:
       - product: fpl
         component: case-service
 
+    # Ethos
+      - product: ethos
+        component: repl-docmosis-backend
+
     # Fees and Pay
       - product: payment
         component: api
