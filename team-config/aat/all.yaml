@@ -49,3 +49,7 @@ gateways:
     # Fees and Pay
       - product: payment
         component: api
+        
+    # Evidence Management
+      - product: dg
+        component: dg-docassembly
