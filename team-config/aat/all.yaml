@@ -35,6 +35,10 @@ gateways:
         component: cms
       - product: div
         component: cos
+  
+    # Financial Remedy
+      - product: finrem
+        component: ns
 
     # SSCS
       - product: sscs
@@ -46,6 +50,18 @@ gateways:
       - product: fpl
         component: case-service
 
+    # Ethos
+      - product: ethos
+        component: repl-docmosis-backend
+
     # Fees and Pay
       - product: payment
         component: api
+        
+    # Access Management
+      - product: am
+        component: accessmgmt-api
+
+    # Evidence Management
+      - product: dg
+        component: dg-docassembly
