@@ -51,7 +51,7 @@ gateways:
       - product: dg
         component: docassembly
       - product: dm
-        component: dm-store 
+        component: store 
  
     # SSCS
       - product: sscs
