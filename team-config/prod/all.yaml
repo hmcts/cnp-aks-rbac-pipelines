@@ -66,3 +66,7 @@ gateways:
     # Fees and Pay
       - product: payment
         component: api
+
+    # Ethos
+      - product: ethos
+        component: repl-docmosis-backend
