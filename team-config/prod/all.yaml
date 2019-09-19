@@ -38,6 +38,20 @@ gateways:
         component: cms
       - product: div
         component: cos
+
+    # Evidence Management
+      - product: em
+        component: anno
+      - product: em
+        component: npa
+      - product: em
+        component: stitching
+      - product: em
+        component: ccd-orchestrator
+      - product: dg
+        component: docassembly
+      - product: dm
+        component: store 
  
     # SSCS
       - product: sscs
