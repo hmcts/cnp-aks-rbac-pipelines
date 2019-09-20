@@ -67,3 +67,7 @@ gateways:
     # Evidence Management
       - product: dg
         component: dg-docassembly
+
+    # Bulk scan and print
+      - product: bulk-scan
+        component: payment-processor
