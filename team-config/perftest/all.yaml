@@ -15,6 +15,7 @@ gateways:
     # Probate
       - product: probate
         component: business-service
+        component: orchestrator-service
     # I&A
       - product: ia
         component: case-api
