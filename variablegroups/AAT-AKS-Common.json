@@ -28,7 +28,7 @@
       "value": "1.13.10"
     },
     "Subscription.AKS.nodeCount": {
-      "value": "7"
+      "value": "8"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.10.16.0/22"
