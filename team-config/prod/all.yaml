@@ -40,7 +40,11 @@ gateways:
         component: cms
       - product: div
         component: cos
-
+        
+    # Financial Remedy
+      - product: finrem
+        component: ns
+        
     # Evidence Management
       - product: em
         component: anno
