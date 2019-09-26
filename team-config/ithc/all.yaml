@@ -12,6 +12,8 @@ gateways:
         component: service
       - product: cmc
         component: pdf-service
+      - product: rpe
+        component: service-auth-provider
     # Probate
       - product: probate
         component: business-service
