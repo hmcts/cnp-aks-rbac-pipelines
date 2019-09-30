@@ -42,6 +42,6 @@ gateways:
         component: api
 
     # Plum Frontend
-      - product: payment
-        component: api
+      - product: plum
+        component: frontend
 
