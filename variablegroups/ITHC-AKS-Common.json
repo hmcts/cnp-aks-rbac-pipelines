@@ -19,7 +19,7 @@
       "value": "true"
     },
     "Subscription.AKS.Kubernetes.version": {
-      "value": "1.13.7"
+      "value": "1.13.10"
     },
     "Subscription.AKS.nodeCount": {
       "value": "3"
@@ -53,6 +53,9 @@
     },
     "Subscription.AKS.Monitor.SlackChannel": {
       "value": "#aks-monitor-ithc"
+    },
+    "Subscription.AKS.NSG.Settings": {
+      "value": "{ \"securityRules\": [] }"
     }
   },
   "id": 29,

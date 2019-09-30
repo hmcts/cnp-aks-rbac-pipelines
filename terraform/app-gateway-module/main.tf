@@ -60,7 +60,7 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "probe" {
     for_each = [for app in local.gateways[count.index].app_configuration : {
       name = "${app.product}-${app.component}"
-      host = "${app.product}-${app.component}.${local.gateways[count.index].gateway_configuration.host_name_suffix}"
+      host = "${app.product}-${app.component}-${var.env}.${local.gateways[count.index].gateway_configuration.host_name_suffix}"
       path = lookup(app, "health_path_override", "/health/liveness")
     }]
 
@@ -100,7 +100,7 @@ resource "azurerm_application_gateway" "ag" {
       frontend_ip_configuration_name = "appGwPrivateFrontendIp"
       frontend_port_name             = "http"
       protocol                       = "Http"
-      host_name                      = "${http_listener.value.name}.${local.gateways[count.index].gateway_configuration.host_name_suffix}"
+      host_name                      = "${http_listener.value.name}-${var.env}.${local.gateways[count.index].gateway_configuration.host_name_suffix}"
     }
   }
 
@@ -130,7 +130,7 @@ data "azurerm_log_analytics_workspace" "log_analytics" {
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   name                       = "AppGw"
-  count = length(local.gateways)
+  count                      = length(local.gateways)
   target_resource_id         = azurerm_application_gateway.ag[count.index].id
   log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_analytics.id
 

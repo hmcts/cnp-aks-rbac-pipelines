@@ -63,6 +63,13 @@
       },
       "criticality": {
         "type": "string"
+      },
+      "serviceOffering": {
+          "type": "string",
+          "defaultValue": "SVCOFF0001235",
+          "metadata": {
+              "description": "The service offering in service now, the alerts must be prefixed with this to go to the right service offering and assignment group"
+          }
       }
     },
     "variables": {
@@ -71,7 +78,7 @@
     },
     "resources": [
       {
-        "name": "[concat(parameters('aksName'), ' - ', 'Node VM Down')]",
+        "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Node VM Down')]",
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
@@ -89,7 +96,7 @@
         },
         "properties": {
           "description": "Node VM is shut down.",
-          "severity": 1,
+          "severity": 3,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
             "[variables('aksResourceId')]"
@@ -139,7 +146,7 @@
         }
       },
       {
-        "name": "[concat(parameters('aksName'), ' - ', 'Node DiskPressure')]",
+        "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Node DiskPressure')]",
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
@@ -207,7 +214,7 @@
         }
       },
       {
-        "name": "[concat(parameters('aksName'), ' - ', 'Node OutOfDisk')]",
+        "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Node OutOfDisk')]",
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
@@ -275,7 +282,7 @@
         }
       },
       {
-        "name": "[concat(parameters('aksName'), ' - ', 'Node MemoryPressure')]",
+        "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Node MemoryPressure')]",
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
@@ -343,7 +350,7 @@
         }
       },
       {
-        "name": "[concat(parameters('aksName'), ' - ', 'Node PIDPressure')]",
+        "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Node PIDPressure')]",
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
@@ -411,7 +418,7 @@
         }
       },
       {
-        "name": "[concat(parameters('aksName'), ' - ', 'Node NotReady')]",
+        "name": "[concat(parameters('serviceOffering'), ' ', parameters('aksName'), ' - ', 'Node NotReady')]",
         "type": "Microsoft.Insights/metricAlerts",
         "location": "global",
         "apiVersion": "2018-03-01",
@@ -429,7 +436,7 @@
         },
         "properties": {
           "description": "kubelet is posting not ready status. - NotReady",
-          "severity": 1,
+          "severity": 3,
           "enabled": "[parameters('isEnabled')]",
           "scopes": [
             "[variables('aksResourceId')]"

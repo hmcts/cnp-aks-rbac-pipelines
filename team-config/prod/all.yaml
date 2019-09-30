@@ -3,9 +3,9 @@
 gateways:
   - gateway_configuration:
       backend_pool_addresses:
-        - 10.10.33.250
-        - 10.10.35.250
-      host_name_suffix: service.core-compute-ithc.internal
+        - 10.13.15.250
+        - 10.13.31.250
+      host_name_suffix: service.core-compute-prod.internal
     app_configuration:
     # RPE
       - product: draft-store
@@ -17,6 +17,8 @@ gateways:
     # Probate
       - product: probate
         component: business-service
+      - product: probate
+        component: orchestrator-service
     # I&A
       - product: ia
         component: case-api
@@ -24,6 +26,7 @@ gateways:
         component: case-notifications-api
       - product: ia
         component: case-documents-api
+
     # Reference DATA
 
     # Divorce
@@ -37,6 +40,24 @@ gateways:
         component: cms
       - product: div
         component: cos
+        
+    # Financial Remedy
+      - product: finrem
+        component: ns
+        
+    # Evidence Management
+      - product: em
+        component: anno
+      - product: em
+        component: npa
+      - product: em
+        component: stitching
+      - product: em
+        component: ccd-orchestrator
+      - product: dg
+        component: docassembly
+      - product: dm
+        component: store 
  
     # SSCS
       - product: sscs
@@ -51,3 +72,7 @@ gateways:
     # Fees and Pay
       - product: payment
         component: api
+
+    # Ethos
+      - product: ethos
+        component: repl-docmosis-backend

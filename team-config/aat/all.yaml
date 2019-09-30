@@ -7,5 +7,79 @@ gateways:
         - 10.10.23.250
       host_name_suffix: service.core-compute-aat.internal
     app_configuration:
+    # RPE
       - product: draft-store
         component: service
+      - product: cmc
+        component: pdf-service
+      - product: rpe
+        component: service-auth-provider
+    # Probate
+      - product: probate
+        component: business-service
+      - product: probate
+        component: orchestrator-service
+    # I&A
+      - product: ia
+        component: case-api
+      - product: ia
+        component: case-notifications-api
+      - product: ia
+        component: case-documents-api
+    # Reference DATA
+
+    # Divorce
+      - product: div
+        component: emca
+      - product: div
+        component: fps
+      - product: div
+        component: dgs
+      - product: div
+        component: cms
+      - product: div
+        component: cos
+  
+    # Financial Remedy
+      - product: finrem
+        component: ns
+
+    # SSCS
+      - product: sscs
+        component: tribunals-api
+      - product: sscs
+        component: evidence-share
+
+    # FPLA
+      - product: fpl
+        component: case-service
+
+    # Ethos
+      - product: ethos
+        component: repl-docmosis-backend
+
+    # Fees and Pay
+      - product: payment
+        component: api
+        
+    # Access Management
+      - product: am
+        component: accessmgmt-api
+
+    # Evidence Management
+      - product: em
+        component: anno
+      - product: em
+        component: npa
+      - product: em
+        component: stitching
+      - product: em
+        component: ccd-orchestrator
+      - product: dg
+        component: docassembly
+      - product: dm
+        component: store
+
+    # Bulk scan and print
+      - product: bulk-scan
+        component: payment-processor

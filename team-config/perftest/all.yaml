@@ -7,5 +7,50 @@ gateways:
         - 10.10.45.250
       host_name_suffix: service.core-compute-perftest.internal
     app_configuration:
+    # RPE
       - product: draft-store
         component: service
+      - product: cmc
+        component: pdf-service
+      - product: rpe
+        component: service-auth-provider
+    # Probate
+      - product: probate
+        component: business-service
+      - product: probate
+        component: orchestrator-service
+    # I&A
+      - product: ia
+        component: case-api
+      - product: ia
+        component: case-notifications-api
+      - product: ia
+        component: case-documents-api
+
+    # Reference DATA
+
+    # Divorce
+      - product: div
+        component: emca
+      - product: div
+        component: fps
+      - product: div
+        component: dgs
+      - product: div
+        component: cms
+      - product: div
+        component: cos   
+
+    # SSCS
+      - product: sscs
+        component: tribunals-api
+      - product: sscs
+        component: evidence-share
+
+    # FPLA
+      - product: fpl
+        component: case-service
+
+    # Fees and Pay
+      - product: payment
+        component: api

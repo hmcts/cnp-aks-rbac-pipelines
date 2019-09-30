@@ -1,65 +1,68 @@
 {
   "variables": {
     "Env.Core.ResourceGroup": {
-      "value": "core-infra-$(Env.Override.Name)-rg"
-    },
-    "Env.Override.Name": {
-      "value": "test"
+      "value": "core-infra-$(Subscription.AKS.Environment.Name)-rg"
     },
     "Environment.name": {
-      "value": "perftest"
+      "value": "prod"
     },
     "Subscription.acrName": {
       "value": "hmctspublic"
     },
+    "Subscription.AKS.Appgw.ingress": {
+      "value": "[{ \"IpAddress\": \"10.13.15.250\" }, { \"IpAddress\": \"10.13.31.250\" }]"
+    },
     "Subscription.AKS.Appgw.subnet.cidr": {
-      "value": "10.10.46.0/25"
+      "value": "10.13.32.0/25"
     },
     "Subscription.AKS.Environment.Name": {
-      "value": "perftest"
+      "value": "prod"
     },
     "Subscription.AKS.Helm.TLS": {
       "value": "true"
     },
     "Subscription.AKS.Iass.subnet.cidr": {
-      "value": "10.10.47.0/24"
+      "value": "10.13.33.0/24"
     },
     "Subscription.AKS.Kubernetes.version": {
-      "value": "1.13.7"
+      "value": "1.13.10"
     },
     "Subscription.AKS.nodeCount": {
-      "value": "3"
+      "value": "8"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
-      "value": "10.10.40.0/23"
+      "value": "10.13.0.0/20"
     },
     "Subscription.AKS.Subnet.Secondary.Cidr": {
-      "value": "10.10.44.0/23"
+      "value": "10.13.16.0/20"
     },
     "Subscription.AKS.vmSize": {
       "value": "Standard_D4s_v3"
     },
     "Subscription.AKS.VNet.Cidr": {
-      "value": "10.10.40.0/21"
+      "value": "10.13.0.0/18"
     },
     "Subscription.AKS.VNet.DnsServers": {
-      "value": "[\"10.112.139.254\"]"
+      "value": "[\"10.96.75.254\"]"
     },
     "Subscription.keyvaultName": {
-      "value": "cftapps-test"
+      "value": "cft-apps-$(Subscription.AKS.Environment.Name)"
     },
     "Subscription.ServiceConnection.Name": {
-      "value": "DCD-CFTAPPS-TEST"
+      "value": "DCD-CFTAPPS-PROD"
     },
     "Subscription.StorageAccount.Name": {
-      "value": "cftapps$(Env.Override.Name)"
+      "value": "cftapps$(Subscription.AKS.Environment.Name)"
     },
     "Subscription.AKS.Monitor.SlackChannel": {
-      "value": "#aks-monitor-test"
+      "value": "#aks-monitor-prod"
+    },
+    "Subscription.AKS.NSG.Settings": {
+      "value": "{ \"securityRules\": [] }"
     }
   },
-  "id": 63,
+  "id": 66,
   "type": "Vsts",
-  "name": "PERFTEST-AKS-Common",
+  "name": "Prod-AKS-Common",
   "isShared": false
 }

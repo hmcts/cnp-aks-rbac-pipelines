@@ -7,7 +7,7 @@
     },
     "kubernetesVersion": {
       "type": "string",
-      "defaultValue": "1.13.7"
+      "defaultValue": "1.13.10"
     },
     "vmSize": {
       "type": "string",
@@ -156,6 +156,10 @@
           "secret": "[parameters('servicePrincipalSecret')]"
         },
         "addonProfiles": {
+          "kubeDashboard": {
+            "config": null,
+            "enabled": false
+          },
           "omsagent": {
               "enabled": true,
               "config": {
