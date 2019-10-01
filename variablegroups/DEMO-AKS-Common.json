@@ -55,7 +55,7 @@
       "value": "#aks-monitor-demo"
     },
     "Subscription.AKS.NSG.Settings": {
-      "value": "{\"securityRules\":[{\"name\":\"AllowInternetToTraefik\",\"description\":\"Allow Internet To Traefik\",\"direction\":\"Inbound\",\"priority\":100,\"sourceAddressPrefix\":\"*\",\"destinationAddressPrefix\":\"51.143.184.251\",\"sourcePortRange\":\"*\",\"sourcePortRanges\":[],\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[\"80\",\"443\"],\"destinationPortRange\":null},{\"name\":\"AllowInternetToOAuth\",\"description\":\"Allow Internet To OAuth\",\"direction\":\"Inbound\",\"priority\":110,\"sourceAddressPrefix\":\"*\",\"destinationAddressPrefix\":\"51.145.22.48\",\"sourcePortRange\":\"*\",\"destinationPortRange\":\"4443\",\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[],\"sourcePortRanges\":[]}]}"
+      "value": "{\"securityRules\":[{\"name\":\"AllowInternetToOAuthProxy\",\"description\":\"Allow Internet To OAuthProxy\",\"direction\":\"Inbound\",\"priority\":100,\"sourceAddressPrefix\":\"*\",\"destinationAddressPrefix\":\"51.143.184.251\",\"sourcePortRange\":\"*\",\"sourcePortRanges\":[],\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[\"80\",\"443\"],\"destinationPortRange\":null},{\"name\":\"TraefikNoProxy\",\"description\":\"Allow Internet To TraefikNoProxy\",\"direction\":\"Inbound\",\"priority\":110,\"sourceAddressPrefix\":\"*\",\"destinationAddressPrefix\":\"51.145.22.48\",\"sourcePortRange\":\"*\",\"destinationPortRange\":\"443\",\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[],\"sourcePortRanges\":[]}]}"
     }
   },
   "id": 22,
