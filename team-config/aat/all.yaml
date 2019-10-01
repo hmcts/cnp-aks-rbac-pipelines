@@ -83,3 +83,17 @@ gateways:
     # Bulk scan and print
       - product: bulk-scan
         component: payment-processor
+      - product: bulk-scan
+        component: processor
+
+    # CCD
+      - product: ccd
+        component: data-store-api
+
+    # CTSC
+      - product: ctsc
+        component: work-allocation
+
+    # BAR
+      - product: bar
+        component: api

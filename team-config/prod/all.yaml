@@ -76,3 +76,11 @@ gateways:
     # Ethos
       - product: ethos
         component: repl-docmosis-backend
+
+    # CCD
+      - product: ccd
+        component: data-store-api
+
+    # BAR
+      - product: bar
+        component: api

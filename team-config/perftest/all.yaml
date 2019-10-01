@@ -54,3 +54,6 @@ gateways:
     # Fees and Pay
       - product: payment
         component: api
+    # CCD
+      - product: ccd
+        component: data-store-api
