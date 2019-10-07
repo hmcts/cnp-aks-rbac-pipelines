@@ -112,7 +112,7 @@
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2019-02-01",
+      "apiVersion": "2019-06-01",
       "location": "[resourceGroup().location]",
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
@@ -178,7 +178,8 @@
           "networkPlugin": "azure",
           "serviceCidr": "[parameters('aksServiceCidr')]",
           "dnsServiceIP": "[parameters('aksDnsServiceIp')]",
-          "dockerBridgeCidr": "172.17.0.1/16"
+          "dockerBridgeCidr": "172.17.0.1/16",
+          "loadBalancerSku": "standard"
         }
       }
     }
