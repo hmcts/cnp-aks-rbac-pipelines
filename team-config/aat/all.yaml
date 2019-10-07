@@ -26,7 +26,6 @@ gateways:
         component: case-notifications-api
       - product: ia
         component: case-documents-api
-    # Reference DATA
 
     # Divorce
       - product: div
