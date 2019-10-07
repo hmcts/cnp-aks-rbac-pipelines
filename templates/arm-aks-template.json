@@ -110,10 +110,28 @@
   },
   "resources": [
     {
+      "apiVersion": "2019-02-01",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[concat(parameters('aksClusterName'), '-pip')]",
+      "resourceGroup": "[parameters('aksVnetResourceGroup')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static",
+        "idleTimeoutInMinutes": "4",
+        "publicIpAddressVersion": "IPv4"
+      }
+    },
+    {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2019-06-01",
+      "apiVersion": "2019-08-01",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/publicIPAddresses', parameters('aksClusterName'),'-pip')]"
+      ],
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
         "Branch":"[parameters('branch')]",
@@ -179,7 +197,11 @@
           "serviceCidr": "[parameters('aksServiceCidr')]",
           "dnsServiceIP": "[parameters('aksDnsServiceIp')]",
           "dockerBridgeCidr": "172.17.0.1/16",
-          "loadBalancerSku": "standard"
+          "loadBalancerSku": "standard",
+          "loadBalancerProfile": {
+            "outboundIPs": {
+              "publicIPs": [
+                {"id": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/publicIPAddresses', parameters('aksClusterName'),'-pip')]"}]}}
         }
       }
     }
