@@ -197,16 +197,7 @@
           "serviceCidr": "[parameters('aksServiceCidr')]",
           "dnsServiceIP": "[parameters('aksDnsServiceIp')]",
           "dockerBridgeCidr": "172.17.0.1/16",
-          "loadBalancerSku": "standard",
-          "loadBalancerProfile": {
-            "outboundIPs": {
-              "publicIPs": [
-                {
-                  "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('loadbalancerIpName'))]"
-                }
-              ]
-            }
-          }
+          "loadBalancerSku": "standard"
         }
       }
     }
