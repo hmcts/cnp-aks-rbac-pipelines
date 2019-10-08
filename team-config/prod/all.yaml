@@ -27,8 +27,6 @@ gateways:
       - product: ia
         component: case-documents-api
 
-    # Reference DATA
-
     # Divorce
       - product: div
         component: emca
