@@ -106,13 +106,14 @@
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser",
-    "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]"
+    "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]",
+    "loadbalancerIpName": "[concat(parameters('aksClusterName'), '-pip')]"
   },
   "resources": [
     {
       "apiVersion": "2019-02-01",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[concat(parameters('aksClusterName'), '-pip')]",
+      "name": "[variables('loadbalancerIpName')]",
       "location": "[resourceGroup().location]",
       "sku": {
         "name": "Standard"
@@ -129,7 +130,7 @@
       "apiVersion": "2019-08-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('aksClusterName'),'-pip')]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('loadbalancerIpName'))]"
       ],
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
@@ -200,7 +201,7 @@
           "loadBalancerProfile": {
             "outboundIPs": {
               "publicIPs": [
-                {"id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('aksClusterName'),'-pip')]"}]}}
+                {"id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('loadbalancerIpName'))]"}]}}
         }
       }
     }
