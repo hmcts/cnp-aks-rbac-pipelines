@@ -99,7 +99,7 @@ gateways:
       - product: bar
         component: api
 
-    # Professional Reference data
+      # Professional Reference data
       - product: rd
         component: professional-api
       - product: rd
