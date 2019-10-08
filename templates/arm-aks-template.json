@@ -199,7 +199,7 @@
           "dockerBridgeCidr": "172.17.0.1/16",
           "loadBalancerSku": "Standard",
           "loadBalancerProfile": {
-            "effectiveOutboundIps": [
+            "outboundIps": [
               {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('loadbalancerIpName'))]",
                 "resourceGroup": "[resourceGroup().name]"
