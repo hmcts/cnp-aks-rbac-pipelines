@@ -201,7 +201,12 @@
           "loadBalancerProfile": {
             "outboundIPs": {
               "publicIPs": [
-                {"id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('loadbalancerIpName'))]"}]}}
+                {
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('loadbalancerIpName'))]"
+                }
+              ]
+            }
+          }
         }
       }
     }
