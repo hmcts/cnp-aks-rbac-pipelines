@@ -200,7 +200,7 @@
           "loadBalancerProfile": {
             "outboundIPs": {
               "publicIPs": [
-                {"id": "['Microsoft.Network/publicIPAddresses', parameters('aksClusterName'),'-pip')]"}]}}
+                {"id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('aksClusterName'),'-pip')]"}]}}
         }
       }
     }
