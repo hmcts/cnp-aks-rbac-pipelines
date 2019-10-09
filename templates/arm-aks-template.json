@@ -111,27 +111,10 @@
   },
   "resources": [
     {
-      "apiVersion": "2019-02-01",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('loadbalancerIpName')]",
-      "location": "[resourceGroup().location]",
-      "sku": {
-        "name": "Standard"
-      },
-      "properties": {
-        "publicIPAllocationMethod": "Static",
-        "idleTimeoutInMinutes": "4",
-        "publicIpAddressVersion": "IPv4"
-      }
-    },
-    {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
       "apiVersion": "2019-08-01",
       "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', variables('loadbalancerIpName'))]"
-      ],
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
         "Branch":"[parameters('branch')]",
