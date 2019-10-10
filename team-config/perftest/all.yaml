@@ -57,3 +57,5 @@ gateways:
     # CCD
       - product: ccd
         component: data-store-api
+        component: definition-store-api
+        component: user-profile-api
