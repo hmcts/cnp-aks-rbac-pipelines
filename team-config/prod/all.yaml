@@ -92,3 +92,8 @@ gateways:
         component: user-profile-api
       - product: rd
         component: profile-sync
+
+    # Bulk scan and print
+      - product: bulk-scan
+        component: processor
+
