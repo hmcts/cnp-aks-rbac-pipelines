@@ -37,7 +37,9 @@ gateways:
         component: cms
       - product: div
         component: cos
- 
+      - product: div
+        component: hm
+
     # SSCS
       - product: sscs
         component: tribunals-api
