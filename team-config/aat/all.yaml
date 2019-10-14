@@ -50,6 +50,8 @@ gateways:
         component: tribunals-api
       - product: sscs
         component: evidence-share
+      - product: sscs
+        component: bulk-scan
 
     # FPLA
       - product: fpl
