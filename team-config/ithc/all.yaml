@@ -39,6 +39,14 @@ gateways:
         component: cos
       - product: div
         component: hm
+      - product: div
+        component: pfe
+      - product: div
+        component: rfe
+      - product: div
+        component: da
+      - product: div
+        component: dn
 
     # SSCS
       - product: sscs
