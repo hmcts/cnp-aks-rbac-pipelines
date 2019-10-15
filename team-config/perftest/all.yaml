@@ -57,5 +57,7 @@ gateways:
     # CCD
       - product: ccd
         component: data-store-api-aks
+      - product: ccd
         component: definition-store-api-aks
+      - product: ccd
         component: user-profile-api-aks
