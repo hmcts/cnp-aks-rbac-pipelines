@@ -4,7 +4,7 @@
       "value": "mi-sbox"
     },
     "Subscription.acrName": {
-      "value": "hmcts"
+      "value": "hmctspublic"
     },
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.95.0/25"

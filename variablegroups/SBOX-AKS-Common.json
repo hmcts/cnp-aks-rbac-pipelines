@@ -4,7 +4,7 @@
       "value": "sandbox"
     },
     "Subscription.acrName": {
-      "value": "hmcts"
+      "value": "hmctspublic"
     },
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.7.0/25"
