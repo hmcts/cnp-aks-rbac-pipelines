@@ -4,7 +4,7 @@
       "value": "ithc"
     },
     "Subscription.acrName": {
-      "value": "hmcts"
+      "value": "hmctspublic"
     },
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.36.0/25"
