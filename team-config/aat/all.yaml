@@ -88,6 +88,8 @@ gateways:
         component: payment-processor
       - product: bulk-scan
         component: processor
+      - product: bulk-scan
+        component: sample-app
 
     # CCD
       - product: ccd
