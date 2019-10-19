@@ -92,6 +92,8 @@ gateways:
         component: processor
       - product: bulk-scan
         component: sample-app
+      - product: bulk-scan
+        component: orchestrator
 
     # CCD
       - product: ccd
