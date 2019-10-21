@@ -114,3 +114,7 @@ gateways:
         component: user-profile-api
       - product: rd
         component: profile-sync
+
+      # Send-letter
+      - product: rpe
+        component: send-letter-service
