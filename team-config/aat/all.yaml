@@ -57,7 +57,7 @@ gateways:
       - product: sscs
         component: cor-backend
       - product: sscs
-        component: sscs-tya-notif
+        component: tya-notif
 
     # FPLA
       - product: fpl
