@@ -55,7 +55,7 @@ gateways:
       - product: sscs
         component: bulk-scan
       - product: sscs
-        component: sscs-cor-backend
+        component: cor-backend
       - product: sscs
         component: sscs-tya-notif
 
