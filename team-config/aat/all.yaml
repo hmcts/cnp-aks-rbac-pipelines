@@ -19,6 +19,8 @@ gateways:
         component: business-service
       - product: probate
         component: orchestrator-service
+      - product: probate
+        component: submit-service
     # I&A
       - product: ia
         component: case-api
@@ -50,6 +52,12 @@ gateways:
         component: tribunals-api
       - product: sscs
         component: evidence-share
+      - product: sscs
+        component: bulk-scan
+      - product: sscs
+        component: cor-backend
+      - product: sscs
+        component: tya-notif
 
     # FPLA
       - product: fpl
@@ -62,7 +70,7 @@ gateways:
     # Fees and Pay
       - product: payment
         component: api
-        
+
     # Access Management
       - product: am
         component: accessmgmt-api
@@ -86,10 +94,18 @@ gateways:
         component: payment-processor
       - product: bulk-scan
         component: processor
+      - product: bulk-scan
+        component: sample-app
+      - product: bulk-scan
+        component: orchestrator
 
     # CCD
       - product: ccd
         component: data-store-api
+      - product: ccd
+        component: definition-store-api
+      - product: ccd
+        component: user-profile-api
 
     # CTSC
       - product: ctsc
@@ -106,3 +122,7 @@ gateways:
         component: user-profile-api
       - product: rd
         component: profile-sync
+
+      # Send-letter
+      - product: rpe
+        component: send-letter-service

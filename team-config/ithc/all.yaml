@@ -17,6 +17,10 @@ gateways:
     # Probate
       - product: probate
         component: business-service
+      - product: probate
+        component: orchestrator-service
+      - product: probate
+        component: submit-service
     # I&A
       - product: ia
         component: case-api
@@ -37,7 +41,17 @@ gateways:
         component: cms
       - product: div
         component: cos
- 
+      - product: div
+        component: hm
+      - product: div
+        component: pfe
+      - product: div
+        component: rfe
+      - product: div
+        component: da
+      - product: div
+        component: dn
+
     # SSCS
       - product: sscs
         component: tribunals-api
