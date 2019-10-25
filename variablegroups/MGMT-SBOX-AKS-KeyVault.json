@@ -53,8 +53,8 @@
   "type": "AzureKeyVault",
   "name": "MGMT-SBOX-AKS-KeyVault",
   "providerData": {
-    "serviceEndpointId": "dc5c51d2-df61-40dd-a006-a36ccdebcf72",
-    "vault": "mgmt-sbox",
+    "serviceEndpointId": "29911403-494d-4f2d-9cfe-ecfd0b271464",
+    "vault": "cftsbox-intsvc",
     "lastRefreshedOn": "2019-07-03T13:25:06.732Z"
   },
   "isShared": false
