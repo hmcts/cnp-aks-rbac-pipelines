@@ -58,7 +58,8 @@
     },
     "variables" : {
         "agName" : "[concat('aks_',parameters('environmentName'),'_action_group')]",
-        "agShortName" : "[concat('aks',parameters('environmentName'))]",
+        "defaultAgShortName" : "[concat('aks',parameters('environmentName'))]",
+        "agShortName": "[take(variables('defaultAgShortName'), 12)]",
         "logicAppName": "[concat('aks-',parameters('environmentName'),'-monitoring-la')]"
     },
     "resources": [
