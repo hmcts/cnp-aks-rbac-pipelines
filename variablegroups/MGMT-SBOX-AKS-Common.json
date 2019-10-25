@@ -13,7 +13,7 @@
       "value": "10.10.13.0/24"
     },
     "Subscription.AKS.Environment.Name": {
-      "value": "mgmt-sbox"
+      "value": "cftsbox-intsvc"
     },
     "Subscription.AKS.Helm.TLS": {
       "value": "false"
