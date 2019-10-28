@@ -98,6 +98,8 @@ gateways:
         component: sample-app
       - product: bulk-scan
         component: orchestrator
+      - product: reform-scan
+        component: blob-router
 
     # CCD
       - product: ccd
