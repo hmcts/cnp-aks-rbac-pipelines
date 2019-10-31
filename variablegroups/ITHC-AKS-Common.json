@@ -19,7 +19,7 @@
       "value": "true"
     },
     "Subscription.AKS.Kubernetes.version": {
-      "value": "1.13.10"
+      "value": "1.14.8"
     },
     "Subscription.AKS.nodeCount": {
       "value": "5"
