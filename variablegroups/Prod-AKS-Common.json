@@ -9,9 +9,6 @@
     "Subscription.acrName": {
       "value": "hmctspublic"
     },
-    "Subscription.AKS.Appgw.ingress": {
-      "value": "[{ \"IpAddress\": \"10.13.31.250\" }]"
-    },
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.13.32.0/25"
     },
