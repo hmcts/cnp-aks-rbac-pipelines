@@ -3,7 +3,6 @@
 gateways:
   - gateway_configuration:
       backend_pool_addresses:
-        - 10.13.15.250
         - 10.13.31.250
       host_name_suffix: service.core-compute-prod.internal
     app_configuration:
@@ -19,6 +18,8 @@ gateways:
         component: business-service
       - product: probate
         component: orchestrator-service
+      - product: probate
+        component: submit-service
     # I&A
       - product: ia
         component: case-api
@@ -38,6 +39,8 @@ gateways:
         component: cms
       - product: div
         component: cos
+      - product: div
+        component: hm
         
     # Financial Remedy
       - product: finrem
@@ -62,6 +65,8 @@ gateways:
         component: tribunals-api
       - product: sscs
         component: evidence-share
+      - product: sscs
+        component: bulk-scan
 
     # FPLA
       - product: fpl
@@ -90,3 +95,8 @@ gateways:
         component: user-profile-api
       - product: rd
         component: profile-sync
+
+    # Bulk scan and print
+      - product: bulk-scan
+        component: processor
+

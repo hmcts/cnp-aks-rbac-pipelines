@@ -19,6 +19,8 @@ gateways:
         component: business-service
       - product: probate
         component: orchestrator-service
+      - product: probate
+        component: submit-service
     # I&A
       - product: ia
         component: case-api
@@ -56,4 +58,8 @@ gateways:
         component: api
     # CCD
       - product: ccd
-        component: data-store-api
+        component: data-store-api-aks
+      - product: ccd
+        component: definition-store-api-aks
+      - product: ccd
+        component: user-profile-api-aks

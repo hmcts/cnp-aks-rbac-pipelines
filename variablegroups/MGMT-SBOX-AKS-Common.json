@@ -4,7 +4,7 @@
       "value": "mgmt-sandbox"
     },
     "Subscription.acrName": {
-      "value": "hmcts"
+      "value": "hmctspublic"
     },
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.12.0/25"
@@ -13,13 +13,13 @@
       "value": "10.10.13.0/24"
     },
     "Subscription.AKS.Environment.Name": {
-      "value": "mgmt-sbox"
+      "value": "cftsbox-intsvc"
     },
     "Subscription.AKS.Helm.TLS": {
       "value": "false"
     },
     "Subscription.AKS.Kubernetes.version": {
-      "value": "1.13.10"
+      "value": "1.14.7"
     },
     "Subscription.AKS.nodeCount": {
       "value": "3"
@@ -40,16 +40,16 @@
       "value": "[\"172.16.0.10\", \"172.16.0.14\"]"
     },
     "Subscription.keyvaultName": {
-      "value": "mgmt-sbox"
+      "value": "cftsbox-intsvc"
     },
     "Subscription.ServiceConnection.Name": {
-      "value": "DCD-MGMT-SBOX"
+      "value": "DTS-CFTSBOX-INTSVC"
     },
     "Subscription.StorageAccount.Name": {
-      "value": "mgmtsbox"
+      "value": "cftsboxintsvc"
     },
     "Env.Core.ResourceGroup": {
-      "value": "core-infra-$(Subscription.AKS.Environment.Name)-rg"
+      "value": "core-infra-intsvc-rg"
     },
     "Subscription.AKS.Monitor.SlackChannel": {
       "value": "#aks-monitor-mgmt-sbox"
