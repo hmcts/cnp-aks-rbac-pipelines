@@ -100,3 +100,6 @@ gateways:
       - product: bulk-scan
         component: processor
 
+      # Send-letter
+      - product: rpe
+        component: send-letter-service 
