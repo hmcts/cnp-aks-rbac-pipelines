@@ -185,7 +185,7 @@
             "outboundIps": {
               "publicIPs": [
                 {
-                  "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('loadbalancerIpName'))]",
+                  "id": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/publicIPAddresses', variables('loadbalancerIpName'))]",
                   "resourceGroup": "[resourceGroup().name]"
                 }
               ]
