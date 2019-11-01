@@ -99,4 +99,9 @@ gateways:
     # Bulk scan and print
       - product: bulk-scan
         component: processor
+      - product: bulk-scan
+        component: orchestrator
 
+      # Send-letter
+      - product: rpe
+        component: send-letter-service 
