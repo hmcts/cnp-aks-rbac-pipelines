@@ -107,7 +107,7 @@
     "osType": "Linux",
     "adminUsername": "azureuser",
     "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]",
-    "loadbalancerIpName": "[concat(parameters('aksClusterName'), '-pip')]"
+    "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]"
   },
   "resources": [
     {
@@ -182,11 +182,10 @@
           "dockerBridgeCidr": "172.17.0.1/16",
           "loadBalancerSku": "Standard",
           "loadBalancerProfile": {
-            "outboundIps": {
-              "publicIPs": [
+            "outboundIPPrefixes": {
+              "publicIPPrefixes": [
                 {
-                  "id": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/publicIPAddresses', variables('loadbalancerIpName'))]",
-                  "resourceGroup": "parameters('aksVnetResourceGroup')"
+                  "id": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/publicIPPrefixes', variables('loadbalancerIpPrefix'))]"
                 }
               ]
             }
