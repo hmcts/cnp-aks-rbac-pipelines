@@ -106,13 +106,14 @@
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser",
-    "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]"
+    "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]",
+    "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]"
   },
   "resources": [
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2019-02-01",
+      "apiVersion": "2019-08-01",
       "location": "[resourceGroup().location]",
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
@@ -178,7 +179,17 @@
           "networkPlugin": "azure",
           "serviceCidr": "[parameters('aksServiceCidr')]",
           "dnsServiceIP": "[parameters('aksDnsServiceIp')]",
-          "dockerBridgeCidr": "172.17.0.1/16"
+          "dockerBridgeCidr": "172.17.0.1/16",
+          "loadBalancerSku": "Standard",
+          "loadBalancerProfile": {
+            "outboundIPPrefixes": {
+              "publicIPPrefixes": [
+                {
+                  "id": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/publicIPPrefixes', variables('loadbalancerIpPrefix'))]"
+                }
+              ]
+            }
+          }
         }
       }
     }
