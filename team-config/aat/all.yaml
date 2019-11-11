@@ -58,6 +58,8 @@ gateways:
         component: cor-backend
       - product: sscs
         component: tya-notif
+      - product: sscs
+        component: ccd-callback-orchestrator
 
     # FPLA
       - product: fpl
