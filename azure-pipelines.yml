@@ -60,22 +60,6 @@ stages:
             parameters:
               environment: 'sbox'
               resource_key: 'appgw'
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
-              environment: 'ithc'
-              resource_key: 'appgw'
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
-              environment: 'stg'
-              resource_key: 'appgw'
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
-              environment: 'test'
-              resource_key: 'appgw'
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
-              environment: 'prod'
-              resource_key: 'appgw'
 
           - task: CopyFiles@2
             displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'

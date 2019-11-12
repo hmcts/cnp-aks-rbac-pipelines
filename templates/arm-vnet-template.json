@@ -107,6 +107,12 @@
       "defaultValue": {
         "securityRules": []
       }
+    },
+    "hubVnetId": {
+      "type": "string",
+      "metadata": {
+        "description": "The full ID of the hub vnet to peer to"
+      }
     }
   },
   "variables": {
@@ -365,6 +371,25 @@
         ]
       },
       "resources": [
+        {
+          "apiVersion": "2016-06-01",
+          "type": "virtualNetworkPeerings",
+          "name": "aks_to_hub",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Network/virtualNetworks/', parameters('aksVnetName'))]"
+          ],
+          "comments": "Peers AKS to HUB",
+          "properties": {
+            "allowVirtualNetworkAccess": "true",
+            "allowForwardedTraffic": "true",
+            "allowGatewayTransit": "false",
+            "useRemoteGateways": "false",
+            "remoteVirtualNetwork": {
+              "id": "[parameters('hubVnetId')]"
+            }
+          }
+        },
         {
           "type": "providers/diagnosticSettings",
           "name": "[concat('Microsoft.Insights/', parameters('aksVnetName'))]",
