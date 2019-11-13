@@ -61,18 +61,22 @@ stages:
               environment: 'sbox'
               resource_key: 'appgw'
           - template: devops-templates/terraform-plan-template.yaml
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
             parameters:
               environment: 'ithc'
               resource_key: 'appgw'
           - template: devops-templates/terraform-plan-template.yaml
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
             parameters:
               environment: 'stg'
               resource_key: 'appgw'
           - template: devops-templates/terraform-plan-template.yaml
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
             parameters:
               environment: 'test'
               resource_key: 'appgw'
           - template: devops-templates/terraform-plan-template.yaml
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
             parameters:
               environment: 'prod'
               resource_key: 'appgw'
