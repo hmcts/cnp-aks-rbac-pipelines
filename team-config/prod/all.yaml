@@ -106,3 +106,7 @@ gateways:
       # Send-letter
       - product: rpe
         component: send-letter-service 
+        
+    # ccpay
+      - product: ccpay
+        component: bulkscanning-api     
