@@ -134,3 +134,7 @@ gateways:
       # ccpay
       - product: ccpay
         component: bulkscanning-api
+      - product: payment
+        component: api
+      - product: fees-register
+        component: api
