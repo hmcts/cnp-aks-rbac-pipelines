@@ -69,10 +69,6 @@ gateways:
       - product: ethos
         component: repl-docmosis-backend
 
-    # Fees and Pay
-      - product: payment
-        component: api
-
     # Access Management
       - product: am
         component: accessmgmt-api
