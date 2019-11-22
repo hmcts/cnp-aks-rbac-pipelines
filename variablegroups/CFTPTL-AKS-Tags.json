@@ -1,0 +1,35 @@
+{
+  "variables": {
+    "activityName": {
+      "value": "AKS"
+    },
+    "automation": {
+      "value": ""
+    },
+    "costCentre": {
+      "value": "10245117"
+    },
+    "criticality": {
+      "value": "High"
+    },
+    "dataClassification": {
+      "value": "Internal"
+    },
+    "environment": {
+      "value": "cftptl"
+    },
+    "managedBy": {
+      "value": "PlatformEngineering"
+    },
+    "releasedBy": {
+      "value": "$(Release.RequestedForEmail)"
+    },
+    "solutionOwner": {
+      "value": "CFT"
+    }
+  },
+  "id":48,
+  "type": "Vsts",
+  "name": "CFTPTL-AKS-Tags",
+  "isShared": false
+}
