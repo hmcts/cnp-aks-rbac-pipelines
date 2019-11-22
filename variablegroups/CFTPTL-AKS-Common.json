@@ -1,0 +1,65 @@
+{
+  "variables": {
+    "Environment.name": {
+      "value": "cftptl"
+    },
+    "Subscription.acrName": {
+      "value": "hmctspublic"
+    },
+    "Subscription.AKS.Appgw.subnet.cidr": {
+      "value": "10.10.68.0/25"
+    },
+    "Subscription.AKS.Iass.subnet.cidr": {
+      "value": "10.10.70.0/23"
+    },
+    "Subscription.AKS.Environment.Name": {
+      "value": "cftptl-intsvc"
+    },
+    "Subscription.AKS.Helm.TLS": {
+      "value": "false"
+    },
+    "Subscription.AKS.Kubernetes.version": {
+      "value": "1.14.8"
+    },
+    "Subscription.AKS.nodeCount": {
+      "value": "3"
+    },
+    "Subscription.AKS.Subnet.Primary.Cidr": {
+      "value": "10.10.64.0/23"
+    },
+    "Subscription.AKS.Subnet.Secondary.Cidr": {
+      "value": "10.10.66.0/23"
+    },
+    "Subscription.AKS.vmSize": {
+      "value": "Standard_D4s_v3"
+    },
+    "Subscription.AKS.VNet.Cidr": {
+      "value": "10.10.64.0/21"
+    },
+    "Subscription.AKS.VNet.DnsServers": {
+      "value": "[\"172.16.0.10\", \"172.16.0.14\"]"
+    },
+    "Subscription.keyvaultName": {
+      "value": "cftptl-intsvc"
+    },
+    "Subscription.ServiceConnection.Name": {
+      "value": "DTS-CFTPTL-INTSVC"
+    },
+    "Subscription.StorageAccount.Name": {
+      "value": "cftptlintsvc"
+    },
+    "Env.Core.ResourceGroup": {
+      "value": "core-infra-intsvc-rg"
+    },
+    "Subscription.AKS.Monitor.SlackChannel": {
+      "value": "#aks-monitor-cftptl"
+    },
+    "Subscription.AKS.NSG.Settings": {
+      "value": "{ \"securityRules\": [] }"
+    }
+  },
+  "id": 46,
+  "type": "Vsts",
+  "name": "CFTPTL-AKS-Common",
+  "isShared": false
+}
