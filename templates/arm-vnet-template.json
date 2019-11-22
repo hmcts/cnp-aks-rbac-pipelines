@@ -373,6 +373,7 @@
       "resources": [
         {
           "apiVersion": "2016-06-01",
+          "condition": "[if(equals(parameters('hubVnetId'), ''), bool('false'), bool('true'))]",
           "type": "virtualNetworkPeerings",
           "name": "aks_to_hub",
           "location": "[resourceGroup().location]",
