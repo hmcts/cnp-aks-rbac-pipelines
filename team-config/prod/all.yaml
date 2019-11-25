@@ -102,7 +102,9 @@ gateways:
         component: processor
       - product: bulk-scan
         component: orchestrator
-
+      - product: bulk-scan
+        component: payment-processor
+        
       # Send-letter
       - product: rpe
         component: send-letter-service 
