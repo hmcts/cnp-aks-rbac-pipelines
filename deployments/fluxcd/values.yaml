@@ -7,3 +7,5 @@ git:
   secretName: flux-git-deploy
 additionalArgs:
   - --manifest-generation=true
+syncGarbageCollection:
+  enabled: true
