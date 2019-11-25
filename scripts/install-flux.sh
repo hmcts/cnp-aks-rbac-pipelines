@@ -26,4 +26,4 @@ helm upgrade flux fluxcd/flux --install --recreate-pods --namespace admin -f ${V
     "${helm_tls_params[@]}" \
     --wait
 
-helm upgrade helm-operator fluxcd/helm-operator --install --namespace admin   -f  helm/nonprod/helm-operator.yaml --version 0.3.0 --wait "${helm_tls_params[@]}"
+helm upgrade helm-operator fluxcd/helm-operator --install --namespace admin   -f  deployments/fluxcd/helm-operator-values.yaml --version 0.3.0 --wait "${helm_tls_params[@]}"
