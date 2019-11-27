@@ -1,0 +1,12 @@
+workers: 6
+git:
+  pollInterval: 1m
+  ssh:
+    secretName: flux-git-deploy
+configureRepositories:
+  enable: true
+  repositories:
+  - name: stable
+    url: https://kubernetes-charts.storage.googleapis.com
+  - name: hmctspublic
+    url: https://hmctspublic.azurecr.io/helm/v1/repo
