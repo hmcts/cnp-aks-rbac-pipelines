@@ -68,6 +68,8 @@ gateways:
         component: evidence-share
       - product: sscs
         component: bulk-scan
+      - product: sscs
+        component: ccd-callback-orchestrator
 
     # FPLA
       - product: fpl
