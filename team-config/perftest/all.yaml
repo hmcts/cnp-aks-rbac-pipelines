@@ -63,3 +63,6 @@ gateways:
         component: definition-store-api-aks
       - product: ccd
         component: user-profile-api-aks
+    # CTSC
+      - product: ctsc
+        component: work-allocation
