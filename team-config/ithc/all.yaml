@@ -29,7 +29,12 @@ gateways:
       - product: ia
         component: case-documents-api
     # Reference DATA
-
+      - product: rd
+        component: professional-api
+      - product: rd
+        component: user-profile-api
+      - product: rd
+        component: profile-sync
     # Divorce
       - product: div
         component: emca
