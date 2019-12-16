@@ -70,3 +70,17 @@ gateways:
     # Fees and Pay
       - product: payment
         component: api
+    
+    # Evidence Management
+      - product: em
+        component: anno
+      - product: em
+        component: npa
+      - product: em
+        component: stitching
+      - product: em
+        component: ccd-orchestrator
+      - product: dg
+        component: docassembly
+      - product: dm
+        component: store
