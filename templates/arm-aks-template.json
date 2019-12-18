@@ -17,6 +17,18 @@
       "type": "int",
       "defaultValue": 2
     },
+    "nodeMinCount": {
+      "type": "string"
+    },
+    "nodeMaxCount": {
+      "type": "string"
+    },
+    "enableAutoScaling": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
     "aksVnetResourceGroup": {
       "type": "string"
     },
@@ -100,7 +112,7 @@
     }
   },
   "variables": {
-    "osDiskSizeGB": 100,  
+    "osDiskSizeGB": 100,
     "maxPods": 30,  
     "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
@@ -113,7 +125,7 @@
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2019-08-01",
+      "apiVersion": "2019-10-01",
       "location": "[resourceGroup().location]",
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
@@ -134,6 +146,13 @@
           {
             "name": "[variables('nodepoolName')]",
             "count": "[parameters('nodeCount')]",
+            "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
+            "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
+            "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
+            "type": "[parameters('type')]",
+            "orchestratorVersion": "[parameters('kubernetesVersion')]",
+            "scaleSetPriority": "string",
+            "scaleSetEvictionPolicy": "string",
             "vmSize": "[parameters('vmSize')]",
             "osDiskSizeGB": "[variables('osDiskSizeGB')]",
             "storageProfile": "[variables('storageProfile')]",

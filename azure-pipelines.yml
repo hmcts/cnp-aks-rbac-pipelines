@@ -2,7 +2,11 @@
 # https://aka.ms/yaml
 
 trigger:
-  - master
+  batch: true
+  branches:
+    include:
+    - master
+
 variables:
   serviceConnection: azurerm-nonprod
   keyvaultName: infra-vault-nonprod
