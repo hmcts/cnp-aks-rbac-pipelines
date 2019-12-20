@@ -84,3 +84,11 @@ gateways:
         component: docassembly
       - product: dm
         component: store
+    
+    # CCD
+      - product: ccd
+        component: data-store-api
+      - product: ccd
+        component: definition-store-api
+      - product: ccd
+        component: user-profile-api
