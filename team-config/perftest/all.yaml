@@ -76,11 +76,11 @@ gateways:
         component: api
     # CCD
       - product: ccd
-        component: data-store-api-aks
+        component: data-store-api
       - product: ccd
-        component: definition-store-api-aks
+        component: definition-store-api
       - product: ccd
-        component: user-profile-api-aks
+        component: user-profile-api
     # CTSC
       - product: ctsc
         component: work-allocation
