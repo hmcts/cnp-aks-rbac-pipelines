@@ -3,16 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "nodeMinCount": {
-      "value": ""
+      "value": "10"
     },
     "nodeMaxCount": {
-      "value": ""
+      "value": "100"
     },
     "enableAutoScaling": {
-      "value": ""
+      "value": "true"
     },
     "type": {
-      "value": "AvailabilitySet"
+      "value": "VirtualMachineScaleSets"
     }
   }
 }
