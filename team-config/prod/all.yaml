@@ -70,6 +70,8 @@ gateways:
         component: bulk-scan
       - product: sscs
         component: ccd-callback-orchestrator
+      - product: sscs
+        component: cor-backend
 
     # FPLA
       - product: fpl
