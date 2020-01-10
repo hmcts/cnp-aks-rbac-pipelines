@@ -42,6 +42,8 @@ gateways:
         component: cos
       - product: div
         component: hm
+      - product: div
+        component: cfs
         
     # Financial Remedy
       - product: finrem
