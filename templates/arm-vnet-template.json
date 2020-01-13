@@ -363,6 +363,14 @@
             "name": "[parameters('iaasSubnetName')]",
             "properties": {
               "addressPrefix": "[parameters('iaasSubnetCIDR')]",
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.Sql"
+                },
+                {
+                  "service": "Microsoft.Storage"
+                }
+              ],
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
               }
