@@ -112,7 +112,7 @@
     }
   },
   "variables": {
-    "osDiskSizeGB": 256,
+    "osDiskSizeGB": 1024,
     "maxPods": 30,  
     "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
