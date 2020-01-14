@@ -122,3 +122,7 @@ gateways:
     # ccpay
       - product: ccpay
         component: bulkscanning-api     
+
+    # xui
+      - product: xui
+        component: terms-and-conditions

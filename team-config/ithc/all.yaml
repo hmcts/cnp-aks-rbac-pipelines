@@ -92,3 +92,7 @@ gateways:
         component: definition-store-api
       - product: ccd
         component: user-profile-api
+
+    # xui
+      - product: xui
+        component: terms-and-conditions

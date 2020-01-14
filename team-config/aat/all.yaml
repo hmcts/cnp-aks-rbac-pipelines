@@ -113,6 +113,10 @@ gateways:
       - product: ctsc
         component: work-allocation
 
+    # xui
+      - product: xui
+        component: terms-and-conditions
+
     # BAR
       - product: bar
         component: api
@@ -136,3 +140,4 @@ gateways:
         component: api
       - product: fees-register
         component: api
+
