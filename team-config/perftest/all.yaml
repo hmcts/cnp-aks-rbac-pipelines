@@ -84,3 +84,7 @@ gateways:
     # CTSC
       - product: ctsc
         component: work-allocation
+
+    # xui
+      - product: xui
+        component: terms-and-conditions
