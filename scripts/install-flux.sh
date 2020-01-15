@@ -26,4 +26,4 @@ helm upgrade flux fluxcd/flux --install --recreate-pods --namespace admin -f ${V
 
 kubectl apply -f ${FLUX_HELM_CRD}
 kubectl -n admin delete secret flux-helm-repositories || true
-helm upgrade flux-helm-operator fluxcd/helm-operator --install --namespace admin   -f  deployments/fluxcd/helm-operator-values.yaml --version 0.4.0 --wait "${helm_tls_params[@]}"
+helm upgrade flux-helm-operator fluxcd/helm-operator --install --namespace admin   -f  deployments/fluxcd/helm-operator-values.yaml --version 0.5.0 --wait "${helm_tls_params[@]}"
