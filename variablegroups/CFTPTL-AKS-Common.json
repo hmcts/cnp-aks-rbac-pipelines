@@ -37,7 +37,7 @@
       "value": "10.10.64.0/21"
     },
     "Subscription.AKS.VNet.DnsServers": {
-      "value": "[\"172.16.0.10\", \"172.16.0.14\"]"
+      "value": "[\"10.96.4.12\"]"
     },
     "Subscription.keyvaultName": {
       "value": "cftptl-intsvc"
