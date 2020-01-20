@@ -37,7 +37,7 @@
       "value": "10.10.8.0/21"
     },
     "Subscription.AKS.VNet.DnsServers": {
-      "value": "[\"172.16.0.10\", \"172.16.0.14\"]"
+      "value": "10.99.196.9"
     },
     "Subscription.keyvaultName": {
       "value": "cftsbox-intsvc"
