@@ -18,9 +18,6 @@
     "Subscription.AKS.Environment.Name": {
       "value": "aat"
     },
-    "Subscription.AKS.Helm.TLS": {
-      "value": "true"
-    },
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.10.25.0/24"
     },
