@@ -18,9 +18,6 @@
     "Subscription.AKS.Environment.Name": {
       "value": "perftest"
     },
-    "Subscription.AKS.Helm.TLS": {
-      "value": "true"
-    },
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.10.47.0/24"
     },

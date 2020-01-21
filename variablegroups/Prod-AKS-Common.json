@@ -15,9 +15,6 @@
     "Subscription.AKS.Environment.Name": {
       "value": "prod"
     },
-    "Subscription.AKS.Helm.TLS": {
-      "value": "true"
-    },
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.13.33.0/24"
     },

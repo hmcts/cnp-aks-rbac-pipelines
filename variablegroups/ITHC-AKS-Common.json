@@ -15,9 +15,6 @@
     "Subscription.AKS.Environment.Name": {
       "value": "ithc"
     },
-    "Subscription.AKS.Helm.TLS": {
-      "value": "true"
-    },
     "Subscription.AKS.Kubernetes.version": {
       "value": "1.15.7"
     },
