@@ -33,9 +33,6 @@
     "Subscription.AKS.VNet.Cidr": {
       "value": "10.10.64.0/21"
     },
-    "Subscription.AKS.VNet.DnsServers": {
-      "value": "[\"10.96.4.12\"]"
-    },
     "Subscription.keyvaultName": {
       "value": "cftptl-intsvc"
     },

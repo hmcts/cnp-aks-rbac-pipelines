@@ -33,9 +33,6 @@
     "Subscription.AKS.VNet.Cidr": {
       "value": "10.10.32.0/21"
     },
-    "Subscription.AKS.VNet.DnsServers": {
-      "value": "[\"10.112.11.254\"]"
-    },
     "Subscription.keyvaultName": {
       "value": "cftapps-ithc"
     },
