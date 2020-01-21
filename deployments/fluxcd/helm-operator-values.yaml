@@ -1,4 +1,6 @@
 workers: 6
+helm:
+  versions: v3
 git:
   pollInterval: 1m
   ssh:

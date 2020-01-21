@@ -4,6 +4,9 @@
   "parameters": {
     "hubVnetId": {
       "value": ""
+    },
+    "aksVnetDnsServers": {
+      "value": ["10.99.196.9"]
     }
   }
 }
