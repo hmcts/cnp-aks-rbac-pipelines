@@ -4,7 +4,6 @@ gateways:
   - gateway_configuration:
       backend_pool_addresses:
         - 10.13.15.250
-        - 10.13.31.250
       host_name_suffix: service.core-compute-prod.internal
     app_configuration:
     # RPE
