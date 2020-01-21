@@ -4,6 +4,9 @@
   "parameters": {
     "hubVnetId": {
       "value": "/subscriptions/fb084706-583f-4c9a-bdab-949aac66ba5c/resourceGroups/hmcts-hub-nonprodi/providers/Microsoft.Network/virtualNetworks/hmcts-hub-nonprodi"
+    },
+    "aksVnetDnsServers": {
+      "value": ["10.112.139.254"]
     }
   }
 }
