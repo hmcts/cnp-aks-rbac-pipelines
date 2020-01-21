@@ -4,6 +4,9 @@
   "parameters": {
     "hubVnetId": {
       "value": "/subscriptions/ea3a8c1e-af9d-4108-bc86-a7e2d267f49c/resourceGroups/hmcts-hub-sbox-int/providers/Microsoft.Network/virtualNetworks/hmcts-hub-sbox-int"
+    },
+    "aksVnetDnsServers": {
+      "value": ["10.100.139.254"]
     }
   }
 }

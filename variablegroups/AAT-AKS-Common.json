@@ -39,9 +39,6 @@
     "Subscription.AKS.VNet.Cidr": {
       "value": "10.10.16.0/20"
     },
-    "Subscription.AKS.VNet.DnsServers": {
-      "value": "[\"10.96.139.254\"]"
-    },
     "Subscription.keyvaultName": {
       "value": "cftapps-$(Env.Override.Name)"
     },
