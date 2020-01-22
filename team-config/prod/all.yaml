@@ -114,6 +114,8 @@ gateways:
         component: orchestrator
       - product: bulk-scan
         component: payment-processor
+      - product: reform-scan
+        component: blob-router
         
       # Send-letter
       - product: rpe
