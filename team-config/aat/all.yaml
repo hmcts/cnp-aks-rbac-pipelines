@@ -84,6 +84,8 @@ gateways:
         component: stitching
       - product: em
         component: ccd-orchestrator
+      - product: em
+        component: showcase
       - product: dg
         component: docassembly
       - product: dm
