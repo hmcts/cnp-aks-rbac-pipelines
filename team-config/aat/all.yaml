@@ -4,6 +4,7 @@ gateways:
   - gateway_configuration:
       backend_pool_addresses:
         - 10.10.19.250
+        - 10.10.23.250
       host_name_suffix: service.core-compute-aat.internal
     app_configuration:
     # RPE
