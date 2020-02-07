@@ -6,7 +6,7 @@
       "value": ""
     },
     "aksVnetDnsServers": {
-      "value": ["10.97.129.254"]
+      "value": ["10.96.203.254"]
     }
   }
 }
