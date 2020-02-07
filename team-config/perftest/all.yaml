@@ -88,3 +88,15 @@ gateways:
     # xui
       - product: xui
         component: terms-and-conditions
+        
+    # Bulk scan and print
+      - product: bulk-scan
+        component: payment-processor
+      - product: bulk-scan
+        component: processor
+      - product: bulk-scan
+        component: sample-app
+      - product: bulk-scan
+        component: orchestrator
+      - product: reform-scan
+        component: blob-router
