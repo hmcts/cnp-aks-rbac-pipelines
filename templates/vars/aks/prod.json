@@ -3,10 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "nodeMinCount": {
-      "value": "10"
+      "value": "15"
     },
     "nodeMaxCount": {
-      "value": "100"
+      "value": "30"
     },
     "enableAutoScaling": {
       "value": "true"

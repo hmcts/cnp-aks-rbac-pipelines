@@ -13,10 +13,6 @@
       "type": "string",
       "defaultValue": "Standard_B4ms"
     },
-    "nodeCount": {
-      "type": "int",
-      "defaultValue": 2
-    },
     "nodeMinCount": {
       "type": "string"
     },
@@ -145,7 +141,7 @@
         "agentPoolProfiles": [
           {
             "name": "[variables('nodepoolName')]",
-            "count": "[parameters('nodeCount')]",
+            "count": "[int(parameters('nodeMinCount'))]",
             "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
             "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
             "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
