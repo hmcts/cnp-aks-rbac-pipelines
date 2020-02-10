@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "nodeMinCount": {
-      "value": "20"
+      "value": "16"
     },
     "nodeMaxCount": {
       "value": "75"
