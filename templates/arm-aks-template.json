@@ -13,10 +13,6 @@
       "type": "string",
       "defaultValue": "Standard_B4ms"
     },
-    "nodeCount": {
-      "type": "int",
-      "defaultValue": 2
-    },
     "nodeMinCount": {
       "type": "string"
     },

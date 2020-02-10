@@ -24,9 +24,6 @@
     "Subscription.AKS.Kubernetes.version": {
       "value": "1.15.7"
     },
-    "Subscription.AKS.nodeCount": {
-      "value": "20"
-    },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.10.16.0/22"
     },
