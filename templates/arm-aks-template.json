@@ -13,18 +13,6 @@
       "type": "string",
       "defaultValue": "Standard_B4ms"
     },
-    "nodeMinCount": {
-      "type": "string"
-    },
-    "nodeMaxCount": {
-      "type": "string"
-    },
-    "enableAutoScaling": {
-      "type": "string"
-    },
-    "type": {
-      "type": "string"
-    },
     "aksVnetResourceGroup": {
       "type": "string"
     },
@@ -142,13 +130,6 @@
           {
             "name": "[variables('nodepoolName')]",
             "count": "[int(parameters('nodeMinCount'))]",
-            "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
-            "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
-            "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
-            "type": "[parameters('type')]",
-            "orchestratorVersion": "[parameters('kubernetesVersion')]",
-            "scaleSetPriority": "string",
-            "scaleSetEvictionPolicy": "string",
             "vmSize": "[parameters('vmSize')]",
             "osDiskSizeGB": "[variables('osDiskSizeGB')]",
             "storageProfile": "[variables('storageProfile')]",
