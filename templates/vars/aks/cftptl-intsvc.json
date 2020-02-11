@@ -6,7 +6,7 @@
       "value": "3"
     },
     "nodeMaxCount": {
-      "value": "30"
+      "value": "50"
     },
     "enableAutoScaling": {
       "value": "true"
