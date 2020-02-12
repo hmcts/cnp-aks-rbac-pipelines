@@ -66,6 +66,8 @@ gateways:
         component: tribunals-api
       - product: sscs
         component: evidence-share
+      - product: sscs
+        component: cor-backend
 
     # FPLA
       - product: fpl
@@ -88,7 +90,7 @@ gateways:
     # xui
       - product: xui
         component: terms-and-conditions
-        
+
     # Bulk scan and print
       - product: bulk-scan
         component: payment-processor
