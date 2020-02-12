@@ -22,8 +22,8 @@
     "enableAutoScaling": {
       "type": "string"
     },
-    "type": {		
-      "type": "string"		
+    "type": {
+      "type": "string"
     },
     "aksVnetResourceGroup": {
       "type": "string"
