@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "nodeCount": {
-      "value": 10
+      "value": 12
     },
     "nodeMinCount": {
       "value": ""
@@ -12,10 +12,10 @@
       "value": ""
     },
     "enableAutoScaling": {
-      "value": ""
+      "value": "false"
     },
     "type": {
-      "value": "AvailabilitySet"
+      "value": "VirtualMachineScaleSets"
     }
   }
 }
