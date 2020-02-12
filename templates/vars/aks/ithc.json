@@ -12,10 +12,10 @@
       "value": ""
     },
     "enableAutoScaling": {
-      "value": "false"
+      "value": ""
     },
     "type": {
-      "value": "VirtualMachineScaleSets"
+      "value": "AvailabilitySet"
     }
   }
 }
