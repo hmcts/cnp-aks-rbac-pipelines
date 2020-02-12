@@ -13,15 +13,15 @@
       "type": "string",
       "defaultValue": "Standard_B4ms"
     },
-    "nodeMinCount": {		
-      "type": "string"		
-    },		
-    "nodeMaxCount": {		
-      "type": "string"		
-    },		
-    "enableAutoScaling": {		
-      "type": "string"		
-    },		
+    "nodeMinCount": {
+      "type": "string"
+    },
+    "nodeMaxCount": {
+      "type": "string"
+    },
+    "enableAutoScaling": {
+      "type": "string"
+    },
     "type": {		
       "type": "string"		
     },
