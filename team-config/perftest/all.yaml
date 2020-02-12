@@ -67,7 +67,7 @@ gateways:
       - product: sscs
         component: evidence-share
       - product: sscs
-          component: cor-backend
+        component: cor-backend
 
     # FPLA
       - product: fpl
