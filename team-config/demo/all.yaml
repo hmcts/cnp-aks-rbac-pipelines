@@ -3,7 +3,7 @@
 gateways:
   - gateway_configuration:
       backend_pool_addresses:
-        - 10.11.15.220
+        - 10.11.15.121
       host_name_suffix: service.core-compute-demo.internal
     app_configuration:
     # RPE
