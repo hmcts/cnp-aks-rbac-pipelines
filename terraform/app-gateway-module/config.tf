@@ -16,6 +16,7 @@ locals {
     prod     = "Production"
     ithc     = "ITHC"
     perftest = "Test"
+    demo     = "Demo"
   }
 
   tags = {
