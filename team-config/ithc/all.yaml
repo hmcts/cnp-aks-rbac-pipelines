@@ -96,3 +96,9 @@ gateways:
     # xui
       - product: xui
         component: terms-and-conditions
+
+    # SIDAM 
+      - product: idam
+        component: api
+      - product: idam
+        component: web-admin
