@@ -8,6 +8,7 @@ locals {
     prod     = "High"
     ithc     = "Medium"
     perftest = "Medium"
+    demo     = "Medium"
   }
 
   env_display_names = {
