@@ -49,6 +49,10 @@ gateways:
         component: user-profile-api
       - product: rd
         component: profile-sync
+      - product: rd
+        component: judicial-data-load
+      - product: rd
+        component: judicial-api
     # Divorce
       - product: div
         component: emca
