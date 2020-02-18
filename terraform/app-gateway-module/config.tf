@@ -8,6 +8,7 @@ locals {
     prod     = "High"
     ithc     = "Medium"
     perftest = "Medium"
+    demo     = "Medium"
   }
 
   env_display_names = {
@@ -16,6 +17,7 @@ locals {
     prod     = "Production"
     ithc     = "ITHC"
     perftest = "Test"
+    demo     = "Demo"
   }
 
   tags = {
