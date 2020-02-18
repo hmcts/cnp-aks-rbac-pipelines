@@ -108,6 +108,8 @@ gateways:
         component: user-profile-api
       - product: rd
         component: profile-sync
+      - product: rd
+        component: judicial-api
 
     # Bulk scan and print
       - product: bulk-scan
