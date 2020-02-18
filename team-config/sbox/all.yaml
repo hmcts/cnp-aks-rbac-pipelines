@@ -62,3 +62,4 @@ gateways:
         component: web-public
       - product: idam
         component: web-admin
+        cookie_based_affinity: true

@@ -78,7 +78,7 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "backend_http_settings" {
     for_each = [for app in local.gateways[count.index].app_configuration : {
       name                  = "${app.product}-${app.component}"
-      cookie_based_affinity = app.product == "idam" ? "Enabled" : "Disabled"
+      cookie_based_affinity = contains(keys(app), "cookie_based_affinity") ? app.cookie_based_affinity : "Disabled"
     }]
 
     content {
