@@ -28,6 +28,8 @@ gateways:
         component: case-notifications-api
       - product: ia
         component: case-documents-api
+      - product: ia
+        component: aip-frontend
 
     # Divorce
       - product: div
@@ -112,7 +114,7 @@ gateways:
         component: user-profile-api
       - product: ccd
         component: test-stubs-service
-        
+
 
     # CTSC
       - product: ctsc
@@ -139,7 +141,7 @@ gateways:
       # Send-letter
       - product: rpe
         component: send-letter-service
-        
+
       # ccpay
       - product: ccpay
         component: bulkscanning-api
