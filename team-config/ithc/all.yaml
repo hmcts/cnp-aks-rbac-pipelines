@@ -102,5 +102,7 @@ gateways:
     # SIDAM 
       - product: idam
         component: api
+        cookie_based_affinity: Enabled
       - product: idam
         component: web-admin
+        cookie_based_affinity: Enabled
