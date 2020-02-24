@@ -106,3 +106,7 @@ gateways:
       - product: idam
         component: web-admin
         cookie_based_affinity: Enabled
+
+    # CMC
+      - product: cmc
+        component: claim-store
