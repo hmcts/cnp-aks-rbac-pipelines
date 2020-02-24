@@ -104,3 +104,8 @@ gateways:
         component: orchestrator
       - product: reform-scan
         component: blob-router
+
+    # CMC
+      - product: cmc
+        component: claim-store
+
