@@ -150,3 +150,7 @@ gateways:
       - product: fees-register
         component: api
 
+    # CMC
+      - product: cmc
+        component: claim-store
+
