@@ -25,3 +25,11 @@ gateways:
         component: hm
       - product: div
         component: cfs
+      - product: div
+        component: pfe
+      - product: div
+        component: da
+      - product: div
+        component: dn
+      - product: div
+        component: rfe
