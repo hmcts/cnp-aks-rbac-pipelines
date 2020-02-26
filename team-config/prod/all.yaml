@@ -132,3 +132,8 @@ gateways:
     # xui
       - product: xui
         component: terms-and-conditions
+
+    # CMC
+      - product: cmc
+        component: claim-store
+
