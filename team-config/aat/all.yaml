@@ -114,6 +114,8 @@ gateways:
         component: user-profile-api
       - product: ccd
         component: test-stubs-service
+      - product: ccd
+        component: case-print-service
 
 
     # CTSC
