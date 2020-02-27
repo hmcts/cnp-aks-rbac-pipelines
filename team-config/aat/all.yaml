@@ -69,6 +69,10 @@ gateways:
       - product: fpl
         component: case-service
 
+    # Adoption
+      - product: adoption
+        component: backend
+
     # Ethos
       - product: ethos
         component: repl-docmosis-backend
