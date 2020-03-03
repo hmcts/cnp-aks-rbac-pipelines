@@ -120,7 +120,8 @@ gateways:
         component: test-stubs-service
       - product: ccd
         component: case-print-service
-
+      - product: ccd
+        component: case-activity-api
 
     # CTSC
       - product: ctsc
