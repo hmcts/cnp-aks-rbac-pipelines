@@ -97,6 +97,8 @@ gateways:
         component: user-profile-api 
       - product: ccd
         component: case-print-service
+      - product: ccd
+        component: case-activity-api
 
     # BAR
       - product: bar
