@@ -34,3 +34,16 @@ gateways:
       - product: ia
         component: case-notifications-api
         
+    # SSCS
+      - product: sscs
+        component: tribunals-api
+      - product: sscs
+        component: evidence-share
+      - product: sscs
+        component: bulk-scan
+      - product: sscs
+        component: ccd-callback-orchestrator
+      - product: sscs
+        component: tya-notif
+      - product: sscs
+        component: cor-backend
