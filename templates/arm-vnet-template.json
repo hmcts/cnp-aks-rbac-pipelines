@@ -133,6 +133,24 @@
       "name": "[parameters('aksNsgName')]",
       "location": "[resourceGroup().location]",
       "apiVersion": "2019-04-01",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "bulkscanToCrimeStorage",
+            "properties": {
+              "description": "This rule permits access from the bulkscan microservice to the crime blob storage via a CloudGateway VPN",
+              "protocol": "tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "10.200.66.12",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Outbound"
+            }
+          }
+        ]
+      },
       "resources": [
         {
           "type": "providers/diagnosticSettings",
