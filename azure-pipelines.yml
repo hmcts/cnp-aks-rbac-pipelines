@@ -95,6 +95,13 @@ stages:
               TargetFolder: '$(Build.ArtifactStagingDirectory)'
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Artifact: drop'
+
+  - stage: Sandbox
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+      - job: Dummy
+        steps:
+        - bash: echo "This is a dummy step to prevent breaking the pipeline during transition to new module."
   - stage: Demo
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
