@@ -96,12 +96,6 @@ stages:
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Artifact: drop'
 
-  - stage: Sandbox
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    jobs:
-      - job: Dummy
-        steps:
-        - bash: echo "This is a dummy step to prevent breaking the pipeline during transition to new module."
   - stage: Demo
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
@@ -111,7 +105,6 @@ stages:
           agentPool: ${{ variables.agentPool }}
           terraformVersion: ${{ variables.terraformVersion }}
   - stage: ITHC
-    dependsOn: Sandbox
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
       - template: devops-templates/terraform-apply-template.yaml
@@ -120,7 +113,6 @@ stages:
           agentPool: ${{ variables.agentPool }}
           terraformVersion: ${{ variables.terraformVersion }}
   - stage: AAT
-    dependsOn: Sandbox
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
       - template: devops-templates/terraform-apply-template.yaml
@@ -129,7 +121,6 @@ stages:
           agentPool: ${{ variables.agentPool }}
           terraformVersion: ${{ variables.terraformVersion }}
   - stage: PerfTest
-    dependsOn: Sandbox
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
       - template: devops-templates/terraform-apply-template.yaml
@@ -138,7 +129,6 @@ stages:
           agentPool: ${{ variables.agentPool }}
           terraformVersion: ${{ variables.terraformVersion }}
   - stage: Prod
-    dependsOn: Sandbox
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
       - template: devops-templates/terraform-apply-template.yaml
