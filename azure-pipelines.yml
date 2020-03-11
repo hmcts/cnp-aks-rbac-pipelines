@@ -62,10 +62,6 @@ stages:
 
           - template: devops-templates/terraform-plan-template.yaml
             parameters:
-              environment: 'sbox'
-              resource_key: 'appgw'
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
               environment: 'demo'
               resource_key: 'appgw'
           - template: devops-templates/terraform-plan-template.yaml
@@ -99,14 +95,6 @@ stages:
               TargetFolder: '$(Build.ArtifactStagingDirectory)'
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Artifact: drop'
-  - stage: Sandbox
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    jobs:
-      - template: devops-templates/terraform-apply-template.yaml
-        parameters:
-          environment: 'sbox'
-          agentPool: ${{ variables.agentPool }}
-          terraformVersion: ${{ variables.terraformVersion }}
   - stage: Demo
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
