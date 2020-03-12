@@ -7,6 +7,9 @@
     },
     "aksVnetDnsServers": {
       "value": ["10.100.139.254"]
+    },
+    "privateDnsZones": {
+      "value": ["service.core-compute.sandbox.internal", "sandbox.platform.hmcts.net"]
     }
   }
 }

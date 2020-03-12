@@ -40,6 +40,10 @@
       "type": "array",
       "defaultValue": []
     },
+    "privateDnsZones": {
+      "type": "array",
+      "defaultValue": []
+    },
     "environmentName": {
         "type": "string",
         "metadata": {
@@ -438,6 +442,21 @@
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]",
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
       ]
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "apiVersion": "2018-09-01",
+      "name": "[concat(variables('privateDnsZone')[copyIndex()].name, '/', parameters('aksVnetName') )]",
+      "location": "global",
+      "dependsOn": [
+          "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZone')[copyIndex()].name)]"
+      ],
+      "properties": {
+          "registrationEnabled": false,
+          "virtualNetwork": {
+              "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
+          }
+      }
     }
   ],
   "outputs": {
