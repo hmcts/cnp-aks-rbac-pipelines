@@ -56,10 +56,6 @@ stages:
               failTaskOnFailedTests: true
             condition: always()
 
-          - task: TerraformInstaller@0
-            inputs:
-              terraformVersion: ${{ variables.terraformVersion }}
-
           - task: CopyFiles@2
             displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
             inputs:
