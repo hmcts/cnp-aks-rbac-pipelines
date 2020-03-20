@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "nodeCount": {
-      "value": 12
+      "value": 18
     },
     "nodeMinCount": {
       "value": ""
