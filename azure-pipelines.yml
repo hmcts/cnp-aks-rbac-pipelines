@@ -56,31 +56,6 @@ stages:
               failTaskOnFailedTests: true
             condition: always()
 
-          - task: TerraformInstaller@0
-            inputs:
-              terraformVersion: ${{ variables.terraformVersion }}
-
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
-              environment: 'sbox'
-              resource_key: 'appgw'
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
-              environment: 'ithc'
-              resource_key: 'appgw'
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
-              environment: 'stg'
-              resource_key: 'appgw'
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
-              environment: 'test'
-              resource_key: 'appgw'
-          - template: devops-templates/terraform-plan-template.yaml
-            parameters:
-              environment: 'prod'
-              resource_key: 'appgw'
-
           - task: CopyFiles@2
             displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
             inputs:
@@ -90,52 +65,6 @@ stages:
                scripts/**
                templates/**
                tests/**
-               terraform/**
-               team-config/**
               TargetFolder: '$(Build.ArtifactStagingDirectory)'
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Artifact: drop'
-  - stage: Sandbox
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    jobs:
-      - template: devops-templates/terraform-apply-template.yaml
-        parameters:
-          environment: 'sbox'
-          agentPool: ${{ variables.agentPool }}
-          terraformVersion: ${{ variables.terraformVersion }}
-  - stage: ITHC
-    dependsOn: Sandbox
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    jobs:
-      - template: devops-templates/terraform-apply-template.yaml
-        parameters:
-          environment: 'ithc'
-          agentPool: ${{ variables.agentPool }}
-          terraformVersion: ${{ variables.terraformVersion }}
-  - stage: AAT
-    dependsOn: Sandbox
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    jobs:
-      - template: devops-templates/terraform-apply-template.yaml
-        parameters:
-          environment: 'stg'
-          agentPool: ${{ variables.agentPool }}
-          terraformVersion: ${{ variables.terraformVersion }}
-  - stage: PerfTest
-    dependsOn: Sandbox
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    jobs:
-      - template: devops-templates/terraform-apply-template.yaml
-        parameters:
-          environment: 'test'
-          agentPool: ${{ variables.agentPool }}
-          terraformVersion: ${{ variables.terraformVersion }}
-  - stage: Prod
-    dependsOn: Sandbox
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    jobs:
-      - template: devops-templates/terraform-apply-template.yaml
-        parameters:
-          environment: 'prod'
-          agentPool: ${{ variables.agentPool }}
-          terraformVersion: ${{ variables.terraformVersion }}
