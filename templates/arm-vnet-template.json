@@ -445,7 +445,7 @@
     },
     {
       "name": "[concat(variables('privateDnsZone')[copyIndex()].name, '/', parameters('aksVnetName') )]",
-      "condition": "[greater(length(variables('privateDnsZone')), 0)]",
+      "condition": "[greater(length(parameters('privateDnsZones')), 0)]",
       "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
       "apiVersion": "2018-09-01",
       "location": "global",
