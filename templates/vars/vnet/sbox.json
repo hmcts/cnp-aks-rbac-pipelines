@@ -9,7 +9,7 @@
       "value": ["10.100.139.254"]
     },
     "privateDnsZones": {
-      "value": ["service.core-compute.sandbox.internal", "sandbox.platform.hmcts.net"]
+      "value": ["service.core-compute.sandbox.internal", "service.core-compute-idam-sandbox.internal", "sandbox.platform.hmcts.net"]
     }
   }
 }
