@@ -15,9 +15,6 @@
     "Subscription.AKS.Environment.Name": {
       "value": "ithc"
     },
-    "Subscription.AKS.Kubernetes.version": {
-      "value": "1.15.7"
-    },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.10.32.0/23"
     },
