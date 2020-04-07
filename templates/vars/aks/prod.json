@@ -2,17 +2,20 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "nodeCount": {
+      "value": 15
+    },
     "nodeMinCount": {
-      "value": "15"
+      "value": ""
     },
     "nodeMaxCount": {
-      "value": "30"
+      "value": ""
     },
     "enableAutoScaling": {
-      "value": "true"
+      "value": ""
     },
     "type": {
-      "value": "VirtualMachineScaleSets"
+      "value": "AvailabilitySet"
     }
   }
 }
