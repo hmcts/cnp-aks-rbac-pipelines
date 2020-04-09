@@ -445,12 +445,12 @@
     },
     {
       "condition": "[greater(length(parameters('privateDnsZones')), 0)]",
-      "name": "[concat(variables('privateDnsZone')[copyIndex()].name, '/', parameters('aksVnetName') )]",
+      "name": "[concat(parameters('privateDnsZones')[copyIndex()].name, '/', parameters('aksVnetName') )]",
       "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
       "apiVersion": "2018-09-01",
       "location": "global",
       "dependsOn": [
-          "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZone')[copyIndex()].name)]"
+          "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones')[copyIndex()].name)]"
       ],
       "properties": {
           "registrationEnabled": false,
