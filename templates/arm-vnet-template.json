@@ -450,7 +450,7 @@
       "apiVersion": "2018-09-01",
       "location": "global",
       "dependsOn": [
-          "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones')[copyIndex()])]"
+          "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
       ],
       "properties": {
           "registrationEnabled": false,
