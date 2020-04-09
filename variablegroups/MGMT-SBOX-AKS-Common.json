@@ -15,9 +15,6 @@
     "Subscription.AKS.Environment.Name": {
       "value": "cftsbox-intsvc"
     },
-    "Subscription.AKS.Kubernetes.version": {
-      "value": "1.15.7"
-    },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.10.8.0/23"
     },
