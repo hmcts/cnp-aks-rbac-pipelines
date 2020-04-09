@@ -457,6 +457,12 @@
           "virtualNetwork": {
               "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
           }
+      },
+      "copy": {
+        "name": "privateDnsZonesCopy",
+        "count": "[length(parameters('privateDnsZones'))]",
+        "mode": "Serial",
+        "batchSize": 1
       }
     }
   ],
