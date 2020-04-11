@@ -459,7 +459,7 @@
           "variables": {},
           "resources": [
             {
-              "name": "[parameters('aksVnetName') )]",
+              "name": "[parameters('aksVnetName')]",
               "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
               "apiVersion": "2018-09-01",
               "location": "global",
