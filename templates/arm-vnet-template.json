@@ -445,20 +445,36 @@
     },
     {
       "condition": "[greater(length(parameters('privateDnsZones')), 0)]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
       "name": "[concat(parameters('privateDnsZones')[copyIndex()].name, '/', parameters('aksVnetName') )]",
-      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-      "apiVersion": "2018-09-01",
-      "location": "global",
-      "resourceGroup": "[parameters('privateDnsZones')[copyIndex()].resourceGroup]",
       "subscriptionId": "[parameters('privateDnsZones')[copyIndex()].subscriptionId]",
-      "dependsOn": [
-          "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
-      ],
+      "resourceGroup": "[parameters('privateDnsZones')[copyIndex()].resourceGroup]",
       "properties": {
-          "registrationEnabled": false,
-          "virtualNetwork": {
-              "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
-          }
+      "mode": "Incremental",
+      "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "name": "[parameters('aksVnetName') )]",
+              "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+              "apiVersion": "2018-09-01",
+              "location": "global",
+              "dependsOn": [
+                  "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
+              ],
+              "properties": {
+                  "registrationEnabled": false,
+                  "virtualNetwork": {
+                      "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
+                  }
+              }
+            }
+          ]
+        }
       },
       "copy": {
         "name": "privateDnsZonesCopy",
