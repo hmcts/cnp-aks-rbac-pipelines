@@ -9,7 +9,23 @@
       "value": ["10.100.139.254"]
     },
     "privateDnsZones": {
-      "value": ["service.core-compute.sandbox.internal", "service.core-compute-idam-sandbox.internal", "sandbox.platform.hmcts.net"]
+      "value": [
+        {
+          "name": "service.core-compute.sandbox.internal", 
+          "subscriptionId": "1497c3d7-ab6d-4bb7-8a10-b51d03189ee3",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam-sandbox.internal", 
+          "subscriptionId": "1497c3d7-ab6d-4bb7-8a10-b51d03189ee3",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "sandbox.platform.hmcts.net",
+          "subscriptionId": "1497c3d7-ab6d-4bb7-8a10-b51d03189ee3",
+          "resourceGroup": "core-infra-intsvc-rg"
+        }
+      ]
     }
   }
 }
