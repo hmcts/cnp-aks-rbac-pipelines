@@ -447,7 +447,10 @@
       "condition": "[greater(length(parameters('privateDnsZones')), 0)]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
-      "name": "[concat(parameters('privateDnsZones')[copyIndex()].name, '/', parameters('aksVnetName') )]",
+      "name": "[parameters('privateDnsZones')[copyIndex()].name]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
+      ],
       "subscriptionId": "[parameters('privateDnsZones')[copyIndex()].subscriptionId]",
       "resourceGroup": "[parameters('privateDnsZones')[copyIndex()].resourceGroup]",
       "properties": {
@@ -463,9 +466,6 @@
               "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
               "apiVersion": "2018-09-01",
               "location": "global",
-              "dependsOn": [
-                  "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
-              ],
               "properties": {
                   "registrationEnabled": false,
                   "virtualNetwork": {
