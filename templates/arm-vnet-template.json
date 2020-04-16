@@ -446,7 +446,7 @@
     {
       "condition": "[greater(length(parameters('privateDnsZones')), 0)]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
+      "apiVersion": "2019-05-10",
       "name": "[parameters('privateDnsZones')[copyIndex()].name]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
