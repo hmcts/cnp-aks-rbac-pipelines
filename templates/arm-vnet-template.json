@@ -42,13 +42,7 @@
     },
     "privateDnsZones": {
       "type": "array",
-      "defaultValue": [
-        {
-          "name": "EMPTY_ARRAY", 
-          "subscriptionId": "000",
-          "resourceGroup": "none"
-        }
-      ]
+      "defaultValue": []
     },
     "environmentName": {
         "type": "string",
@@ -450,7 +444,7 @@
       ]
     },
     {
-      "condition": "[and(not(empty(parameters('privateDnsZones'))), not(equals(parameters('privateDnsZones')[copyIndex()].name, 'EMPTY_ARRAY')))]",
+      "condition": "[greater(length(parameters('privateDnsZones')), 0)]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "name": "[parameters('privateDnsZones')[copyIndex()].name]",
@@ -484,7 +478,7 @@
       },
       "copy": {
         "name": "privateDnsZonesCopy",
-        "count": "[if(equals(length(parameters('privateDnsZones')), 0), 1, length(parameters('privateDnsZones')))]",
+        "count": "[length(parameters('privateDnsZones'))]",
         "mode": "Serial",
         "batchSize": 1
       }
