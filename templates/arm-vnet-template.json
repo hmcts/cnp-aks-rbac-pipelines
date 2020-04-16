@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-10-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "aksVnetName": {
@@ -136,7 +136,7 @@
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[parameters('aksNsgName')]",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2019-04-01",
+      "apiVersion": "2019-10-01",
       "resources": [
         {
           "type": "providers/diagnosticSettings",
@@ -144,7 +144,7 @@
           "dependsOn": [
             "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('aksNsgName'))]"
           ],
-          "apiVersion": "2017-05-01-preview",
+          "apiVersion": "2019-10-01",
           "properties": {
             "name": "[parameters('aksNsgName')]",
             "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
@@ -174,7 +174,7 @@
       "name": "[concat(parameters('aksNsgName') ,'/', variables('aksnsgSecurityRules')[copyIndex()].name)]",
       "condition": "[greater(length(parameters('aksNetworkSecurityGroupsSettings').securityRules), 0)]",
       "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-      "apiVersion": "2018-08-01",
+      "apiVersion": "2019-10-01",
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('aksNsgName'))]"
       ],
@@ -202,7 +202,7 @@
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[parameters('appgwNsgName')]",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2019-04-01",
+      "apiVersion": "2019-10-01",
       "properties": {
         "securityRules": [
           {
@@ -228,7 +228,7 @@
           "dependsOn": [
             "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('appgwNsgName'))]"
           ],
-          "apiVersion": "2017-05-01-preview",
+          "apiVersion": "2019-10-01",
           "properties": {
             "name": "[parameters('appgwNsgName')]",
             "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
@@ -258,7 +258,7 @@
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[parameters('iaasNsgName')]",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2019-04-01",
+      "apiVersion": "2019-10-01",
       "resources": [
         {
           "type": "providers/diagnosticSettings",
@@ -266,7 +266,7 @@
           "dependsOn": [
             "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('iaasNsgName'))]"
           ],
-          "apiVersion": "2017-05-01-preview",
+          "apiVersion": "2019-10-01",
           "properties": {
             "name": "[parameters('iaasNsgName')]",
             "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
@@ -295,7 +295,7 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('aksVnetName')]",
-      "apiVersion": "2019-04-01",
+      "apiVersion": "2019-10-01",
       "location": "[resourceGroup().location]",
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
@@ -384,7 +384,7 @@
       },
       "resources": [
         {
-          "apiVersion": "2016-06-01",
+          "apiVersion": "2019-10-01",
           "condition": "[if(equals(parameters('hubVnetId'), ''), bool('false'), bool('true'))]",
           "type": "virtualNetworkPeerings",
           "name": "aks_to_hub",
@@ -409,7 +409,7 @@
           "dependsOn": [
             "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
           ],
-          "apiVersion": "2017-05-01-preview",
+          "apiVersion": "2019-10-01",
           "properties": {
             "name": "[parameters('aksVnetName')]",
             "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
@@ -446,7 +446,7 @@
     {
       "condition": "[greater(length(parameters('privateDnsZones')), 0)]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-05-10",
+      "apiVersion": "2019-10-01",
       "name": "[parameters('privateDnsZones')[copyIndex()].name]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
@@ -464,7 +464,7 @@
             {
               "name": "[concat(parameters('privateDnsZones')[copyIndex()].name, '/', parameters('aksVnetName'))]",
               "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-              "apiVersion": "2019-05-10",
+              "apiVersion": "2019-10-01",
               "location": "global",
               "properties": {
                   "registrationEnabled": false,
