@@ -445,18 +445,42 @@
     },
     {
       "condition": "[greater(length(parameters('privateDnsZones')), 0)]",
-      "name": "[concat(variables('privateDnsZone')[copyIndex()].name, '/', parameters('aksVnetName') )]",
-      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-      "apiVersion": "2018-09-01",
-      "location": "global",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "name": "[parameters('privateDnsZones')[copyIndex()].name]",
       "dependsOn": [
-          "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZone')[copyIndex()].name)]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
       ],
+      "subscriptionId": "[parameters('privateDnsZones')[copyIndex()].subscriptionId]",
+      "resourceGroup": "[parameters('privateDnsZones')[copyIndex()].resourceGroup]",
       "properties": {
-          "registrationEnabled": false,
-          "virtualNetwork": {
-              "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
-          }
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "name": "[concat(parameters('privateDnsZones')[copyIndex()].name, '/', parameters('aksVnetName'))]",
+              "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+              "apiVersion": "2018-09-01",
+              "location": "global",
+              "properties": {
+                  "registrationEnabled": false,
+                  "virtualNetwork": {
+                      "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('aksVnetName'))]"
+                  }
+              }
+            }
+          ]
+        }
+      },
+      "copy": {
+        "name": "privateDnsZonesCopy",
+        "count": "[length(parameters('privateDnsZones'))]",
+        "mode": "Serial",
+        "batchSize": 1
       }
     }
   ],
