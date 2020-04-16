@@ -42,7 +42,9 @@
     },
     "privateDnsZones": {
       "type": "array",
-      "defaultValue": []
+      "defaultValue": [
+        "EMPTY_ARRAY"
+      ]
     },
     "environmentName": {
         "type": "string",
@@ -444,7 +446,7 @@
       ]
     },
     {
-      "condition": "[greater(length(parameters('privateDnsZones')), 0)]",
+      "condition": "[and(not(empty(parameters('privateDnsZones'))), not(equals(parameters('privateDnsZones')[0], 'EMPTY_ARRAY')))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "name": "[parameters('privateDnsZones')[copyIndex()].name]",
