@@ -478,7 +478,7 @@
       },
       "copy": {
         "name": "privateDnsZonesCopy",
-        "count": "[length(parameters('privateDnsZones'))]",
+        "count": "[if(equals(length(parameters('privateDnsZones')), 0), 1, length(parameters('privateDnsZones')))]",
         "mode": "Serial",
         "batchSize": 1
       }
