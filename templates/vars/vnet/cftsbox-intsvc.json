@@ -7,6 +7,30 @@
     },
     "aksVnetDnsServers": {
       "value": ["10.99.196.9"]
+    },
+    "privateDnsZones": {
+      "value": [
+        {
+          "name": "service.core-compute-sandbox.internal", 
+          "subscriptionId": "1497c3d7-ab6d-4bb7-8a10-b51d03189ee3",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam-sandbox.internal", 
+          "subscriptionId": "1497c3d7-ab6d-4bb7-8a10-b51d03189ee3",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "sandbox.platform.hmcts.net",
+          "subscriptionId": "1497c3d7-ab6d-4bb7-8a10-b51d03189ee3",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "reform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        }
+      ]
     }
   }
 }
