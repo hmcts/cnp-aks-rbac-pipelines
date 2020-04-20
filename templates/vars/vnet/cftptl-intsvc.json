@@ -7,6 +7,110 @@
     },
     "aksVnetDnsServers": {
       "value": ["10.96.4.12"]
+    },
+    "privateDnsZones": {
+      "value": [
+        {
+          "name": "service.core-compute-prod.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam-prod.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam2-prod.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "platform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "reform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-aat.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam-aat.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam-aat2.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "aat.platform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-preview.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam-preview.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-demo.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam-demo.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "demo.platform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-ithc.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam-ithc.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "ithc.platform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-perftest.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam-perftest.internal", 
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "perftest.platform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        }
+      ]
     }
   }
 }
