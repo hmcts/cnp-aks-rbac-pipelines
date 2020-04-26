@@ -6,7 +6,7 @@
       "value": ""
     },
     "aksVnetDnsServers": {
-      "value": ["10.99.196.9"]
+      "value": []
     },
     "privateDnsZones": {
       "value": [
