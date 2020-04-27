@@ -6,7 +6,7 @@
       "value": "/subscriptions/0978315c-75fe-4ada-9d11-1eb5e0e0b214/resourceGroups/hmcts-hub-prod-int/providers/Microsoft.Network/virtualNetworks/hmcts-hub-prod-int"
     },
     "aksVnetDnsServers": {
-      "value": ["10.96.139.254"]
+      "value": []
     },
     "privateDnsZones": {
       "value": [
@@ -44,7 +44,12 @@
           "name": "service.core-compute-idam-preview.internal", 
           "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
           "resourceGroup": "core-infra-intsvc-rg"
-        }
+        },
+        {
+          "name": "platform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
       ]
     }
   }
