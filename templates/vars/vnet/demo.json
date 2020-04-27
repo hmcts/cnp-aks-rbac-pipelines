@@ -6,7 +6,7 @@
       "value": ""
     },
     "aksVnetDnsServers": {
-      "value": ["10.96.203.254"]
+      "value": []
     },
     "privateDnsZones": {
       "value": [
@@ -27,6 +27,11 @@
         },
         {
           "name": "reform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "platform.hmcts.net",
           "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
           "resourceGroup": "core-infra-intsvc-rg"
         }
