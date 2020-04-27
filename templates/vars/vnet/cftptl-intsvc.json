@@ -21,7 +21,7 @@
           "resourceGroup": "core-infra-intsvc-rg"
         },
         {
-          "name": "service.core-compute-idam2-prod.internal", 
+          "name": "service.core-compute-idam-prod2.internal", 
           "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
           "resourceGroup": "core-infra-intsvc-rg"
         },
