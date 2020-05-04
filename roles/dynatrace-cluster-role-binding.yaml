@@ -43,4 +43,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: dynatrace-monitoring
-  namespace: dynatrace
+  namespace: monitoring
