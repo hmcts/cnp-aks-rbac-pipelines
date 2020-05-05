@@ -21,6 +21,16 @@
           "resourceGroup": "core-infra-intsvc-rg"
         },
         {
+          "name": "service.core-compute-idam-sprod.internal", 
+          "subscriptionId": "1497c3d7-ab6d-4bb7-8a10-b51d03189ee3",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "service.core-compute-idam-saat.internal", 
+          "subscriptionId": "1497c3d7-ab6d-4bb7-8a10-b51d03189ee3",
+          "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
           "name": "sandbox.platform.hmcts.net",
           "subscriptionId": "1497c3d7-ab6d-4bb7-8a10-b51d03189ee3",
           "resourceGroup": "core-infra-intsvc-rg"
