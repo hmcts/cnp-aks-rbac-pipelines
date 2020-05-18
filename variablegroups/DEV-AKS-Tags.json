@@ -1,0 +1,36 @@
+{
+    "variables": {
+      "activityName": {
+        "value": "AKS"
+      },
+      "automation": {
+        "value": ""
+      },
+      "costCentre": {
+        "value": "10245117"
+      },
+      "criticality": {
+        "value": "Medium"
+      },
+      "dataClassification": {
+        "value": "Internal"
+      },
+      "environment": {
+        "value": "dev"
+      },
+      "managedBy": {
+        "value": "PlatformEngineering"
+      },
+      "releasedBy": {
+        "value": "$(Release.RequestedForEmail)"
+      },
+      "solutionOwner": {
+        "value": "CFT"
+      }
+    },
+    "id": 27,
+    "type": "Vsts",
+    "name": "DEV-AKS-Tags",
+    "isShared": false
+  }
+  
