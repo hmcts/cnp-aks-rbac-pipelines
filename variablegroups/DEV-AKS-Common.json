@@ -28,7 +28,7 @@
         "value": "10.12.80.0/20"
       },
       "Subscription.AKS.vmSize": {
-        "value": "Standard_D4s_v3"
+        "value": "Standard_B4ms"
       },
       "Subscription.AKS.VNet.Cidr": {
         "value": "10.12.64.0/18"
