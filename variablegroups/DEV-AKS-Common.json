@@ -1,0 +1,57 @@
+{
+    "variables": {
+      "Env.Core.ResourceGroup": {
+        "value": "core-infra-$(Env.Override.Name)-rg"
+      },
+      "Env.Override.Name": {
+        "value": "stg"
+      },
+      "Environment.name": {
+        "value": "dev"
+      },
+      "Subscription.acrName": {
+        "value": "hmctspublic"
+      },
+      "Subscription.AKS.Appgw.subnet.cidr": {
+        "value": "10.12.96.0/25"
+      },
+      "Subscription.AKS.Environment.Name": {
+        "value": "dev"
+      },
+      "Subscription.AKS.Iass.subnet.cidr": {
+        "value": "10.12.97.0/24"
+      },
+      "Subscription.AKS.Subnet.Primary.Cidr": {
+        "value": "10.12.64.0/20"
+      },
+      "Subscription.AKS.Subnet.Secondary.Cidr": {
+        "value": "10.12.80.0/20"
+      },
+      "Subscription.AKS.vmSize": {
+        "value": "Standard_D4s_v3"
+      },
+      "Subscription.AKS.VNet.Cidr": {
+        "value": "10.12.64.0/18"
+      },
+      "Subscription.keyvaultName": {
+        "value": "cftapps-$(Env.Override.Name)"
+      },
+      "Subscription.ServiceConnection.Name": {
+        "value": "DCD-CFTAPPS-DEV"
+      },
+      "Subscription.StorageAccount.Name": {
+        "value": "cftapps$(Env.Override.Name)"
+      },
+      "Subscription.AKS.Monitor.SlackChannel": {
+        "value": "#aks-monitor-dev"
+      },
+      "Subscription.AKS.NSG.Settings": {
+        "value": "{ \"securityRules\": [] }"
+      }
+    },
+    "id": 25,
+    "type": "Vsts",
+    "name": "DEV-AKS-Common",
+    "isShared": false
+  }
+  
