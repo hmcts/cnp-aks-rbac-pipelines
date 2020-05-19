@@ -3,9 +3,6 @@
       "Env.Core.ResourceGroup": {
         "value": "core-infra-$(Env.Override.Name)-rg"
       },
-      "Env.Override.Name": {
-        "value": "stg"
-      },
       "Environment.name": {
         "value": "dev"
       },
