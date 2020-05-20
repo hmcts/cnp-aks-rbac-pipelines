@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "kubernetesVersion": {
-      "value": "1.15.10"
+      "value": "1.16.7"
     },
     "nodeCount": {
       "value": 6
@@ -18,7 +18,7 @@
       "value": ""
     },
     "type": {
-      "value": "AvailabilitySet"
+      "value": "VirtualMachineScaleSets"
     }
   }
 }
