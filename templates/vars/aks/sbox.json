@@ -19,6 +19,16 @@
     },
     "type": {
       "value": "VirtualMachineScaleSets"
+    },
+    "serviceEndpoints": {
+      "value": [
+        {
+          "service": "Microsoft.Sql"
+        },
+        {
+          "service": "Microsoft.Storage"
+        }
+      ]
     }
   }
 }
