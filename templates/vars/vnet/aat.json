@@ -51,6 +51,16 @@
           "resourceGroup": "core-infra-intsvc-rg"
         }
       ]
+    },
+    "serviceEndpoints": {
+      "value": [
+        {
+          "service": "Microsoft.Sql"
+        },
+        {
+          "service": "Microsoft.Storage"
+        }
+      ]
     }
   }
 }

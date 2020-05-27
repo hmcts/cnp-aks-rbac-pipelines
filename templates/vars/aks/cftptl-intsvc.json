@@ -19,19 +19,6 @@
     },
     "type": {
       "value": "AvailabilitySet"
-    },
-    "serviceEndpoints": {
-      "value": [
-        {
-          "service": "Microsoft.Sql"
-        },
-        {
-          "service": "Microsoft.Storage"
-        },
-        {
-          "service": "Microsoft.AzureCosmosDB"
-        }
-      ]
     }
   }
 }
