@@ -117,10 +117,6 @@
       "metadata": {
         "description": "The full ID of the hub vnet to peer to"
       }
-    },
-    "serviceEndpoints": {
-      "type": "array",
-      "defaultValue": []
     }
   },
   "variables": {
@@ -328,7 +324,17 @@
             "name": "[variables('primarySubnetName')]",
             "properties": {
               "addressPrefix": "[parameters('aksPrimarySubnetCIDR')]",
-              "serviceEndpoints": "[parameters('serviceEndpoints')]",
+              "serviceEndpoints": [
+        {
+          "service": "Microsoft.Sql"
+        },
+        {
+          "service": "Microsoft.Storage"
+        },
+        {
+          "service": "Microsoft.AzureCosmosDB"
+        }
+      ],
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
               }
@@ -338,7 +344,17 @@
             "name": "[variables('secondarySubnetName')]",
             "properties": {
               "addressPrefix": "[parameters('aksSecondarySubnetCIDR')]",
-              "serviceEndpoints": "[parameters('serviceEndpoints')]",
+              "serviceEndpoints":[
+        {
+          "service": "Microsoft.Sql"
+        },
+        {
+          "service": "Microsoft.Storage"
+        },
+        {
+          "service": "Microsoft.AzureCosmosDB"
+        }
+      ],
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
               }
@@ -348,7 +364,17 @@
             "name": "[parameters('appgwSubnetName')]",
             "properties": {
               "addressPrefix": "[parameters('appgwSubnetCIDR')]",
-              "serviceEndpoints": "[parameters('serviceEndpoints')]",
+              "serviceEndpoints": [
+        {
+          "service": "Microsoft.Sql"
+        },
+        {
+          "service": "Microsoft.Storage"
+        },
+        {
+          "service": "Microsoft.AzureCosmosDB"
+        }
+      ],
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
               }
@@ -358,7 +384,17 @@
             "name": "[parameters('iaasSubnetName')]",
             "properties": {
               "addressPrefix": "[parameters('iaasSubnetCIDR')]",
-              "serviceEndpoints": "[parameters('serviceEndpoints')]",
+              "serviceEndpoints": [
+        {
+          "service": "Microsoft.Sql"
+        },
+        {
+          "service": "Microsoft.Storage"
+        },
+        {
+          "service": "Microsoft.AzureCosmosDB"
+        }
+      ],
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
               }
