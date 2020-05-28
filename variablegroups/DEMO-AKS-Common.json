@@ -12,6 +12,9 @@
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.11.33.0/24"
     },
+    "Subscription.AKS.LogAnalytics.Name": {
+      "value": "hmcts-$(Environment.Name)-law"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "demo"
     },

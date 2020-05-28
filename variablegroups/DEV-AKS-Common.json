@@ -21,6 +21,9 @@
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.12.97.0/24"
     },
+    "Subscription.AKS.LogAnalytics.Name": {
+      "value": "hmcts-development-law"
+    },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.12.64.0/20"
     },
