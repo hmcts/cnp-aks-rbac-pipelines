@@ -10,7 +10,7 @@ openssl req -x509 -newkey rsa:4096 -keyout tls.key -out tls.crt -days 365 \
 kubectl create secret generic sealed-secrets-pki \
   --from-file=tls.key \
   --from-file=tls.crt \
-  --namespace ${NAMESPACE} --dry-run -o yaml > sealed-secrets-pki.yaml
+  --namespace ${NAMESPACE} --dry-run=client -o yaml > sealed-secrets-pki.yaml
 
 az keyvault secret set \
   --name sealed-secrets-pki \
