@@ -71,6 +71,9 @@
     "logAnalyticsResourceGroup": {
       "type": "string"
     },
+    "maxPods": {
+      "type": "int"
+    },
     "environmentName": {
         "type": "string",
         "metadata": {
