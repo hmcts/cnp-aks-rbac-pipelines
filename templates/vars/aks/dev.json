@@ -19,6 +19,9 @@
     },
     "type": {
       "value": "AvailabilitySet"
+    },
+    "maxPods": {
+      "value": 50
     }
   }
 }
