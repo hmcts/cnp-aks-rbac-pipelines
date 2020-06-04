@@ -15,6 +15,9 @@
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.46.0/25"
     },
+    "Subscription.AKS.Developer.Role": {
+      "value": "reader"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "perftest"
     },

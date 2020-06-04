@@ -12,6 +12,9 @@
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.13.32.0/25"
     },
+    "Subscription.AKS.Developer.Role": {
+      "value": "reader"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "prod"
     },
