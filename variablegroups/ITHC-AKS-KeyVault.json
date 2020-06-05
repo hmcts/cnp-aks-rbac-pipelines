@@ -53,7 +53,7 @@
   "type": "AzureKeyVault",
   "name": "ITHC-AKS-KeyVault",
   "providerData": {
-    "serviceEndpointId": "74f2acf2-c151-400b-b3f4-aa6d583331ba",
+    "serviceEndpointId": "e4e62145-ad74-619e-9db3-726d39718c5b",
     "vault": "cftapps-ithc",
     "lastRefreshedOn": "2019-07-03T13:24:49.024Z"
   },
