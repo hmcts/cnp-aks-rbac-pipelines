@@ -37,7 +37,7 @@
       "value": "ethos-ldata"
     },
     "Subscription.ServiceConnection.Name": {
-      "value": "DCD-ETHOS-MIGRATION-LDATA"
+      "value": "azurerm-ethosldata"
     },
     "Subscription.StorageAccount.Name": {
       "value": "ethos$(Subscription.AKS.Environment.Name)"
