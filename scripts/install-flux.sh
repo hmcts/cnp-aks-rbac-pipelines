@@ -6,7 +6,7 @@ CLUSTER_NAME=$2
 VAULT_NAME=$3
 HELM_REPO=https://charts.fluxcd.io
 VALUES=deployments/fluxcd/values.yaml
-FLUX_HELM_CRD=https://raw.githubusercontent.com/fluxcd/helm-operator/chart-0.7.0/deploy/flux-helm-release-crd.yaml
+FLUX_HELM_CRD=https://raw.githubusercontent.com/fluxcd/helm-operator/chart-1.1.0/deploy/crds.yaml
 
 helm repo add fluxcd ${HELM_REPO}
 
