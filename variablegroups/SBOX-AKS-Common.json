@@ -12,6 +12,9 @@
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.10.4.0/24"
     },
+    "Subscription.AKS.Developer.Role": {
+      "value": "reader"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "sbox"
     },

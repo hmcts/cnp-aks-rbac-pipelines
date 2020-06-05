@@ -15,6 +15,9 @@
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.12.96.0/25"
     },
+    "Subscription.AKS.Developer.Role": {
+      "value": "edit"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "dev"
     },

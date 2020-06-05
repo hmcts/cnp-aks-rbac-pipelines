@@ -30,6 +30,9 @@
     "AKS.LogAnalytics.ResourceGroup": {
       "value": "oms-automation-rg"
     },
+    "AKS.Binding.Developer.Role": {
+      "value": "roles/$(Subscription.AKS.Developer.Role)-role-binding.yaml"
+    },
     "Env.Location": {
       "value": "UK South"
     }

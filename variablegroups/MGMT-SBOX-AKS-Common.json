@@ -15,6 +15,9 @@
     "Subscription.AKS.LogAnalytics.Name": {
       "value": "hmcts-$(Environment.Name)-law"
     },
+    "Subscription.AKS.Developer.Role": {
+      "value": "reader"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "cftsbox-intsvc"
     },
