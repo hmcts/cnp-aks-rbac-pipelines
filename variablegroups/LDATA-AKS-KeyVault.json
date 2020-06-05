@@ -53,7 +53,7 @@
   "type": "AzureKeyVault",
   "name": "LDATA-AKS-KeyVault",
   "providerData": {
-    "serviceEndpointId": "a6794204-7cef-4b23-8dd4-fa8dd9c5ffe8",
+    "serviceEndpointId": "3ec31d64-48a7-4cf2-a7c1-de4f9e65178b",
     "vault": "ethos-ldata",
     "lastRefreshedOn": "2019-07-03T13:24:20.107Z"
   },
