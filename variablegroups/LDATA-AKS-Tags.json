@@ -16,7 +16,7 @@
       "value": "Internal"
     },
     "environment": {
-      "value": "Sandbox"
+      "value": "ldata"
     },
     "managedBy": {
       "value": "PlatformEngineering"
