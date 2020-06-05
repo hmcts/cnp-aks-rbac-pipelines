@@ -1,0 +1,59 @@
+{
+  "variables": {
+    "Environment.name": {
+      "value": "ldata"
+    },
+    "Subscription.acrName": {
+      "value": "hmctspublic"
+    },
+    "Subscription.AKS.Appgw.subnet.cidr": {
+      "value": "10.14.132.0/25"
+    },
+    "Subscription.AKS.Iass.subnet.cidr": {
+      "value": "10.14.133.0/24"
+    },
+    "Subscription.AKS.Developer.Role": {
+      "value": "reader"
+    },
+    "Subscription.AKS.Environment.Name": {
+      "value": "ldata"
+    },
+    "Subscription.AKS.LogAnalytics.Name": {
+      "value": "hmcts-$(Subscription.AKS.Environment.Name)-law"
+    },
+    "Subscription.AKS.Subnet.Primary.Cidr": {
+      "value": "10.14.128.0/23"
+    },
+    "Subscription.AKS.Subnet.Secondary.Cidr": {
+      "value": "10.14.130.0/23"
+    },
+    "Subscription.AKS.vmSize": {
+      "value": "Standard_B4ms"
+    },
+    "Subscription.AKS.VNet.Cidr": {
+      "value": "10.14.128.0/21"
+    },
+    "Subscription.keyvaultName": {
+      "value": "ethos-ldata"
+    },
+    "Subscription.ServiceConnection.Name": {
+      "value": "DCD-ETHOS-MIGRATION-LDATA"
+    },
+    "Subscription.StorageAccount.Name": {
+      "value": "ethos$(Subscription.AKS.Environment.Name)"
+    },
+    "Env.Core.ResourceGroup": {
+      "value": "core-infra-$(Subscription.AKS.Environment.Name)-rg"
+    },
+    "Subscription.AKS.Monitor.SlackChannel": {
+      "value": "#aks-monitor-ldata"
+    },
+    "Subscription.AKS.NSG.Settings": {
+      "value": "{ \"securityRules\": [] }"
+    }
+  },
+  "id": 19,
+  "type": "Vsts",
+  "name": "LDATA-AKS-Common",
+  "isShared": false
+}
