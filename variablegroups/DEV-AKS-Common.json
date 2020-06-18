@@ -4,7 +4,7 @@
       "value": "core-infra-$(Env.Override.Name)-rg"
     },
     "Environment.name": {
-      "value": "dev"
+      "value": "preview"
     },
     "Env.Override.Name": {
       "value": "dev"
@@ -15,8 +15,11 @@
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.12.96.0/25"
     },
+    "Subscription.AKS.Developer.Role": {
+      "value": "edit"
+    },
     "Subscription.AKS.Environment.Name": {
-      "value": "dev"
+      "value": "preview"
     },
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.12.97.0/24"
@@ -46,7 +49,7 @@
       "value": "cftapps$(Env.Override.Name)"
     },
     "Subscription.AKS.Monitor.SlackChannel": {
-      "value": "#aks-monitor-dev"
+      "value": "#aks-monitor-preview"
     },
     "Subscription.AKS.NSG.Settings": {
       "value": "{ \"securityRules\": [] }"

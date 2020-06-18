@@ -1,62 +1,59 @@
 {
   "variables": {
-    "Env.Core.ResourceGroup": {
-      "value": "core-infra-$(Env.Override.Name)-rg"
-    },
-    "Env.Override.Name": {
-      "value": "stg"
-    },
     "Environment.name": {
-      "value": "aat"
+      "value": "ldata"
     },
     "Subscription.acrName": {
       "value": "hmctspublic"
     },
     "Subscription.AKS.Appgw.subnet.cidr": {
-      "value": "10.10.24.0/25"
+      "value": "10.14.132.0/25"
+    },
+    "Subscription.AKS.Iass.subnet.cidr": {
+      "value": "10.14.133.0/24"
     },
     "Subscription.AKS.Developer.Role": {
       "value": "reader"
     },
     "Subscription.AKS.Environment.Name": {
-      "value": "aat"
-    },
-    "Subscription.AKS.Iass.subnet.cidr": {
-      "value": "10.10.25.0/24"
+      "value": "ldata"
     },
     "Subscription.AKS.LogAnalytics.Name": {
-      "value": "hmcts-$(Environment.Name)-law"
+      "value": "hmcts-$(Subscription.AKS.Environment.Name)-law"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
-      "value": "10.10.16.0/22"
+      "value": "10.14.128.0/23"
     },
     "Subscription.AKS.Subnet.Secondary.Cidr": {
-      "value": "10.10.20.0/22"
+      "value": "10.14.130.0/23"
     },
     "Subscription.AKS.vmSize": {
-      "value": "Standard_D4s_v3"
+      "value": "Standard_B4ms"
     },
     "Subscription.AKS.VNet.Cidr": {
-      "value": "10.10.16.0/20"
+      "value": "10.14.128.0/21"
     },
     "Subscription.keyvaultName": {
-      "value": "cftapps-$(Env.Override.Name)"
+      "value": "ethos-ldata"
     },
     "Subscription.ServiceConnection.Name": {
-      "value": "DCD-CFTAPPS-STG"
+      "value": "azurerm-ethosldata"
     },
     "Subscription.StorageAccount.Name": {
-      "value": "cftapps$(Env.Override.Name)"
+      "value": "ethos$(Subscription.AKS.Environment.Name)"
+    },
+    "Env.Core.ResourceGroup": {
+      "value": "core-infra-$(Subscription.AKS.Environment.Name)-rg"
     },
     "Subscription.AKS.Monitor.SlackChannel": {
-      "value": "#aks-monitor-aat"
+      "value": "#aks-monitor-ldata"
     },
     "Subscription.AKS.NSG.Settings": {
       "value": "{ \"securityRules\": [] }"
     }
   },
-  "id": 63,
+  "id": 19,
   "type": "Vsts",
-  "name": "AAT-AKS-Common",
+  "name": "LDATA-AKS-Common",
   "isShared": false
 }

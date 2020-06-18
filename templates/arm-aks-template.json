@@ -71,6 +71,10 @@
     "logAnalyticsResourceGroup": {
       "type": "string"
     },
+    "maxPods": {
+      "type": "int",
+      "defaultValue": 30
+    },
     "environmentName": {
         "type": "string",
         "metadata": {
@@ -110,8 +114,7 @@
     }
   },
   "variables": {
-    "osDiskSizeGB": 100,
-    "maxPods": 30,  
+    "osDiskSizeGB": 100, 
     "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
@@ -154,7 +157,7 @@
             "vmSize": "[parameters('vmSize')]",
             "osDiskSizeGB": "[variables('osDiskSizeGB')]",
             "storageProfile": "[variables('storageProfile')]",
-            "maxPods": "[variables('maxPods')]",
+            "maxPods": "[parameters('maxPods')]",
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
             "osType": "[variables('osType')]"
           }
@@ -193,7 +196,7 @@
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
-          "networkPlugin": "calico",
+          "networkPlugin": "kubenet",
           "serviceCidr": "[parameters('aksServiceCidr')]",
           "dnsServiceIP": "[parameters('aksDnsServiceIp')]",
           "dockerBridgeCidr": "172.17.0.1/16",

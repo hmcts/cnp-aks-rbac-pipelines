@@ -13,7 +13,10 @@
       "value": "10.10.70.0/23"
     },
     "Subscription.AKS.LogAnalytics.Name": {
-      "value": "hmcts-$(Environment.Name)-law"
+      "value": "hmcts-$(Subscription.AKS.Environment.Name)-law"
+    },
+    "Subscription.AKS.Developer.Role": {
+      "value": "reader"
     },
     "Subscription.AKS.Environment.Name": {
       "value": "cftptl-intsvc"
