@@ -196,7 +196,7 @@
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
-          "networkPlugin": "kubenet",
+          "networkPlugin": "azure",
           "serviceCidr": "[parameters('aksServiceCidr')]",
           "dnsServiceIP": "[parameters('aksDnsServiceIp')]",
           "dockerBridgeCidr": "172.17.0.1/16",
