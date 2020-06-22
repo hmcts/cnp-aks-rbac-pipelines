@@ -145,7 +145,24 @@
         "dnsPrefix": "[parameters('dnsPrefix')]",
         "agentPoolProfiles": [
           {
-            "name": "[variables('nodepoolName')]",
+            "name": "[concat('admin-', variables('nodepoolName'))]",
+            "count": "[parameters('nodeCount')]",
+            "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
+            "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
+            "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
+            "type": "[parameters('type')]",
+            "orchestratorVersion": "[parameters('kubernetesVersion')]",
+            "scaleSetPriority": "string",
+            "scaleSetEvictionPolicy": "string",
+            "vmSize": "[parameters('vmSize')]",
+            "osDiskSizeGB": "[variables('osDiskSizeGB')]",
+            "storageProfile": "[variables('storageProfile')]",
+            "maxPods": "[parameters('maxPods')]",
+            "vnetSubnetID": "[variables('aksVnetSubnetId')]",
+            "osType": "[variables('osType')]"
+          },
+          {
+            "name": "[concat('app-', variables('nodepoolName'))]",
             "count": "[parameters('nodeCount')]",
             "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
             "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
