@@ -145,7 +145,7 @@
         "dnsPrefix": "[parameters('dnsPrefix')]",
         "agentPoolProfiles": [
           {
-            "name": "[concat('admin-', variables('nodepoolName'))]",
+            "name": "[concat('admin-'-, variables('nodepoolName'))]",
             "count": "[parameters('nodeCount')]",
             "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
             "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
@@ -213,7 +213,7 @@
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
-          "networkPlugin": "kubenet",
+          "networkPlugin": "azure",
           "serviceCidr": "[parameters('aksServiceCidr')]",
           "dnsServiceIP": "[parameters('aksDnsServiceIp')]",
           "dockerBridgeCidr": "172.17.0.1/16",
