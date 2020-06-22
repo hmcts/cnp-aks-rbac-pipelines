@@ -114,8 +114,8 @@
     }
   },
   "variables": {
-    "osDiskSizeGB": 100, 
-    "nodepoolName" : "nodepool",
+    "osDiskSizeGB": 100,
+    "nodepoolName" : ["admin", "app"],
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser",
@@ -144,23 +144,32 @@
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
         "dnsPrefix": "[parameters('dnsPrefix')]",
         "agentPoolProfiles": [
-          {
-            "name": "[variables('nodepoolName')]",
-            "count": "[parameters('nodeCount')]",
-            "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
-            "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
-            "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
-            "type": "[parameters('type')]",
-            "orchestratorVersion": "[parameters('kubernetesVersion')]",
-            "scaleSetPriority": "string",
-            "scaleSetEvictionPolicy": "string",
-            "vmSize": "[parameters('vmSize')]",
-            "osDiskSizeGB": "[variables('osDiskSizeGB')]",
-            "storageProfile": "[variables('storageProfile')]",
-            "maxPods": "[parameters('maxPods')]",
-            "vnetSubnetID": "[variables('aksVnetSubnetId')]",
-            "osType": "[variables('osType')]"
-          }
+          "copy": [
+            {
+              "name": "nodepool",
+              "count": "[length(variables('nodepoolName'))]",
+              "input": {
+                "name": "[concat(variables('nodepoolName')[copyIndex('nodepool'), 'nodepool')]",
+                "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
+                "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
+                "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
+                "type": "[parameters('type')]",
+                "orchestratorVersion": "[parameters('kubernetesVersion')]",
+                "scaleSetPriority": "string",
+                "scaleSetEvictionPolicy": "string",
+                "vmSize": "[parameters('vmSize')]",
+                "osDiskSizeGB": "[variables('osDiskSizeGB')]",
+                "storageProfile": "[variables('storageProfile')]",
+                "maxPods": "[parameters('maxPods')]",
+                "vnetSubnetID": "[variables('aksVnetSubnetId')]",
+                "osType": "[variables('osType')]",
+                "nodeLabels": { "[variables('nodepoolName')[copyIndex('nodepool')]" },
+                "nodeTaints": [
+                  "[variables('nodepoolName')[copyIndex('nodepool')]"
+                ]
+              }
+            }
+          ]
         ],
         "linuxProfile": {
           "adminUsername": "[variables('adminUsername')]",
@@ -187,7 +196,7 @@
                   "logAnalyticsWorkspaceResourceID": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]"
               }
           }
-        },           
+        },
         "enableRBAC": true,
         "aadProfile": {
           "clientAppID": "[parameters('clientAppId')]",
