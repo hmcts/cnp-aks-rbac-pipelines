@@ -158,11 +158,7 @@
                 "storageProfile": "[variables('storageProfile')]",
                 "maxPods": "[parameters('maxPods')]",
                 "vnetSubnetID": "[variables('aksVnetSubnetId')]",
-                "osType": "[variables('osType')]",
-                "nodeLabels": { "admin" },
-                "nodeTaints": [
-                  "admin"
-                ]
+                "osType": "[variables('osType')]"
             },
             {
                 "name": "apppool",
@@ -178,11 +174,7 @@
                 "storageProfile": "[variables('storageProfile')]",
                 "maxPods": "[parameters('maxPods')]",
                 "vnetSubnetID": "[variables('aksVnetSubnetId')]",
-                "osType": "[variables('osType')]",
-                "nodeLabels": { "app" },
-                "nodeTaints": [
-                  "app"
-                ]
+                "osType": "[variables('osType')]"
             }
           ]
         ],
