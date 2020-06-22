@@ -177,6 +177,7 @@
                 "osType": "[variables('osType')]"
             }
           ]
+        }
         ],
         "linuxProfile": {
           "adminUsername": "[variables('adminUsername')]",
