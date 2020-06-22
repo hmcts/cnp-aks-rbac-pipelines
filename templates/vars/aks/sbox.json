@@ -15,7 +15,7 @@
       "value": "25"
     },
     "enableAutoScaling": {
-      "value": true""
+      "value": "true"
     },
     "type": {
       "value": "VirtualMachineScaleSets"
