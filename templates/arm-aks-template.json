@@ -115,7 +115,7 @@
   },
   "variables": {
     "osDiskSizeGB": 100,
-    "nodepoolName" : ["admin", "app"],
+    "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser",
@@ -144,12 +144,8 @@
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
         "dnsPrefix": "[parameters('dnsPrefix')]",
         "agentPoolProfiles": [
-          "copy": [
             {
-              "name": "nodepool",
-              "count": "[length(variables('nodepoolName'))]",
-              "input": {
-                "name": "[variables('nodepoolName')[copyIndex('nodepool')]]",
+                "name": "adminpool",
                 "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
                 "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
                 "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
@@ -162,8 +158,31 @@
                 "storageProfile": "[variables('storageProfile')]",
                 "maxPods": "[parameters('maxPods')]",
                 "vnetSubnetID": "[variables('aksVnetSubnetId')]",
-                "osType": "[variables('osType')]"
-              }
+                "osType": "[variables('osType')]",
+                "nodeLabels": { "admin" },
+                "nodeTaints": [
+                  "admin"
+                ]
+            },
+            {
+                "name": "apppool",
+                "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
+                "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
+                "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
+                "type": "[parameters('type')]",
+                "orchestratorVersion": "[parameters('kubernetesVersion')]",
+                "scaleSetPriority": "string",
+                "scaleSetEvictionPolicy": "string",
+                "vmSize": "[parameters('vmSize')]",
+                "osDiskSizeGB": "[variables('osDiskSizeGB')]",
+                "storageProfile": "[variables('storageProfile')]",
+                "maxPods": "[parameters('maxPods')]",
+                "vnetSubnetID": "[variables('aksVnetSubnetId')]",
+                "osType": "[variables('osType')]",
+                "nodeLabels": { "app" },
+                "nodeTaints": [
+                  "app"
+                ]
             }
           ]
         ],
