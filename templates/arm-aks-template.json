@@ -149,7 +149,7 @@
               "name": "nodepool",
               "count": "[length(variables('nodepoolName'))]",
               "input": {
-                "name": "[concat(variables('nodepoolName')[copyIndex('nodepool')], 'nodepool')]",
+                "name": "[variables('nodepoolName')[copyIndex('nodepool')]]",
                 "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
                 "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
                 "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
@@ -162,11 +162,7 @@
                 "storageProfile": "[variables('storageProfile')]",
                 "maxPods": "[parameters('maxPods')]",
                 "vnetSubnetID": "[variables('aksVnetSubnetId')]",
-                "osType": "[variables('osType')]",
-                "nodeLabels": { "[variables('nodepoolName')[copyIndex('nodepool')]" },
-                "nodeTaints": [
-                  "[variables('nodepoolName')[copyIndex('nodepool')]"
-                ]
+                "osType": "[variables('osType')]"
               }
             }
           ]
