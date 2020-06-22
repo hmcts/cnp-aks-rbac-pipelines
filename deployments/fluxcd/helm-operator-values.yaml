@@ -19,3 +19,14 @@ resources:
   requests:
     cpu: 500m
     memory: 1Gi
+nodeSelector: {
+   agentpool: adminpool
+  }
+tolerations: [
+{
+key: "pods",
+operator: "Equal",
+value: "admin",
+effect: "NoSchedule"
+}
+  ]

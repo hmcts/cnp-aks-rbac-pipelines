@@ -9,3 +9,14 @@ additionalArgs:
   - --manifest-generation=true
 syncGarbageCollection:
   enabled: true
+nodeSelector: {
+   agentpool: adminpool
+  }
+tolerations: [
+{
+key: "pods",
+operator: "Equal",
+value: "admin",
+effect: "NoSchedule"
+}
+  ]
