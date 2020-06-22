@@ -145,7 +145,7 @@
         "dnsPrefix": "[parameters('dnsPrefix')]",
         "agentPoolProfiles": [
           {
-            "name": "[concat('admin-'-, variables('nodepoolName'))]",
+            "name": "[concat('admin-', variables('nodepoolName'))]",
             "count": "[parameters('nodeCount')]",
             "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
             "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
