@@ -12,6 +12,10 @@
       "type": "string",
       "defaultValue": "Standard_B4ms"
     },
+    "adminNodeCount": {
+      "type": "int",
+      "defaultValue": 3
+    },
     "nodeCount": {
       "type": "int"
     },
@@ -146,9 +150,9 @@
         "agentPoolProfiles": [
           {
             "name": "adminpool",
-            "count": "5",
-            "maxCount": "10",
-            "minCount": "5",
+            "count": "[parameters('adminNodeCount')]",
+            "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
+            "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
             "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
             "type": "[parameters('type')]",
             "orchestratorVersion": "[parameters('kubernetesVersion')]",

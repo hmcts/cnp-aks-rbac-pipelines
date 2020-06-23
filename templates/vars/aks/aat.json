@@ -5,6 +5,9 @@
     "kubernetesVersion": {
       "value": "1.16.9"
     },
+    "adminNodeCount": {
+      "value": 5
+    },
     "nodeCount": {
       "value": 27
     },
