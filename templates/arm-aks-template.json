@@ -146,9 +146,9 @@
         "agentPoolProfiles": [
           {
             "name": "adminpool",
-            "count": "[parameters('nodeCount')]",
-            "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
-            "minCount": "[if(empty(parameters('nodeMinCount')), json('null'), int(parameters('nodeMinCount')))]",
+            "count": "5",
+            "maxCount": "10",
+            "minCount": "5",
             "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
             "type": "[parameters('type')]",
             "orchestratorVersion": "[parameters('kubernetesVersion')]",
