@@ -5,34 +5,12 @@
 Included here are the scripts requires by the manually configured build and release pipeline in Azure DevOps for creating AKS clusters
 
 ## Why manual?
-Currently Azure DevOps is missing some features for release pipelines through code
-* re-running just one stage / environment
-* gates / approvals (not strictly required)
-* step templates / task groups
 
-Once there is an easy way to target just one environment, and we can reuse code rather than copying it for each stage we should migrate to config as code.
+Azure DevOps has evolved since this started, and now should support the features we require, we just haven't had the time to convert it over
+to pipeline as code.
 
-
-
-### Flux install
-|Type|Activity|Subscription|Script|
-|-|-|-|-|
-|Bash|Flux create secret|N|Y|
-|Bash|Flux install|N|Y|
-
-### Flux post-install
-|Type|Activity|Subscription|Script|
-|-|-|-|-|
-|Download secure file|Download secure file|N|N|
-|Bash|Create github secret|N|Y|
-
-### Metrics
-
-|Type|Activity|Subscription|Script|
-|-|-|-|-|
-ARM|Add Default Metric Alerts|Y|N|
-ARM|Add Custom Metric Alerts|Y|N|
-
+The only remaining open question is about rolling changes out environment by environment,
+currently it's done by clicking the 'Deploy' button for the environment in the release pipeline.
 
 ## Usage Guidelines
 
@@ -46,3 +24,17 @@ As maintaining Variable groups in UI is tedious, all AKS pipeline variable group
 * You can get serviceEndpointId for keyvault variablegroup by running [Get Service End point Id script](variablegroups/scripts/get-service-end-point.sh) . If you don't have necessary privileges to list service connections, ask someone who has it. 
 * Refer [here](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate) for generating personal access token to authenticate Azure Devops.  
 
+### Updating Kubernetes version
+
+We regularly update the version of Kubernetes we run, and try to keep all clusters on the same version.
+
+The aim is to stay on the latest GA version of Kubernetes that Microsoft supports.
+
+We sometimes run the preview environment on newer versions so that we can try out new features and as a 'canary'
+to make sure that it works with our workloads.
+
+The version is managed in a per environment [vars file](templates/vars/aks).
+
+Once you've updated the version use the [AKS release pipeline](https://dev.azure.com/hmcts/CNP/_release?_a=releases&view=mine&definitionId=16) to apply the update.
+
+_Note: You will need to raise a change request to do this in production, do the other environments first and then raise the change once they are successful._
