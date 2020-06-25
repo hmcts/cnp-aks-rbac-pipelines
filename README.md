@@ -31,7 +31,7 @@ We regularly update the version of Kubernetes we run, and try to keep all cluste
 The aim is to stay on the latest GA version of Kubernetes that Microsoft supports.
 
 We sometimes run the preview environment on newer versions so that we can try out new features and as a 'canary'
-to make sure that it works with our workloads.
+to make sure that it works with our workloads. Make sure you test the non live preview cluster, works first before promoting it.
 
 The version is managed in a per environment [vars file](templates/vars/aks).
 
