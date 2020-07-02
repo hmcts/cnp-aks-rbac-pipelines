@@ -13,7 +13,7 @@ BEARER_TOKEN=$(kubectl get secret $(kubectl get sa dynatrace-monitoring \
   -n monitoring | base64 --decode)
 
 API_TOKEN=$(az keyvault secret show \
-  --name dynatrace-cluster-registration-token-london-${DYNATRACE_INSTANCE} \
+  --name dynatrace-api-key-${DYNATRACE_INSTANCE} \
   --vault-name "${VAULT_NAME}" \
   --query value -o tsv)
 
