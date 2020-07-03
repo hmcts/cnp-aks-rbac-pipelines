@@ -16,15 +16,15 @@ kubectl apply -f ${DYNATRACE_CLUSTERROLE_BINDING}
 if kubectl config current-context; then
  K8S_API_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
  CLUSTER_NAME=$(kubectl config view --minify -o jsonpath='{.clusters[0].name}')
- BEARER_TOKEN=$(kubectl get secret $(kubectl get sa dynatrace-monitoring \
-  -o jsonpath='{.secrets[0].name}' -n monitoring) -o jsonpath='{.data.token}' \
+ BEARER_TOKEN=$(kubectl get secret "$(kubectl get sa dynatrace-monitoring \
+  -o jsonpath='{.secrets[0].name}' -n monitoring)" -o jsonpath='{.data.token}' \
   -n monitoring | base64 --decode)
 else
   error_exit "context not set!! Aborting."
 fi
 
 API_KEY=$(az keyvault secret show \
- --name dynatrace-api-key-${DYNATRACE_INSTANCE} \
+ --name dynatrace-api-key-"${DYNATRACE_INSTANCE}" \
  --vault-name "${VAULT_NAME}" \
  --query value -o tsv)
 
@@ -42,7 +42,7 @@ EOF
 
 DT_OLD_CLUSTER_ID=$(curl --request GET \
  --url "https://$DYNATRACE_INSTANCE.live.dynatrace.com/api/config/v1/kubernetes/credentials" \
- --header 'Authorization: Api-Token '"$API_KEY"'' | jq .values[] | jq -r 'select(.name=="cft-'${CLUSTER_NAME}'").id')
+ --header 'Authorization: Api-Token '"$API_KEY"'' | jq .values[] | jq -r 'select(.name=="cft-'"${CLUSTER_NAME}"'").id')
 
 # If previously registered, ID of the AKS cluster in DT should be removed prior
 # to the registration of the rebuilt cluster.
@@ -54,7 +54,7 @@ if [ -n "${DT_OLD_CLUSTER_ID}" ]; then
 fi
 
 echo "Validating payload.."
-status=$(curl -s -o /dev/null -w %{http_code} --request POST --url "https://$DYNATRACE_INSTANCE.live.dynatrace.com/api/config/v1/kubernetes/credentials/validator" \
+status=$(curl -s -o /dev/null -w "%{http_code}" --request POST --url "https://$DYNATRACE_INSTANCE.live.dynatrace.com/api/config/v1/kubernetes/credentials/validator" \
  --data "$(generate_kubernetes_credentials)" \
  --header 'Content-type: application/json' \
  --header 'Authorization: Api-Token '"$API_KEY"'')
