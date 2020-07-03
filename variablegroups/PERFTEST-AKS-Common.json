@@ -53,6 +53,12 @@
     },
     "Subscription.AKS.NSG.Settings": {
       "value": "{ \"securityRules\": [] }"
+    },
+    "Dynatrace.KeyVault.Name":{
+      "value": "cftptl-intsvc"
+    },
+    "Dynatrace.Instance.Name":{
+      "value": "yrk32651"
     }
   },
   "id": 63,
