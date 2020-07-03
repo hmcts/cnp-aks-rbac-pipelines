@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 VAULT_NAME=$1
 DYNATRACE_INSTANCE=$2
@@ -17,8 +17,8 @@ if kubectl config current-context; then
   K8S_API_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
   CLUSTER_NAME=$(kubectl config view --minify -o jsonpath='{.clusters[0].name}')
 	BEARER_TOKEN=$(kubectl get secret $(kubectl get sa dynatrace-monitoring \
-	  -o jsonpath='{.secrets[0].name}' -n monitoring) -o jsonpath='{.data.token}' \
-	  -n monitoring | base64 --decode)
+	 -o jsonpath='{.secrets[0].name}' -n monitoring) -o jsonpath='{.data.token}' \
+	 -n monitoring | base64 --decode)
 else
   error_exit "context not set!! Aborting."
 fi
