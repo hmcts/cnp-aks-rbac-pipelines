@@ -14,8 +14,8 @@ error_exit()
 kubectl apply -f ${DYNATRACE_CLUSTERROLE_BINDING}
 
 if kubectl config current-context; then
-  K8S_API_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
-  CLUSTER_NAME=$(kubectl config view --minify -o jsonpath='{.clusters[0].name}')
+	K8S_API_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
+	CLUSTER_NAME=$(kubectl config view --minify -o jsonpath='{.clusters[0].name}')
 	BEARER_TOKEN=$(kubectl get secret $(kubectl get sa dynatrace-monitoring \
 	 -o jsonpath='{.secrets[0].name}' -n monitoring) -o jsonpath='{.data.token}' \
 	 -n monitoring | base64 --decode)
