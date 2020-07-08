@@ -65,10 +65,7 @@
     "serverAppSecret": {
       "type": "string"
     },
-    "logAnalyticsWorkSpaceName": {
-      "type": "string"
-    },
-    "logAnalyticsResourceGroup": {
+    "logAnalyticsResourceId": {
       "type": "string"
     },
     "maxPods": {
@@ -184,7 +181,7 @@
           "omsagent": {
               "enabled": true,
               "config": {
-                  "logAnalyticsWorkspaceResourceID": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]"
+                  "logAnalyticsWorkspaceResourceID": "[parameters('logAnalyticsResourceId')]",
               }
           }
         },           
