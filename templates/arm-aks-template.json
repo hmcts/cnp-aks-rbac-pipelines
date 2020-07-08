@@ -181,7 +181,7 @@
           "omsagent": {
               "enabled": true,
               "config": {
-                  "logAnalyticsWorkspaceResourceID": "[parameters('logAnalyticsResourceId')]",
+                  "logAnalyticsWorkspaceResourceID": "[parameters('logAnalyticsResourceId')]"
               }
           }
         },           
