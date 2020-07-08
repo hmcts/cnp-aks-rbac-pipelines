@@ -21,6 +21,9 @@
     "Subscription.AKS.Environment.Name": {
       "value": "cftsbox-intsvc"
     },
+    "Subscription.Dynatrace.Enable": {
+      "value": "false"
+    },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.10.8.0/23"
     },

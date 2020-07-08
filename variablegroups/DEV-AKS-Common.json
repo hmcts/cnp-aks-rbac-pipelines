@@ -21,6 +21,9 @@
     "Subscription.AKS.Environment.Name": {
       "value": "preview"
     },
+    "Subscription.Dynatrace.Enable": {
+      "value": "false"
+    },
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.12.97.0/24"
     },
