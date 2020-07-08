@@ -21,6 +21,9 @@
     "Subscription.AKS.Environment.Name": {
       "value": "demo"
     },
+    "Subscription.Dynatrace.Enable": {
+      "value": "false"
+    },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.11.0.0/20"
     },

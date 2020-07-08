@@ -18,6 +18,9 @@
     "Subscription.AKS.Environment.Name": {
       "value": "sbox"
     },
+    "Subscription.Dynatrace.Enable": {
+      "value": "false"
+    },
     "Subscription.AKS.LogAnalytics.Name": {
       "value": "hmcts-$(Subscription.AKS.Environment.Name)-law"
     },

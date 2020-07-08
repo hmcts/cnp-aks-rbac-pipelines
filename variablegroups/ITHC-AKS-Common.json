@@ -21,6 +21,9 @@
     "Subscription.AKS.Environment.Name": {
       "value": "ithc"
     },
+    "Subscription.Dynatrace.Enable": {
+      "value": "false"
+    },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.10.32.0/23"
     },
