@@ -93,10 +93,7 @@
       "type": "string",
       "defaultValue": "aks-iaas-nsg"
     },
-    "logAnalyticsWorkSpaceName": {
-      "type": "string"
-    },
-    "logAnalyticsResourceGroup": {
+    "logAnalyticsResourceId": {
       "type": "string"
     },
     "appgwNsgPortrange": {
@@ -151,7 +148,7 @@
           "apiVersion": "2017-05-01-preview",
           "properties": {
             "name": "[parameters('aksNsgName')]",
-            "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
+            "workspaceId": "[parameters('logAnalyticsResourceId')]",
             "logs": [
               {
                 "category": "NetworkSecurityGroupEvent",
@@ -235,7 +232,7 @@
           "apiVersion": "2017-05-01-preview",
           "properties": {
             "name": "[parameters('appgwNsgName')]",
-            "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
+            "workspaceId": "[parameters('logAnalyticsResourceId')]",
             "logs": [
               {
                 "category": "NetworkSecurityGroupEvent",
@@ -273,7 +270,7 @@
           "apiVersion": "2017-05-01-preview",
           "properties": {
             "name": "[parameters('iaasNsgName')]",
-            "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
+            "workspaceId": "[parameters('logAnalyticsResourceId')]",
             "logs": [
               {
                 "category": "NetworkSecurityGroupEvent",
@@ -396,7 +393,7 @@
           "apiVersion": "2017-05-01-preview",
           "properties": {
             "name": "[parameters('aksVnetName')]",
-            "workspaceId": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]",
+            "workspaceId": "[parameters('logAnalyticsResourceId')]",
             "logs": [
               {
                 "category": "VMProtectionAlerts",

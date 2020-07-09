@@ -21,8 +21,8 @@
     "Subscription.Dynatrace.Enable": {
       "value": "false"
     },
-    "Subscription.AKS.LogAnalytics.Name": {
-      "value": "hmcts-$(Subscription.AKS.Environment.Name)-law"
+    "Subscription.AKS.LogAnalytics.ResourceId": {
+      "value": "/subscriptions/bf308a5c-0624-4334-8ff8-8dca9fd43783/resourcegroups/oms-automation/providers/microsoft.operationalinsights/workspaces/hmcts-sandbox"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.10.0.0/23"
