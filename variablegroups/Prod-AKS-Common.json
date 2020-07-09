@@ -24,8 +24,8 @@
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.13.33.0/24"
     },
-    "Subscription.AKS.LogAnalytics.Name": {
-      "value": "hmcts-$(Environment.Name)-law"
+    "Subscription.AKS.LogAnalytics.ResourceId": {
+      "value": "/subscriptions/8999dec3-0104-4a27-94ee-6588559729d1/resourcegroups/oms-automation/providers/microsoft.operationalinsights/workspaces/hmcts-prod"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.13.0.0/20"
