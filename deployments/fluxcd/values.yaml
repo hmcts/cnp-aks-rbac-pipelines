@@ -5,6 +5,7 @@ git:
   url: git@github.com:hmcts/cnp-flux-config
   pollInterval: 1m
   secretName: flux-git-deploy
+  timeout: "60s"
 additionalArgs:
   - --manifest-generation=true
 syncGarbageCollection:
