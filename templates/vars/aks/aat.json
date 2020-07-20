@@ -19,6 +19,9 @@
     },
     "type": {
       "value": "AvailabilitySet"
+    },
+    "networkPlugin": {
+      "value": "kubenet"
     }
   }
 }

@@ -19,6 +19,9 @@
     },
     "type": {
       "value": "VirtualMachineScaleSets"
+    },
+    "networkPlugin": {
+      "value": "azure"
     }
   }
 }
