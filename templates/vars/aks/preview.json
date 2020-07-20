@@ -22,6 +22,9 @@
     },
     "maxPods": {
       "value": 50
+    },
+    "networkPlugin": {
+      "value": "kubenet"
     }
   }
 }
