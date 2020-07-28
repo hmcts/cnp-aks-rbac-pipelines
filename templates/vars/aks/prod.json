@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "kubernetesVersion": {
-      "value": "1.16.9"
+      "value": "1.17.7"
     },
     "nodeCount": {
       "value": 25
@@ -19,9 +19,6 @@
     },
     "type": {
       "value": "AvailabilitySet"
-    },
-    "networkPlugin": {
-      "value": "kubenet"
     }
   }
 }
