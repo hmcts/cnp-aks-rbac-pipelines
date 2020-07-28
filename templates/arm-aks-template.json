@@ -108,9 +108,6 @@
     },
     "criticality": {
       "type": "string"
-    },
-    "networkPlugin": {
-      "type": "string"
     }
   },
   "variables": {
@@ -196,7 +193,7 @@
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
-          "networkPlugin": "[parameters('networkPlugin')]",
+          "networkPlugin": "azure",
           "serviceCidr": "[parameters('aksServiceCidr')]",
           "dnsServiceIP": "[parameters('aksDnsServiceIp')]",
           "dockerBridgeCidr": "172.17.0.1/16",
