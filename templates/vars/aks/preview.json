@@ -22,9 +22,6 @@
     },
     "maxPods": {
       "value": 50
-    },
-    "networkPlugin": {
-      "value": "azure"
     }
   }
 }
