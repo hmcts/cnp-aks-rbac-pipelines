@@ -38,3 +38,4 @@ The version is managed in a per environment [vars file](templates/vars/aks).
 Once you've updated the version use the [AKS release pipeline](https://dev.azure.com/hmcts/CNP/_release?_a=releases&view=mine&definitionId=16) to apply the update.
 
 _Note: You will need to raise a change request to do this in production, do the other environments first and then raise the change once they are successful._
+ 
