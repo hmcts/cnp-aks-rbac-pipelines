@@ -53,6 +53,12 @@
     },
     "Subscription.AKS.NSG.Settings": {
       "value": "{\"securityRules\":[{\"name\":\"AllowInternetToOAuthProxy\",\"description\":\"Allow Internet To OAuthProxy\",\"direction\":\"Inbound\",\"priority\":100,\"sourceAddressPrefix\":\"*\",\"destinationAddressPrefix\":\"51.11.25.221\",\"sourcePortRange\":\"*\",\"sourcePortRanges\":[],\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[\"80\",\"443\"],\"destinationPortRange\":null},{\"name\":\"TraefikNoProxy\",\"description\":\"Allow Internet To TraefikNoProxy\",\"direction\":\"Inbound\",\"priority\":110,\"sourceAddressPrefix\":\"*\",\"destinationAddressPrefix\":\"51.11.5.163\",\"sourcePortRange\":\"*\",\"destinationPortRange\":\"443\",\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[],\"sourcePortRanges\":[]},{\"name\":\"BulkscanToCrimeStorage\",\"description\":\"Permit access from bulkscan microservice to Crime storage endpoint located in a remote vpn network\",\"direction\":\"Outbound\",\"priority\":100,\"sourceAddressPrefix\":\"VirtualNetwork\",\"destinationAddressPrefix\":\"10.200.66.12\",\"sourcePortRange\":\"*\",\"destinationPortRange\":\"443\",\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[],\"sourcePortRanges\":[]}]}"
+    },
+    "bastionSubnetPrefix": {
+      "values": "10.48.0.32"
+    },
+    "bastionSubnetNextHop": {
+      "value": "10.11.72.36"
     }
   },
   "id": 22,

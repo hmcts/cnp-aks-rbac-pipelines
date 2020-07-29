@@ -118,11 +118,24 @@
     "serviceEndpoints": {
       "type": "array",
       "defaultValue": []
+    },
+    "bastionSubnetPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The address prefix of the bastion subnet"
+      }
+    },
+    "bastionSubnetNextHop": {
+      "type": "string",
+      "metadata": {
+        "description": "The next hop to reach the bastion vnet (Hub network; Palo Alto Load Balancer)"
+      }
     }
   },
   "variables": {
     "primarySubnetName": "[concat('aks-',parameters('aksPrimarySubnetName'))]",
     "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]",
+    "routeTableName": "aks-route-table",
     "nsgRulesMapping": {
       "true": "[parameters('aksNetworkSecurityGroupsSettings').securityRules]",
       "false": [{
@@ -294,6 +307,36 @@
       ]
     },
     {
+      "type": "Microsoft.Network/routeTables",
+      "name": "[variables('routeTableName')]",
+      "apiVersion": "2020-05-01",
+      "location": "[resourceGroup().location]",
+      "tags" : {
+        "EnvironmentName": "[parameters('environmentName')]",
+        "Branch":"[parameters('branch')]",
+        "managedBy":"[parameters('managedBy')]",
+        "solutionOwner": "[parameters('solutionOwner')]",
+        "activityName": "[parameters('activityName')]",
+        "dataClassification":"[parameters('dataClassification')]",
+        "automation": "[parameters('automation')]",
+        "costCentre":"[parameters('costCentre')]",
+        "environment": "[parameters('environment')]",
+        "criticality": "[parameters('criticality')]"
+      },
+      "properties": {
+        "routes": [
+          {
+            "name": "BastionMgmtVnet",
+            "properties": {
+              "addressPrefix": "[parameters('bastionSubnetPrefix')]",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('bastionSubnetNextHop')]"
+            }
+          }
+        ]
+      }
+    },
+    {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('aksVnetName')]",
       "apiVersion": "2019-04-01",
@@ -328,6 +371,9 @@
               "serviceEndpoints": "[parameters('serviceEndpoints')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
@@ -338,6 +384,9 @@
               "serviceEndpoints": "[parameters('serviceEndpoints')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
@@ -358,6 +407,9 @@
               "serviceEndpoints": "[parameters('serviceEndpoints')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           }
@@ -421,7 +473,8 @@
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]",
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]",
-        "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
+        "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]",
+        "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
       ]
     },
     {

@@ -53,6 +53,12 @@
     },
     "Subscription.AKS.NSG.Settings": {
       "value": "{ \"securityRules\": [] }"
+    },
+    "bastionSubnetPrefix": {
+      "values": "10.48.0.0"
+    },
+    "bastionSubnetNextHop": {
+      "value": "10.11.8.36"
     }
   },
   "id": 29,

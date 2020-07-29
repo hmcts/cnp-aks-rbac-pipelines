@@ -59,6 +59,12 @@
     },
     "Dynatrace.Instance.Name":{
       "value": "ebe20728"
+    },
+    "bastionSubnetPrefix": {
+      "values": "10.48.0.0"
+    },
+    "bastionSubnetNextHop": {
+      "value": "10.11.8.36"
     }
   },
   "id": 66,
