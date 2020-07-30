@@ -66,6 +66,12 @@
           "service": "Microsoft.Storage"
         }
       ]
+    },
+    "bastionSubnetPrefix": {
+      "value": "10.48.0.32"
+    },
+    "bastionSubnetNextHop": {
+      "value": "10.11.72.36"
     }
   }
 }
