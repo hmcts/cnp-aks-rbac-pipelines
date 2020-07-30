@@ -58,7 +58,7 @@
       ]
     },
     "bastionSubnetPrefix": {
-      "value": "10.48.0.100"
+      "value": "10.48.0.100/27"
     },
     "bastionSubnetNextHop": {
       "value": "10.10.200.36"
