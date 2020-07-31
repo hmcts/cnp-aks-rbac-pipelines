@@ -19,6 +19,7 @@ helm upgrade flux-helm-operator fluxcd/helm-operator --install --namespace admin
 curl -s "https://raw.githubusercontent.com/\
 kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 TMP_DIR=/tmp/flux/${ENV}/${CLUSTER_NAME}
+mkdir -p $TMP_DIR
 # -----------------------------------------------------------
 (
 cat <<EOF
