@@ -52,7 +52,7 @@
       "value": "#aks-monitor-ithc"
     },
     "Subscription.AKS.NSG.Settings": {
-      "value": "{ \"securityRules\": [] }"
+      "value": "{ \"securityRules\": [ {\"name\":\"BastionMgmtVnet\",\"description\":\"Permit access from Bastion network\",\"direction\":\"Inbound\",\"priority\":1000,\"sourceAddressPrefix\":\"10.48.0.0/27\",\"destinationAddressPrefix\":\"VirtualNetwork\",\"sourcePortRange\":\"*\",\"destinationPortRange\":\"*\",\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[],\"sourcePortRanges\":[]} ] }"
     }
   },
   "id": 29,
