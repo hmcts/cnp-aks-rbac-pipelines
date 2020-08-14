@@ -65,11 +65,12 @@
     "serverAppSecret": {
       "type": "string"
     },
-    "logAnalyticsWorkSpaceName": {
+    "logAnalyticsResourceId": {
       "type": "string"
     },
-    "logAnalyticsResourceGroup": {
-      "type": "string"
+    "maxPods": {
+      "type": "int",
+      "defaultValue": 30
     },
     "environmentName": {
         "type": "string",
@@ -110,8 +111,7 @@
     }
   },
   "variables": {
-    "osDiskSizeGB": 100,
-    "maxPods": 30,  
+    "osDiskSizeGB": 100, 
     "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
@@ -154,7 +154,7 @@
             "vmSize": "[parameters('vmSize')]",
             "osDiskSizeGB": "[variables('osDiskSizeGB')]",
             "storageProfile": "[variables('storageProfile')]",
-            "maxPods": "[variables('maxPods')]",
+            "maxPods": "[parameters('maxPods')]",
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
             "osType": "[variables('osType')]"
           }
@@ -181,7 +181,7 @@
           "omsagent": {
               "enabled": true,
               "config": {
-                  "logAnalyticsWorkspaceResourceID": "[resourceId(parameters('logAnalyticsResourceGroup'),'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkSpaceName'))]"
+                  "logAnalyticsWorkspaceResourceID": "[parameters('logAnalyticsResourceId')]"
               }
           }
         },           

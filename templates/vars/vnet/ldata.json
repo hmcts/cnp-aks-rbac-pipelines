@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "hubVnetId": {
-      "value": ""
+      "value": "/subscriptions/fb084706-583f-4c9a-bdab-949aac66ba5c/resourceGroups/hmcts-hub-nonprodi/providers/Microsoft.Network/virtualNetworks/hmcts-hub-nonprodi"
     },
     "aksVnetDnsServers": {
       "value": []
@@ -11,17 +11,12 @@
     "privateDnsZones": {
       "value": [
         {
-          "name": "service.core-compute-demo.internal", 
+          "name": "service.core-compute-ethosldata.internal", 
           "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
           "resourceGroup": "core-infra-intsvc-rg"
         },
         {
-          "name": "service.core-compute-idam-demo.internal", 
-          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
-          "resourceGroup": "core-infra-intsvc-rg"
-        },
-        {
-          "name": "demo.platform.hmcts.net",
+          "name": "service.core-compute-idam-ethosldata.internal", 
           "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
           "resourceGroup": "core-infra-intsvc-rg"
         },

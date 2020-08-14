@@ -9,11 +9,20 @@
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.10.36.0/25"
     },
+    "Subscription.AKS.Developer.Role": {
+      "value": "reader"
+    },
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.10.37.0/24"
     },
+    "Subscription.AKS.LogAnalytics.ResourceId": {
+      "value": "/subscriptions/1c4f0704-a29e-403d-b719-b90c34ef14c9/resourcegroups/oms-automation/providers/microsoft.operationalinsights/workspaces/hmcts-nonprod"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "ithc"
+    },
+    "Subscription.Dynatrace.Enable": {
+      "value": "false"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.10.32.0/23"
@@ -43,7 +52,7 @@
       "value": "#aks-monitor-ithc"
     },
     "Subscription.AKS.NSG.Settings": {
-      "value": "{ \"securityRules\": [] }"
+      "value": "{ \"securityRules\": [ {\"name\":\"BastionMgmtVnet\",\"description\":\"Permit access from Bastion network\",\"direction\":\"Inbound\",\"priority\":1000,\"sourceAddressPrefix\":\"10.48.0.0/27\",\"destinationAddressPrefix\":\"VirtualNetwork\",\"sourcePortRange\":\"*\",\"destinationPortRange\":\"*\",\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[],\"sourcePortRanges\":[]} ] }"
     }
   },
   "id": 29,

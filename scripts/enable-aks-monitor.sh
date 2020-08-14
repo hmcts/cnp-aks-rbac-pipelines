@@ -3,10 +3,7 @@ set -e
 
 
 AKS_ID=$1
-WORKSPACE_RG=$2
-WORKSPACE_NAME=$3
-
-WORKSPACE_ID=$(az resource list --resource-group ${WORKSPACE_RG} --name ${WORKSPACE_NAME} --resource-type Microsoft.OperationalInsights/workspaces --query [0].id -o tsv)
+WORKSPACE_ID=$2
 
 az monitor diagnostic-settings create \
     -n DiagLogAnalytics \

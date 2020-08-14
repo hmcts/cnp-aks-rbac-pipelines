@@ -12,8 +12,17 @@
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.10.4.0/24"
     },
+    "Subscription.AKS.Developer.Role": {
+      "value": "reader"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "sbox"
+    },
+    "Subscription.Dynatrace.Enable": {
+      "value": "false"
+    },
+    "Subscription.AKS.LogAnalytics.ResourceId": {
+      "value": "/subscriptions/bf308a5c-0624-4334-8ff8-8dca9fd43783/resourcegroups/oms-automation/providers/microsoft.operationalinsights/workspaces/hmcts-sandbox"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.10.0.0/23"
@@ -43,7 +52,7 @@
       "value": "#aks-monitor-sbox"
     },
     "Subscription.AKS.NSG.Settings": {
-      "value": "{ \"securityRules\": [] }"
+      "value": "{ \"securityRules\": [ {\"name\":\"BastionMgmtVnet\",\"description\":\"Permit access from Bastion network\",\"direction\":\"Inbound\",\"priority\":1000,\"sourceAddressPrefix\":\"10.48.0.96/27\",\"destinationAddressPrefix\":\"VirtualNetwork\",\"sourcePortRange\":\"*\",\"destinationPortRange\":\"*\",\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[],\"sourcePortRanges\":[]} ] }"
     }
   },
   "id": 19,

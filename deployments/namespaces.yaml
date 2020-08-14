@@ -3,3 +3,8 @@ kind: Namespace
 metadata:
    name: admin
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: monitoring
+---
