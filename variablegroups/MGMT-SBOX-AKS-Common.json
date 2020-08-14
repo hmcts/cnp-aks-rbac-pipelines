@@ -12,8 +12,17 @@
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.10.13.0/24"
     },
+    "Subscription.AKS.LogAnalytics.ResourceId": {
+      "value": "/subscriptions/1c4f0704-a29e-403d-b719-b90c34ef14c9/resourcegroups/oms-automation/providers/microsoft.operationalinsights/workspaces/hmcts-nonprod"
+    },
+    "Subscription.AKS.Developer.Role": {
+      "value": "reader"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "cftsbox-intsvc"
+    },
+    "Subscription.Dynatrace.Enable": {
+      "value": "false"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.10.8.0/23"

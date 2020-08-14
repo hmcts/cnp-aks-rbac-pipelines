@@ -1,62 +1,62 @@
 {
   "variables": {
     "Environment.name": {
-      "value": "cftptl"
+      "value": "ldata"
     },
     "Subscription.acrName": {
       "value": "hmctspublic"
     },
     "Subscription.AKS.Appgw.subnet.cidr": {
-      "value": "10.10.68.0/25"
+      "value": "10.14.132.0/25"
     },
     "Subscription.AKS.Iass.subnet.cidr": {
-      "value": "10.10.70.0/23"
-    },
-    "Subscription.AKS.LogAnalytics.ResourceId": {
-      "value": "/subscriptions/8999dec3-0104-4a27-94ee-6588559729d1/resourcegroups/oms-automation/providers/microsoft.operationalinsights/workspaces/hmcts-prod"
+      "value": "10.14.133.0/24"
     },
     "Subscription.AKS.Developer.Role": {
       "value": "reader"
     },
     "Subscription.AKS.Environment.Name": {
-      "value": "cftptl-intsvc"
+      "value": "ldata"
     },
     "Subscription.Dynatrace.Enable": {
       "value": "false"
     },
+    "Subscription.AKS.LogAnalytics.ResourceId": {
+      "value": "/subscriptions/8999dec3-0104-4a27-94ee-6588559729d1/resourcegroups/oms-automation/providers/microsoft.operationalinsights/workspaces/hmcts-prod"
+    },
     "Subscription.AKS.Subnet.Primary.Cidr": {
-      "value": "10.10.64.0/23"
+      "value": "10.14.128.0/23"
     },
     "Subscription.AKS.Subnet.Secondary.Cidr": {
-      "value": "10.10.66.0/23"
+      "value": "10.14.130.0/23"
     },
     "Subscription.AKS.vmSize": {
-      "value": "Standard_D8s_v3"
+      "value": "Standard_B4ms"
     },
     "Subscription.AKS.VNet.Cidr": {
-      "value": "10.10.64.0/21"
+      "value": "10.14.128.0/21"
     },
     "Subscription.keyvaultName": {
-      "value": "cftptl-intsvc"
+      "value": "ethos-ldata"
     },
     "Subscription.ServiceConnection.Name": {
-      "value": "DTS-CFTPTL-INTSVC"
+      "value": "azurerm-ethosldata"
     },
     "Subscription.StorageAccount.Name": {
-      "value": "cftptlintsvc"
+      "value": "ethos$(Subscription.AKS.Environment.Name)"
     },
     "Env.Core.ResourceGroup": {
-      "value": "core-infra-intsvc-rg"
+      "value": "core-infra-$(Subscription.AKS.Environment.Name)-rg"
     },
     "Subscription.AKS.Monitor.SlackChannel": {
-      "value": "#aks-monitor-cftptl"
+      "value": "#aks-monitor-ldata"
     },
     "Subscription.AKS.NSG.Settings": {
       "value": "{ \"securityRules\": [] }"
     }
   },
-  "id": 46,
+  "id": 19,
   "type": "Vsts",
-  "name": "CFTPTL-AKS-Common",
+  "name": "LDATA-AKS-Common",
   "isShared": false
 }

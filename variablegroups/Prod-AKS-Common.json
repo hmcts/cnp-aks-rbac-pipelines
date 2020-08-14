@@ -12,11 +12,20 @@
     "Subscription.AKS.Appgw.subnet.cidr": {
       "value": "10.13.32.0/25"
     },
+    "Subscription.AKS.Developer.Role": {
+      "value": "reader"
+    },
     "Subscription.AKS.Environment.Name": {
       "value": "prod"
     },
+    "Subscription.Dynatrace.Enable": {
+      "value": "true"
+    },
     "Subscription.AKS.Iass.subnet.cidr": {
       "value": "10.13.33.0/24"
+    },
+    "Subscription.AKS.LogAnalytics.ResourceId": {
+      "value": "/subscriptions/8999dec3-0104-4a27-94ee-6588559729d1/resourcegroups/oms-automation/providers/microsoft.operationalinsights/workspaces/hmcts-prod"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
       "value": "10.13.0.0/20"
@@ -44,6 +53,12 @@
     },
     "Subscription.AKS.NSG.Settings": {
       "value": "{ \"securityRules\": [{\"name\":\"BulkscanToCrimeStorage\",\"description\":\"Permit access from bulkscan microservice to Crime storage endpoint located in a remote vpn network\",\"direction\":\"Outbound\",\"priority\":100,\"sourceAddressPrefix\":\"VirtualNetwork\",\"destinationAddressPrefix\":\"10.200.66.12\",\"sourcePortRange\":\"*\",\"destinationPortRange\":\"443\",\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[],\"sourcePortRanges\":[]}] }"
+    },
+    "Dynatrace.KeyVault.Name":{
+      "value": "cftptl-intsvc"
+    },
+    "Dynatrace.Instance.Name":{
+      "value": "ebe20728"
     }
   },
   "id": 66,

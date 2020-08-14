@@ -6,7 +6,7 @@
       "value": "1.17.7"
     },
     "nodeCount": {
-      "value": 29
+      "value": 10 
     },
     "nodeMinCount": {
       "value": ""
@@ -18,7 +18,7 @@
       "value": ""
     },
     "type": {
-      "value": "VirtualMachineScaleSets"
+      "value": "AvailabilitySet"
     }
   }
 }

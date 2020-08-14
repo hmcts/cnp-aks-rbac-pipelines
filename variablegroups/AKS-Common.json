@@ -27,11 +27,11 @@
     "AKS.VNet.ResourceGroup": {
       "value": "aks-infra-$(Subscription.AKS.Environment.Name)-rg"
     },
-    "AKS.LogAnalytics.Name": {
-      "value": "hmcts-$(Subscription.AKS.Environment.Name)-law"
-    },
     "AKS.LogAnalytics.ResourceGroup": {
       "value": "oms-automation-rg"
+    },
+    "AKS.Binding.Developer.Role": {
+      "value": "roles/$(Subscription.AKS.Developer.Role)-role-binding.yaml"
     },
     "Env.Location": {
       "value": "UK South"
