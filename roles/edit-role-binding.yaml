@@ -26,8 +26,6 @@ rules:
       - 'create'
       - 'update'
       - 'delete'
-      - 'get'
-      - 'list'
       - 'watch'
   - apiGroups:
       - 'servicecatalog.k8s.io'
@@ -37,8 +35,6 @@ rules:
       - 'create'
       - 'update'
       - 'delete'
-      - 'get'
-      - 'list'
       - 'watch'
   - apiGroups:
       - 'helm.fluxcd.io'

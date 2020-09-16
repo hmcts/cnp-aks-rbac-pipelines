@@ -18,6 +18,20 @@ metadata:
   name: developer-view-hr
 rules:
   - apiGroups:
+      - 'keda.k8s.io'
+    resources:
+      - 'scaledobjects'
+    verbs:
+      - 'list'
+      - 'get'
+  - apiGroups:
+      - 'servicecatalog.k8s.io'
+    resources:
+      - 'servicebindings'
+    verbs:
+      - 'list'
+      - 'get'
+  - apiGroups:
       - 'helm.fluxcd.io'
     resources:
       - 'helmreleases'
