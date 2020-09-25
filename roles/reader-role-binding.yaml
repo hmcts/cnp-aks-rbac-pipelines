@@ -28,6 +28,7 @@ rules:
       - 'servicecatalog.k8s.io'
     resources:
       - 'servicebindings'
+      - 'serviceinstances'
     verbs:
       - 'list'
       - 'get'
