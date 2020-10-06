@@ -42,6 +42,17 @@ rules:
       - 'list'
       - 'get'
   - apiGroups:
+      - 'secrets-store.csi.x-k8s.io'
+    resources:
+      - 'secretproviderclasses'
+    verbs:
+      - 'create'
+      - 'update'
+      - 'delete'
+      - 'watch'
+      - 'list'
+      - 'get'
+  - apiGroups:
       - 'helm.fluxcd.io'
     resources:
       - 'helmreleases'
