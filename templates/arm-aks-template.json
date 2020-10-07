@@ -12,6 +12,10 @@
       "type": "string",
       "defaultValue": "Standard_B4ms"
     },
+    "osDiskType": {
+      "type": "string",
+      "defaultValue": "Managed"
+    },
     "nodeCount": {
       "type": "int"
     },
@@ -123,7 +127,7 @@
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2019-10-01",
+      "apiVersion": "2020-09-01",
       "location": "[resourceGroup().location]",
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
@@ -152,6 +156,7 @@
             "scaleSetPriority": "string",
             "scaleSetEvictionPolicy": "string",
             "vmSize": "[parameters('vmSize')]",
+            "osDiskType": "[parameters('osDiskType')]",
             "osDiskSizeGB": "[variables('osDiskSizeGB')]",
             "storageProfile": "[variables('storageProfile')]",
             "maxPods": "[parameters('maxPods')]",

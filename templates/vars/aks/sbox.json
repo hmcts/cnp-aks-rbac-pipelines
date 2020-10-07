@@ -19,6 +19,9 @@
     },
     "type": {
       "value": "VirtualMachineScaleSets"
+    },
+    "osDiskType": {
+      "value": "Ephemeral"
     }
   }
 }
