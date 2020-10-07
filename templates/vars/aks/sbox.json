@@ -22,6 +22,9 @@
     },
     "osDiskType": {
       "value": "Ephemeral"
+    },
+    "vmSize": {
+      "value": "Standard_DS3_v2"
     }
   }
 }
