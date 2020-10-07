@@ -161,7 +161,8 @@
             "storageProfile": "[variables('storageProfile')]",
             "maxPods": "[parameters('maxPods')]",
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
-            "osType": "[variables('osType')]"
+            "osType": "[variables('osType')]",
+            "mode": "System"
           }
         ],
         "linuxProfile": {
