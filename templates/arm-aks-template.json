@@ -122,9 +122,6 @@
       "name": "[parameters('aksClusterName')]",
       "apiVersion": "2019-10-01",
       "location": "[resourceGroup().location]",
-      "identity": {
-        "type": "SystemAssigned"
-      },
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
         "Branch":"[parameters('branch')]",
@@ -168,6 +165,10 @@
               }
             ]
           }
+        },
+        "servicePrincipalProfile": {
+          "clientId": "[parameters('servicePrincipalId')]",
+          "secret": "[parameters('servicePrincipalSecret')]"
         },
         "addonProfiles": {
           "kubeDashboard": {
