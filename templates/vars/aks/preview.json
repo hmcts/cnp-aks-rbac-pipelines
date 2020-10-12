@@ -5,11 +5,8 @@
     "kubernetesVersion": {
       "value": "1.17.9"
     },
-    "nodeCount": {
-      "value": 75
-    },
     "nodeMinCount": {
-      "value": ""
+      "value": 75
     },
     "nodeMaxCount": {
       "value": ""
