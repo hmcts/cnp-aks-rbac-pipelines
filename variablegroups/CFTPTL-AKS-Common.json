@@ -30,9 +30,6 @@
     "Subscription.AKS.Subnet.Secondary.Cidr": {
       "value": "10.10.66.0/23"
     },
-    "Subscription.AKS.vmSize": {
-      "value": "Standard_D8s_v3"
-    },
     "Subscription.AKS.VNet.Cidr": {
       "value": "10.10.64.0/21"
     },
