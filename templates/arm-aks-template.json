@@ -166,10 +166,13 @@
             ]
           }
         },
-        "servicePrincipalProfile": {
-          "clientId": "[parameters('servicePrincipalId')]",
-          "secret": "[parameters('servicePrincipalSecret')]"
+        "identity": {
+          "type": "SystemAssigned"
         },
+        // "servicePrincipalProfile": {
+        //   "clientId": "[parameters('servicePrincipalId')]",
+        //   "secret": "[parameters('servicePrincipalSecret')]"
+        // },
         "addonProfiles": {
           "kubeDashboard": {
             "config": null,
