@@ -16,6 +16,9 @@
     },
     "type": {
       "value": "VirtualMachineScaleSets"
+    },
+    "vmSize": {
+      "value": "Standard_DS3_v2"
     }
   }
 }

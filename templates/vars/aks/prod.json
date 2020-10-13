@@ -16,6 +16,9 @@
     },
     "type": {
       "value": "AvailabilitySet"
+    },
+    "vmSize": {
+      "value": "Standard_D4s_v3"
     }
   }
 }
