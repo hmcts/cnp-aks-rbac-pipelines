@@ -47,12 +47,6 @@
     "sshPublicKey": {
       "type": "string"
     },
-    "servicePrincipalId": {
-      "type": "string"
-    },
-    "servicePrincipalSecret": {
-      "type": "string"
-    },
     "clientAppId": {
       "type": "string"
     },
@@ -166,9 +160,8 @@
             ]
           }
         },
-        "servicePrincipalProfile": {
-          "clientId": "[parameters('servicePrincipalId')]",
-          "secret": "[parameters('servicePrincipalSecret')]"
+        "identity": {
+          "type": "SystemAssigned"
         },
         "addonProfiles": {
           "kubeDashboard": {
