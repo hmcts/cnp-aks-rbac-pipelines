@@ -3,16 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "kubernetesVersion": {
-      "value": "1.17.9"
+      "value": "1.18.8"
     },
     "nodeMinCount": {
-      "value": 18
+      "value": 20
     },
     "nodeMaxCount": {
-      "value": ""
+      "value": "40"
     },
     "enableAutoScaling": {
-      "value": ""
+      "value": "true"
     },
     "type": {
       "value": "AvailabilitySet"
