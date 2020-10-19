@@ -100,7 +100,7 @@
     "criticality": {
       "type": "string"
     },
-    "aadGroupAccess": {
+    "aadAccessGroups": {
       "type": "object"
     }
   },
@@ -181,7 +181,7 @@
         "aadProfile": {
           "managed": true,
           "enableAzureRBAC": true,
-          "adminGroupObjectIDs": "[parameters('aadGroupAccess').groups[copyIndex('aadGroupAccess')].name)]",
+          "adminGroupObjectIDs": "[parameters('aadAccessGroups').groups[copyIndex('aadGroup')].name)]",
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
@@ -202,7 +202,7 @@
         }
       },
       "copy": {
-        "name": "aadGroupAccess",
+        "name": "aadGroup",
         "count": "[length(parameters('aadAccessGroups').groups)]"
       }
     }
