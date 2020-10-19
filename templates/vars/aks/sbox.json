@@ -24,7 +24,7 @@
       "value":{
         "groups": [
           {
-            "name": null
+            "name": "dcd_group_aks_admin_global_v2"
           }
         ]
       }
