@@ -203,7 +203,7 @@
       },
       "copy": {
         "name": "aadGroupAccess",
-        "count": "[length(parameters('groupAccess').groups)]"
+        "count": "[length(parameters('aadAccessGroups').groups)]"
       }
     }
   ],
