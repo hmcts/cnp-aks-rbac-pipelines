@@ -116,6 +116,7 @@
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser",
+    "nodepoolMode": "system",
     "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]",
     "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]"
   },
@@ -159,7 +160,8 @@
             "storageProfile": "[variables('storageProfile')]",
             "maxPods": "[parameters('maxPods')]",
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
-            "osType": "[variables('osType')]"
+            "osType": "[variables('osType')]",
+            "mode": "System"
           }
         ],
         "linuxProfile": {
