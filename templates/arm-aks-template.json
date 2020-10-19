@@ -181,7 +181,7 @@
         "aadProfile": {
           "managed": true,
           "enableAzureRBAC": true,
-          "adminGroupObjectIDs": "[parameters('aadGroupAccess').group[copyIndex('group')].name)]",
+          "adminGroupObjectIDs": "[parameters('aadGroupAccess').groups[copyIndex('aadGroupAccess')].name)]",
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
