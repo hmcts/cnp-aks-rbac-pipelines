@@ -19,6 +19,15 @@
     },
     "vmSize": {
       "value": "Standard_DS3_v2"
+    },
+    "aadAccessGroups": {
+      "value":{
+        "groups": [
+          {
+            "name": null
+          }
+        ]
+      }
     }
   }
 }
