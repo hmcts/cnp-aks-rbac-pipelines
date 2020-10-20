@@ -190,7 +190,6 @@
         "aadProfile": {
           "managed": true,
           "enableAzureRBAC": true,
-          "adminGroupObjectIDs": null,
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
