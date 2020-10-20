@@ -105,9 +105,6 @@
     },
     "criticality": {
       "type": "string"
-    },
-    "aadAccessGroups": {
-      "type": "object"
     }
   },
   "variables": {
