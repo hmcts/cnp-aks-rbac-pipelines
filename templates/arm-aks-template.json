@@ -124,7 +124,7 @@
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2020-09-01",
+      "apiVersion": "2020-04-01",
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "SystemAssigned"
@@ -193,7 +193,7 @@
         "aadProfile": {
           "managed": true,
           "enableAzureRBAC": true,
-          "adminGroupObjectIDs": "[parameters('aadAccessGroups').groups[copyIndex('aadGroup')].name]",
+          "adminGroupObjectIDs": null,
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
