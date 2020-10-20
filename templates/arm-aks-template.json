@@ -209,10 +209,6 @@
             }
           }
         }
-      },
-      "copy": {
-        "name": "aadGroup",
-        "count": "[length(parameters('aadAccessGroups').groups)]"
       }
     }
   ],
