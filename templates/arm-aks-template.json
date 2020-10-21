@@ -99,6 +99,9 @@
     },
     "criticality": {
       "type": "string"
+    },
+    "iam": {
+      "type":"object"
     }
   },
   "variables": {
@@ -198,6 +201,43 @@
             }
           }
         }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "copy": {
+      "name": "iam_loop",
+      "count": "[length(parameters('iam').permissions)]"
+      },
+      "dependsOn": [
+          "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aksClusterName'))]"
+      ],
+      "apiVersion": "2020-06-01",
+      "name": "[concat(parameters('iam').permissions[copyIndex()].name, '-Iam-aks-sbox')]",
+      "resourceGroup": "[parameters('iam').permissions[copyIndex()].resourceGroup]",
+      "subscriptionId": "[parameters('iam').permissions[copyIndex()].subscriptionId]",
+      "properties": {
+      "mode": "Incremental",
+      "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+       {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion":  "2020-04-01-preview",
+      "name": "[parameters('iam').permissions[copyIndex()].guid]",
+      "properties": {
+          "roleDefinitionId": "[parameters('iam').permissions[copyIndex()].roleDefinitionId]",
+          "principalId": "[reference(parameters('aksClusterName'), '2020-03-01').identityProfile.kubeletidentity.objectId]",
+          "scope": "[parameters('iam').permissions[copyIndex()].scope]",
+          "principalType": "ServicePrincipal"
+      }
+  }
+          ]
+      },
+      "parameters": {}
       }
     }
   ],

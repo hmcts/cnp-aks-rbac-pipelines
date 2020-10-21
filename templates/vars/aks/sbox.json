@@ -19,6 +19,48 @@
     },
     "vmSize": {
       "value": "Standard_DS3_v2"
+    },
+    "iam": {
+      "value": {
+          "permissions": [
+
+          {
+              "name": "VmContributor",        
+              "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '9980e02c-c2be-4d73-94e8-173b1dc7cf3c')]",
+              "resourcegroup": "MC_sbox-01-rg_sbox-01-aks_uksouth",
+              "scope": "[resourceGroup().id]",
+              "guid": "1dcf22d7-5b0c-458e-97ad-f2094f3b2839",
+              "subscriptionId": "b72ab7b7-723f-4b18-b6f6-03b0f2c6a1bb"
+
+          },
+          {
+            "name": "AcrPull",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+            "resourcegroup": "rpe-acr-prod-rg",
+            "scope": "[resourceGroup().id]",
+            "guid": "f95e7d2b-9150-4d21-8f99-ee79c6842a88",
+            "subscriptionId": "8999dec3-0104-4a27-94ee-6588559729d1"
+          },
+          {
+            "name": "ManagedIdentityOperator1",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]",
+            "resourcegroup": "managed-identities-sbox-rg",
+            "scope": "[resourceGroup().id]",
+            "guid": "bd324eb6-0fb9-496d-a988-a5317bfa4890",
+            "subscriptionId": "b72ab7b7-723f-4b18-b6f6-03b0f2c6a1bb"
+          },
+          {
+            "name": "ManagedIdentityOperator2",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]",
+            "resourcegroup": "managed-identities-sandbox-rg",
+            "scope": "[resourceGroup().id]",
+            "guid": "e6a7a183-8a0d-4cca-b3c4-3175133e18fc",
+            "subscriptionId": "bf308a5c-0624-4334-8ff8-8dca9fd43783"
+          }
+          ]
+        }
+      }
+    
     }
   }
-}
+
