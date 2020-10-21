@@ -34,14 +34,6 @@
 
           },
           {
-            "name": "AcrPull",        
-            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
-            "resourcegroup": "rpe-acr-prod-rg",
-            "scope": "[resourceGroup().id]",
-            "guid": "f95e7d2b-9150-4d21-8f99-ee79c6842a88",
-            "subscriptionId": "8999dec3-0104-4a27-94ee-6588559729d1"
-          },
-          {
             "name": "ManagedIdentityOperator1",        
             "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]",
             "resourcegroup": "managed-identities-sbox-rg",
