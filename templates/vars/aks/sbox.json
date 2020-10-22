@@ -48,6 +48,14 @@
             "scope": "[resourceGroup().id]",
             "guid": "e6a7a183-8a0d-4cca-b3c4-3175133e18fc",
             "subscriptionId": "bf308a5c-0624-4334-8ff8-8dca9fd43783"
+          },
+          {
+            "name": "AcrPull",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+            "resourcegroup": "rpe-acr-prod-rg",
+            "scope": "[resourceGroup().id]",
+            "guid": "f95e7d2b-9150-4d21-8f99-ee79c6842a88",
+            "subscriptionId": "8999dec3-0104-4a27-94ee-6588559729d1"
           }
           ]
         }
