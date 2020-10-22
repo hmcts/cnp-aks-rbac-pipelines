@@ -15,7 +15,7 @@
       "value": "true"
     },
     "type": {
-      "value": "AvailabilitySet"
+      "value": "VirtualMachineScaleSets"
     },
     "vmSize": {
       "value": "Standard_D4s_v3"
