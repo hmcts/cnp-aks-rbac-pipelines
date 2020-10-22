@@ -55,7 +55,7 @@
             "resourcegroup": "MC_sbox-01-rg_sbox-01-aks_uksouth",
             "scope": "[resourceGroup().id]",
             "guid": "e6a7a183-8a0d-4cca-b3c4-3175133e18fe",
-            "subscriptionId": "bf308a5c-0624-4334-8ff8-8dca9fd43783"
+            "subscriptionId": "b72ab7b7-723f-4b18-b6f6-03b0f2c6a1bb"
           },
           {
             "name": "AcrPull",        
