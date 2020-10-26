@@ -111,7 +111,11 @@
     "osType": "Linux",
     "adminUsername": "azureuser",
     "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]",
-    "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]"
+    "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]",
+    "MC_RG": "[concat('MC_', resourceGroup().name, '_', parameters('aksclusterName'), '_', 'uksouth')]",
+    "Virtual_Machine_Contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/',  '9980e02c-c2be-4d73-94e8-173b1dc7cf3c')]",
+    "Network_Contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/',  '4d97b98b-1d4f-4787-a291-c67834d212e7')]"
+
   },
   "resources": [
     {
@@ -205,6 +209,72 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+          "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aksclusterName'))]"
+      ],
+      "apiVersion": "2020-06-01",
+      "name":"[concat(parameters('aksclusterName'), '-VM-Contributor-Iam')]",
+      "resourceGroup": "[variables('MC_RG')]",
+      "subscriptionId": "[subscription().subscriptionId]",
+      "properties": {
+      "mode": "Incremental",
+      "template": {
+        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {},
+        "variables": {},
+        "resources": [
+          {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "93807473-a718-49db-8985-3db1315a0e34",
+            "properties": {
+              "roleDefinitionId": "[variables('Virtual_Machine_Contributor')]",
+              "principalId": "[reference(parameters('aksClusterName'), '2020-03-01').identityProfile.kubeletidentity.objectId]",
+              "scope":"[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', variables('MC_RG'))]",
+              "principalType": "ServicePrincipal"
+          }
+        }
+        ]
+      },
+      "parameters": {}
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+          "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aksclusterName'))]"
+      ],
+      "apiVersion": "2020-06-01",
+      "name":"[concat(parameters('aksclusterName'), '-Network-Contributor-Iam')]",
+      "resourceGroup": "[parameters('aksVnetResourceGroup')]",
+      "subscriptionId": "[subscription().subscriptionId]",
+      "properties": {
+      "mode": "Incremental",
+      "template": {
+        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {},
+        "variables": {},
+        "resources": [
+          {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "93807473-a718-49db-8985-3db1315a0e34",
+            "properties": {
+              "roleDefinitionId": "[variables('Network_Contributor')]",
+              "principalId": "[reference(resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksclusterName')), '2020-06-01', 'Full').identity.principalId]",
+              "scope":"[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('aksVnetResourceGroup'))]",
+              "principalType": "ServicePrincipal"
+          }
+        }
+        ]
+      },
+      "parameters": {}
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
       "copy": {
       "name": "iam_loop",
       "count": "[length(parameters('iam').permissions)]"
@@ -219,23 +289,23 @@
       "properties": {
       "mode": "Incremental",
       "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "parameters": {},
-          "variables": {},
-          "resources": [
-       {
-      "type": "Microsoft.Authorization/roleAssignments",
-      "apiVersion":  "2020-04-01-preview",
-      "name": "[parameters('iam').permissions[copyIndex()].guid]",
-      "properties": {
-          "roleDefinitionId": "[parameters('iam').permissions[copyIndex()].roleDefinitionId]",
-          "principalId": "[reference(parameters('aksClusterName'), '2020-03-01').identityProfile.kubeletidentity.objectId]",
-          "scope": "[parameters('iam').permissions[copyIndex()].scope]",
-          "principalType": "ServicePrincipal"
-      }
-  }
-          ]
+        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {},
+        "variables": {},
+        "resources": [
+          {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion":  "2020-04-01-preview",
+            "name": "[parameters('iam').permissions[copyIndex()].guid]",
+            "properties": {
+              "roleDefinitionId": "[parameters('iam').permissions[copyIndex()].roleDefinitionId]",
+              "principalId": "[reference(parameters('aksClusterName'), '2020-03-01').identityProfile.kubeletidentity.objectId]",
+              "scope": "[parameters('iam').permissions[copyIndex()].scope]",
+              "principalType": "ServicePrincipal"
+          }
+        }
+        ]
       },
       "parameters": {}
       }
