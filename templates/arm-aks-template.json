@@ -47,15 +47,6 @@
     "sshPublicKey": {
       "type": "string"
     },
-    "clientAppId": {
-      "type": "string"
-    },
-    "serverAppId": {
-      "type": "string"
-    },
-    "serverAppSecret": {
-      "type": "string"
-    },
     "logAnalyticsResourceId": {
       "type": "string"
     },
@@ -110,18 +101,18 @@
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser",
+    "nodepoolMode": "Syetem",
     "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]",
     "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]",
     "MC_RG": "[concat('MC_', resourceGroup().name, '_', parameters('aksclusterName'), '_', 'uksouth')]",
     "Virtual_Machine_Contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/',  '9980e02c-c2be-4d73-94e8-173b1dc7cf3c')]",
     "Network_Contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/',  '4d97b98b-1d4f-4787-a291-c67834d212e7')]"
-
   },
   "resources": [
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2019-10-01",
+      "apiVersion": "2020-04-01",
       "location": "[resourceGroup().location]",
       "identity": {
           "type": "SystemAssigned"
@@ -157,7 +148,8 @@
             "storageProfile": "[variables('storageProfile')]",
             "maxPods": "[parameters('maxPods')]",
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
-            "osType": "[variables('osType')]"
+            "osType": "[variables('osType')]",
+            "mode": "[variables('nodepoolMode')]"
           }
         ],
         "linuxProfile": {
@@ -181,12 +173,10 @@
                   "logAnalyticsWorkspaceResourceID": "[parameters('logAnalyticsResourceId')]"
               }
           }
-        },           
-        "enableRBAC": true,
+        },
         "aadProfile": {
-          "clientAppID": "[parameters('clientAppId')]",
-          "serverAppID": "[parameters('serverAppId')]",
-          "serverAppSecret": "[parameters('serverAppSecret')]",
+          "managed": true,
+          "enableAzureRBAC": true,
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
