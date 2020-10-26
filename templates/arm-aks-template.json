@@ -101,7 +101,7 @@
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser",
-    "nodepoolMode": "Syetem",
+    "nodepoolMode": "System",
     "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]",
     "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]",
     "MC_RG": "[concat('MC_', resourceGroup().name, '_', parameters('aksclusterName'), '_', 'uksouth')]",
