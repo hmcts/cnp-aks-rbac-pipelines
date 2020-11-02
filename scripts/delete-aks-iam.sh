@@ -13,20 +13,20 @@ subs=(${SUBSCRIPTIONS_LIST})
 
 for sub in ${subs[@]}; 
 do
-
+echo "Setting subscription for $sub"
 az account set --subscription $sub
 
 for guid in ${guids[@]}; 
 do 
 
-NAME=$(az role assignment list --all --query "[?name=='$guid'].[principalName]" -o tsv);
+ID=$(az role assignment list --all --query "[?name=='$guid'].[principalId]" -o tsv);
 SCOPE=$(az role assignment list --all --query "[?name=='$guid'].[scope]" -o tsv);
 RESOURCEGROUP=$(az role assignment list --all --query "[?name=='$guid'].[resourceGroup]" -o tsv);
 
-if [ -n "${NAME}" ];  then
-    # echo "JAIL is set to the empty string in $sub"
+if [ -n "${ID}" ];  then
+
     echo "Deleting IAM Role Assignment for GUID:- $guid on subscription:- $sub in Resource Group:- $RESOURCEGROUP";
-    az role assignment delete --assignee $NAME --scope $SCOPE;
+    az role assignment delete --assignee $ID --scope $SCOPE;
 fi
 
 done
