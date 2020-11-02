@@ -6,10 +6,10 @@
       "value": "1.18.8"
     },
     "nodeMinCount": {
-      "value": 75
+      "value": 30
     },
     "nodeMaxCount": {
-      "value": ""
+      "value": "75"
     },
     "enableAutoScaling": {
       "value": "true"
