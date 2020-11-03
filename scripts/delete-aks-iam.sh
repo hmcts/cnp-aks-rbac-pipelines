@@ -27,7 +27,7 @@ do
 if [ -n "${ID}" ];  then
 
     echo "Deleting IAM Role Assignment for GUID:- $guid on subscription:- $sub in Resource Group:- $RESOURCEGROUP";
-    #az role assignment delete --ids $ID;
+    az role assignment delete --ids $ID;
     
 fi
 
