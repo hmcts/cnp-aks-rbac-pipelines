@@ -3,25 +3,25 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "kubernetesVersion": {
-      "value": "1.17.9"
+      "value": "1.18.8"
     },
     "nodeMinCount": {
-      "value": 75
+      "value": 30
     },
     "nodeMaxCount": {
-      "value": ""
+      "value": "75"
     },
     "enableAutoScaling": {
-      "value": ""
+      "value": "true"
     },
     "type": {
-      "value": "AvailabilitySet"
+      "value": "VirtualMachineScaleSets"
     },
     "maxPods": {
       "value": 50
     },
     "vmSize": {
-      "value": "Standard_B4ms"
+      "value": "Standard_DS3_v2"
     }
   }
 }
