@@ -20,6 +20,12 @@
     "vmSize": {
       "value": "Standard_DS3_v2"
     },
+    "Virtual_Machine_Contributor_Iam_Guid": {
+      "value": "93807473-a718-49db-8985-3db1315a0e34"
+    },
+    "Network_Contributor_Iam_Guid": {
+      "value": "3276d396-c475-459f-8324-572e59d220d8"
+    },
     "iam": {
       "value": {
           "permissions": [
