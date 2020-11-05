@@ -6,8 +6,6 @@ SUBSCRIPTIONS_LIST=$2
 
 IFS=","
 guids=(${GUIDS_LIST})
-
-IFS=","
 subs=(${SUBSCRIPTIONS_LIST})
 
 for sub in ${subs[@]}; 
