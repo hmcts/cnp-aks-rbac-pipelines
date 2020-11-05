@@ -1,12 +1,15 @@
 #!/bin/bash
 set -e
 
-GUIDS_LIST=$1
-SUBSCRIPTIONS_LIST=$2
+ENVIRONMENT=$1
 
-IFS=","
-guids=(${GUIDS_LIST})
-subs=(${SUBSCRIPTIONS_LIST})
+IFS=$' '
+IFS=$'\n'
+
+guids+=("$(jq -r .Virtual_Machine_Contributor_Iam_Guid.value ../templates/vars/aks/$ENVIRONMENT.json) ")
+guids+=("$(jq -r .Network_Contributor_Iam_Guid.value ../templates/vars/aks/$ENVIRONMENT.json)")
+guids+=("$(jq -r .iam.value.permissions[].guid ../templates/vars/aks/$ENVIRONMENT.json)")
+subs=$(jq -r .iam.value.permissions[].subscriptionId ../templates/vars/aks/$ENVIRONMENT.json | uniq)
 
 for sub in ${subs[@]}; 
 do
@@ -17,15 +20,14 @@ az account set --subscription $sub
 for guid in ${guids[@]}; 
 do 
 
-    ID=$(az role assignment list --all --query "[?name=='$guid'].[id]" -o tsv);
-    RESOURCEGROUP=$(az role assignment list --all --query "[?name=='$guid'].[resourceGroup]" -o tsv);
+ID=$(az role assignment list --all --query "[?name=='$guid'].[id]" -o tsv);
+RESOURCEGROUP=$(az role assignment list --all --query "[?name=='$guid'].[resourceGroup]" -o tsv);
 
-    echo "Checking IAM Role Assignment for GUID:- $guid on subscription:- $sub in Resource Group:- $RESOURCEGROUP";
-
+echo "Checking IAM Role Assignment for GUID:- $guid on subscription:- $sub in Resource Group:- $RESOURCEGROUP";
 if [ -n "${ID}" ];  then
 
     echo "Deleting IAM Role Assignment for GUID:- $guid on subscription:- $sub in Resource Group:- $RESOURCEGROUP";
-    az role assignment delete --ids $ID;
+    az role assignment delete --ids $ID ;
     
 fi
 
