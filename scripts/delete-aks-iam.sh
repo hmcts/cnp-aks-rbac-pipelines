@@ -5,7 +5,6 @@ ENVIRONMENT=$1
 
 IFS=$' '
 IFS=$'\n'
-
 guids+=("$(jq -r .Virtual_Machine_Contributor_Iam_Guid.value ../templates/vars/aks/$ENVIRONMENT.json) ")
 guids+=("$(jq -r .Network_Contributor_Iam_Guid.value ../templates/vars/aks/$ENVIRONMENT.json)")
 guids+=("$(jq -r .iam.value.permissions[].guid ../templates/vars/aks/$ENVIRONMENT.json)")
