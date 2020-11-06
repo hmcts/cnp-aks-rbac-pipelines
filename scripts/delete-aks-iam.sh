@@ -9,10 +9,10 @@ IFS=$'\n'
 guids=()
 subs=()
 
-guids+=("$(jq -r .Virtual_Machine_Contributor_Iam_Guid.value ../templates/vars/aks/$ENVIRONMENT.json) ")
-guids+=("$(jq -r .Network_Contributor_Iam_Guid.value ../templates/vars/aks/$ENVIRONMENT.json)")
-guids+=("$(jq -r .iam.value.permissions[].guid ../templates/vars/aks/$ENVIRONMENT.json)")
-subs=$(jq -r .iam.value.permissions[].subscriptionId ../templates/vars/aks/$ENVIRONMENT.json | uniq)
+guids+=("$(jq -r .parameters.Virtual_Machine_Contributor_Iam_Guid.value ../templates/vars/aks/$ENVIRONMENT.json) ")
+guids+=("$(jq -r .parameters.Network_Contributor_Iam_Guid.value ../templates/vars/aks/$ENVIRONMENT.json)")
+guids+=("$(jq -r .parameters.iam.value.permissions[].guid ../templates/vars/aks/$ENVIRONMENT.json)")
+subs=$(jq -r .parameters.iam.value.permissions[].subscriptionId ../templates/vars/aks/$ENVIRONMENT.json | uniq)
 
 for sub in ${subs[@]}; 
 do
