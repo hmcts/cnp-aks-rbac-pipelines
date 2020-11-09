@@ -94,10 +94,16 @@
     "iam": {
       "type":"object"
     },
-    "Virtual_Machine_Contributor_Iam_Guid": {
+    "Virtual_Machine_Contributor_Iam_Guid_00": {
       "type":"string"
     },
-    "Network_Contributor_Iam_Guid": {
+    "Virtual_Machine_Contributor_Iam_Guid_01": {
+      "type":"string"
+    },
+    "Network_Contributor_Iam_Guid_00": {
+      "type":"string"
+    },
+    "Network_Contributor_Iam_Guid_01": {
       "type":"string"
     }
   },
@@ -223,7 +229,7 @@
           {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[parameters('Virtual_Machine_Contributor_Iam_Guid')]",
+            "name":  "[if(contains(parameters('aksclusterName'), '00'), parameters('Virtual_Machine_Contributor_Iam_Guid_00'), parameters('Virtual_Machine_Contributor_Iam_Guid_01'))]",
             "properties": {
               "roleDefinitionId": "[variables('Virtual_Machine_Contributor')]",
               "principalId": "[reference(parameters('aksClusterName'), '2020-03-01').identityProfile.kubeletidentity.objectId]",
@@ -256,7 +262,7 @@
           {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[parameters('Network_Contributor_Iam_Guid')]",
+            "name": "[if(contains(parameters('aksclusterName'), '00'), parameters('Network_Contributor_Iam_Guid_00'), parameters('Network_Contributor_Iam_Guid_01'))]",
             "properties": {
               "roleDefinitionId": "[variables('Network_Contributor')]",
               "principalId": "[reference(resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksclusterName')), '2020-06-01', 'Full').identity.principalId]",
@@ -293,7 +299,7 @@
           {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion":  "2020-04-01-preview",
-            "name": "[parameters('iam').permissions[copyIndex()].guid]",
+            "name": "[if(contains(parameters('aksclusterName'), '00'), parameters('iam').permissions[copyIndex()].guid_00, parameters('iam').permissions[copyIndex()].guid_01)]",
             "properties": {
               "roleDefinitionId": "[parameters('iam').permissions[copyIndex()].roleDefinitionId]",
               "principalId": "[reference(parameters('aksClusterName'), '2020-03-01').identityProfile.kubeletidentity.objectId]",

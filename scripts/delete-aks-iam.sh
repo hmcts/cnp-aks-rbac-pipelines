@@ -2,16 +2,22 @@
 set -e
 
 ENVIRONMENT=$1
+AKSNAME=$2
+
+if [[ $AKSNAME == *"00"* ]]
+then
+AKSENV="00"
+else
+AKSENV="01"
+fi
 
 IFS=$' '
 IFS=$'\n'
-
 guids=()
 subs=()
-
-guids+=("$(jq -r .parameters.Virtual_Machine_Contributor_Iam_Guid.value ../templates/vars/aks/$ENVIRONMENT.json) ")
-guids+=("$(jq -r .parameters.Network_Contributor_Iam_Guid.value ../templates/vars/aks/$ENVIRONMENT.json)")
-guids+=("$(jq -r .parameters.iam.value.permissions[].guid ../templates/vars/aks/$ENVIRONMENT.json)")
+guids+=("$(jq -r .parameters.Virtual_Machine_Contributor_Iam_Guid_$AKSENV.value ../templates/vars/aks/$ENVIRONMENT.json) ")
+guids+=("$(jq -r .parameters.Network_Contributor_Iam_Guid_$AKSENV.value ../templates/vars/aks/$ENVIRONMENT.json)")
+guids+=("$(jq -r .parameters.iam.value.permissions[].guid_$AKSENV ../templates/vars/aks/$ENVIRONMENT.json)")
 subs=$(jq -r .parameters.iam.value.permissions[].subscriptionId ../templates/vars/aks/$ENVIRONMENT.json | uniq)
 
 for sub in ${subs[@]}; 
