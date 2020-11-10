@@ -16,7 +16,7 @@ IFS=$'\n'
 guids=()
 subs=()
 guids+=("$(jq -r .parameters.Virtual_Machine_Contributor_Iam_Guid_$AKSENV.value ../templates/vars/aks/$ENVIRONMENT.json) ")
-guids+=("$(jq -r .parameters.Contributor_Iam_Guid_$AKSENV.value ../templates/vars/aks/$ENVIRONMENT.json)")
+guids+=("$(jq -r .parameters.contributor_Iam_Guid_$AKSENV.value ../templates/vars/aks/$ENVIRONMENT.json)")
 guids+=("$(jq -r .parameters.iam.value.permissions[].guid_$AKSENV ../templates/vars/aks/$ENVIRONMENT.json)")
 subs=$(jq -r .parameters.iam.value.permissions[].subscriptionId ../templates/vars/aks/$ENVIRONMENT.json | uniq)
 
