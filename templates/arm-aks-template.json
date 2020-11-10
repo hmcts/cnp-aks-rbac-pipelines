@@ -100,10 +100,10 @@
     "Virtual_Machine_Contributor_Iam_Guid_01": {
       "type":"string"
     },
-    "Network_Contributor_Iam_Guid_00": {
+    "contributor_Iam_Guid_00": {
       "type":"string"
     },
-    "Network_Contributor_Iam_Guid_01": {
+    "contributor_Iam_Guid_01": {
       "type":"string"
     }
   },
@@ -118,7 +118,7 @@
     "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]",
     "MC_RG": "[concat('MC_', resourceGroup().name, '_', parameters('aksclusterName'), '_', 'uksouth')]",
     "Virtual_Machine_Contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/',  '9980e02c-c2be-4d73-94e8-173b1dc7cf3c')]",
-    "Network_Contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/',  '4d97b98b-1d4f-4787-a291-c67834d212e7')]"
+    "contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/',  'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
   },
   "resources": [
     {
@@ -215,7 +215,7 @@
           "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aksclusterName'))]"
       ],
       "apiVersion": "2020-06-01",
-      "name":"[concat(parameters('aksclusterName'), '-VM-Contributor-Iam')]",
+      "name":"[concat(parameters('aksclusterName'), '-Contributor-Iam')]",
       "resourceGroup": "[variables('MC_RG')]",
       "subscriptionId": "[subscription().subscriptionId]",
       "properties": {
@@ -262,9 +262,9 @@
           {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[if(contains(parameters('aksclusterName'), '00'), parameters('Network_Contributor_Iam_Guid_00'), parameters('Network_Contributor_Iam_Guid_01'))]",
+            "name": "[if(contains(parameters('aksclusterName'), '00'), parameters('contributor_Iam_Guid_00'), parameters('contributor_Iam_Guid_01'))]",
             "properties": {
-              "roleDefinitionId": "[variables('Network_Contributor')]",
+              "roleDefinitionId": "[variables('contributor')]",
               "principalId": "[reference(resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksclusterName')), '2020-06-01', 'Full').identity.principalId]",
               "scope":"[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('aksVnetResourceGroup'))]",
               "principalType": "ServicePrincipal"
@@ -285,7 +285,7 @@
           "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aksClusterName'))]"
       ],
       "apiVersion": "2020-06-01",
-      "name": "[concat(parameters('iam').permissions[copyIndex()].name, '-Iam-aks-sbox')]",
+      "name": "[concat(parameters('iam').permissions[copyIndex()].name, '-Iam-aks-',parameters('aksclusterName'))]",
       "resourceGroup": "[parameters('iam').permissions[copyIndex()].resourceGroup]",
       "subscriptionId": "[parameters('iam').permissions[copyIndex()].subscriptionId]",
       "properties": {

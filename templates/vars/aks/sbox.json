@@ -26,10 +26,10 @@
     "Virtual_Machine_Contributor_Iam_Guid_01": {
       "value": "93807473-a718-49db-8985-3db1315a0e34"
     },
-    "Network_Contributor_Iam_Guid_00": {
+    "contributor_Iam_Guid_00": {
       "value": "b3cfa4d5-46ea-4ebd-8daf-8be3d014da0c"
     },
-    "Network_Contributor_Iam_Guid_01": {
+    "contributor_Iam_Guid_01": {
       "value": "3276d396-c475-459f-8324-572e59d220d8"
     },
     "iam": {
