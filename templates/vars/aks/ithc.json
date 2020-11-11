@@ -19,6 +19,43 @@
     },
     "vmSize": {
       "value": "Standard_D4s_v3"
-    }
+    },
+    "Virtual_Machine_Contributor_Iam_Guid_00": {
+      "value": "8cccbafb-f6ae-4ef5-8a7d-fdca8d050860"
+    },
+    "Virtual_Machine_Contributor_Iam_Guid_01": {
+      "value": "0667fee4-378a-4465-a9dd-b50b27380c3e"
+    },
+    "contributor_Iam_Guid_00": {
+      "value": "1fbf4599-1a09-4fd9-909e-e5669477516c"
+    },
+    "contributor_Iam_Guid_01": {
+      "value": "7b53fad4-bcf1-4b63-a006-92ef0788ea3c"
+    },
+    "iam": {
+      "value": {
+          "permissions": [
+          {
+            "name": "ManagedIdentityOperator1",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]",
+            "resourcegroup": "managed-identities-ithc-rg",
+            "scope": "[resourceGroup().id]",
+            "guid_00": "eb01c794-f776-4588-a306-accb42d59626",
+            "guid_01": "f89ae6e1-f8a5-485b-b6e6-50963a657e60",
+            "subscriptionId": "62864d44-5da9-4ae9-89e7-0cf33942fa09"
+          },
+          {
+            "name": "AcrPull",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+            "resourcegroup": "rpe-acr-prod-rg",
+            "scope": "[resourceGroup().id]",
+            "guid_00": "86885a49-2753-410f-8710-df3ad70fb390",
+            "guid_01": "ed5d74e9-2594-4759-808b-216511eebfc3",
+            "subscriptionId": "8999dec3-0104-4a27-94ee-6588559729d1"
+          }
+          ]
+        }
+      }
+  
   }
 }
