@@ -51,7 +51,7 @@
             "scope": "[resourceGroup().id]",
             "guid_00": "4db8205b-8087-4798-aea8-96608742f038",
             "guid_01": "463d5224-ebbe-429d-a806-4bf1da99368a",
-            "subscriptionId": "1c4f0704-a29e-403d-b719-b90c34ef14c9"
+            "subscriptionId": "62864d44-5da9-4ae9-89e7-0cf33942fa09"
           },
           {
             "name": "ManagedIdentityOperator3",        
