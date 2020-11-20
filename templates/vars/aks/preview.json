@@ -22,6 +22,52 @@
     },
     "vmSize": {
       "value": "Standard_D4s_v3"
-    }
+    },
+    "Virtual_Machine_Contributor_Iam_Guid_00": {
+      "value": "afa59330-39cf-4941-b1f4-9b27c6a365a9"
+    },
+    "Virtual_Machine_Contributor_Iam_Guid_01": {
+      "value": "26b0b13a-28f3-491c-8335-430046efdf1b"
+    },
+    "contributor_Iam_Guid_00": {
+      "value": "f5e8e541-1b33-4306-8d7a-08f76c142e1e"
+    },
+    "contributor_Iam_Guid_01": {
+      "value": "7848fe45-12b1-4858-84aa-c4c22a24d79b"
+    },
+    "iam": {
+      "value": {
+          "permissions": [
+          {
+            "name": "ManagedIdentityOperator1",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]",
+            "resourcegroup": "managed-identities-aat-rg",
+            "scope": "[resourceGroup().id]",
+            "guid_00": "e88f9703-cc9b-4aff-968e-de9b08ac0ebf",
+            "guid_01": "724b0811-aa2d-45c7-ba69-ab90ea1ee59e",
+            "subscriptionId": "96c274ce-846d-4e48-89a7-d528432298a7"
+          },
+          {
+            "name": "ManagedIdentityOperator2",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]",
+            "resourcegroup": "managed-identities-aat-rg",
+            "scope": "[resourceGroup().id]",
+            "guid_00": "515bc41e-1804-4ce4-9edb-273da71a7dc0",
+            "guid_01": "86b9bc97-a964-4520-b7c1-533c908c592e",
+            "subscriptionId": "1c4f0704-a29e-403d-b719-b90c34ef14c9"
+          },
+          {
+            "name": "AcrPull",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+            "resourcegroup": "rpe-acr-prod-rg",
+            "scope": "[resourceGroup().id]",
+            "guid_00": "45fb14e8-3317-4695-8c0b-23c502eba1fa",
+            "guid_01": "3d05e35c-04c4-4513-9746-daebae4cd085",
+            "subscriptionId": "8999dec3-0104-4a27-94ee-6588559729d1"
+          }
+          ]
+        }
+      }
+  
   }
 }
