@@ -57,6 +57,15 @@
             "subscriptionId": "1c4f0704-a29e-403d-b719-b90c34ef14c9"
           },
           {
+            "name": "ManagedIdentityOperator3",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]",
+            "resourcegroup": "managed-identities-preview-rg",
+            "scope": "[resourceGroup().id]",
+            "guid_00": "1373f3fd-1f22-4345-aae3-b24972533a8f",
+            "guid_01": "b17d8129-d482-4842-a4b4-7ce06b157f8f",
+            "subscriptionId": "8b6ea922-0862-443e-af15-6056e1c9b9a4"
+          },
+          {
             "name": "AcrPull",        
             "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
             "resourcegroup": "rpe-acr-prod-rg",
@@ -65,6 +74,7 @@
             "guid_01": "3d05e35c-04c4-4513-9746-daebae4cd085",
             "subscriptionId": "8999dec3-0104-4a27-94ee-6588559729d1"
           }
+
           ]
         }
       }
