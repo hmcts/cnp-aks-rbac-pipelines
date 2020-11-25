@@ -3,22 +3,22 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "kubernetesVersion": {
-      "value": "1.18.6"
-    },
-    "nodeCount": {
-      "value": 6
+      "value": "1.18.8"
     },
     "nodeMinCount": {
-      "value": ""
+      "value": 10
     },
     "nodeMaxCount": {
-      "value": ""
+      "value": "30"
     },
     "enableAutoScaling": {
-      "value": ""
+      "value": "true"
     },
     "type": {
       "value": "VirtualMachineScaleSets"
+    },
+    "vmSize": {
+      "value": "Standard_B4ms"
     }
   }
 }

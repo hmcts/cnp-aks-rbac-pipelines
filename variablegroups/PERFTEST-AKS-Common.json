@@ -13,7 +13,7 @@
       "value": "hmctspublic"
     },
     "Subscription.AKS.Appgw.subnet.cidr": {
-      "value": "10.10.46.0/25"
+      "value": "10.61.32.0/25"
     },
     "Subscription.AKS.Developer.Role": {
       "value": "reader"
@@ -25,22 +25,19 @@
       "value": "true"
     },
     "Subscription.AKS.Iass.subnet.cidr": {
-      "value": "10.10.47.0/24"
+      "value": "10.61.33.0/24"
     },
     "Subscription.AKS.LogAnalytics.ResourceId": {
       "value": "/subscriptions/1c4f0704-a29e-403d-b719-b90c34ef14c9/resourcegroups/oms-automation/providers/microsoft.operationalinsights/workspaces/hmcts-nonprod"
     },
     "Subscription.AKS.Subnet.Primary.Cidr": {
-      "value": "10.10.40.0/23"
+      "value": "10.61.0.0/20"
     },
     "Subscription.AKS.Subnet.Secondary.Cidr": {
-      "value": "10.10.44.0/23"
-    },
-    "Subscription.AKS.vmSize": {
-      "value": "Standard_D4s_v3"
+      "value": "10.61.16.0/20"
     },
     "Subscription.AKS.VNet.Cidr": {
-      "value": "10.10.40.0/21"
+      "value": "10.61.0.0/18"
     },
     "Subscription.keyvaultName": {
       "value": "cftapps-test"
