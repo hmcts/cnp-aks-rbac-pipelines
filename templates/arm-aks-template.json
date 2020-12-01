@@ -47,21 +47,6 @@
     "sshPublicKey": {
       "type": "string"
     },
-    "servicePrincipalId": {
-      "type": "string"
-    },
-    "servicePrincipalSecret": {
-      "type": "string"
-    },
-    "clientAppId": {
-      "type": "string"
-    },
-    "serverAppId": {
-      "type": "string"
-    },
-    "serverAppSecret": {
-      "type": "string"
-    },
     "logAnalyticsResourceId": {
       "type": "string"
     },
@@ -105,6 +90,21 @@
     },
     "criticality": {
       "type": "string"
+    },
+    "iam": {
+      "type":"object"
+    },
+    "Virtual_Machine_Contributor_Iam_Guid_00": {
+      "type":"string"
+    },
+    "Virtual_Machine_Contributor_Iam_Guid_01": {
+      "type":"string"
+    },
+    "contributor_Iam_Guid_00": {
+      "type":"string"
+    },
+    "contributor_Iam_Guid_01": {
+      "type":"string"
     }
   },
   "variables": {
@@ -113,15 +113,22 @@
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser",
+    "nodepoolMode": "System",
     "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]",
-    "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]"
+    "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]",
+    "MC_RG": "[concat('MC_', resourceGroup().name, '_', parameters('aksclusterName'), '_', 'uksouth')]",
+    "Virtual_Machine_Contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/',  '9980e02c-c2be-4d73-94e8-173b1dc7cf3c')]",
+    "contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/',  'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
   },
   "resources": [
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2019-10-01",
+      "apiVersion": "2020-04-01",
       "location": "[resourceGroup().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
         "Branch":"[parameters('branch')]",
@@ -153,7 +160,8 @@
             "storageProfile": "[variables('storageProfile')]",
             "maxPods": "[parameters('maxPods')]",
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
-            "osType": "[variables('osType')]"
+            "osType": "[variables('osType')]",
+            "mode": "[variables('nodepoolMode')]"
           }
         ],
         "linuxProfile": {
@@ -166,10 +174,6 @@
             ]
           }
         },
-        "servicePrincipalProfile": {
-          "clientId": "[parameters('servicePrincipalId')]",
-          "secret": "[parameters('servicePrincipalSecret')]"
-        },
         "addonProfiles": {
           "kubeDashboard": {
             "config": null,
@@ -181,12 +185,10 @@
                   "logAnalyticsWorkspaceResourceID": "[parameters('logAnalyticsResourceId')]"
               }
           }
-        },           
-        "enableRBAC": true,
+        },
         "aadProfile": {
-          "clientAppID": "[parameters('clientAppId')]",
-          "serverAppID": "[parameters('serverAppId')]",
-          "serverAppSecret": "[parameters('serverAppSecret')]",
+          "managed": true,
+          "enableAzureRBAC": true,
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
@@ -205,6 +207,109 @@
             }
           }
         }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+          "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aksclusterName'))]"
+      ],
+      "apiVersion": "2020-06-01",
+      "name":"[concat(parameters('aksclusterName'), '-VM-Contributor-Iam')]",
+      "resourceGroup": "[variables('MC_RG')]",
+      "subscriptionId": "[subscription().subscriptionId]",
+      "properties": {
+      "mode": "Incremental",
+      "template": {
+        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {},
+        "variables": {},
+        "resources": [
+          {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name":  "[if(contains(parameters('aksclusterName'), '00'), parameters('Virtual_Machine_Contributor_Iam_Guid_00'), parameters('Virtual_Machine_Contributor_Iam_Guid_01'))]",
+            "properties": {
+              "roleDefinitionId": "[variables('Virtual_Machine_Contributor')]",
+              "principalId": "[reference(parameters('aksClusterName'), '2020-03-01').identityProfile.kubeletidentity.objectId]",
+              "scope":"[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', variables('MC_RG'))]",
+              "principalType": "ServicePrincipal"
+          }
+        }
+        ]
+      },
+      "parameters": {}
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+          "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aksclusterName'))]"
+      ],
+      "apiVersion": "2020-06-01",
+      "name":"[concat(parameters('aksclusterName'), '-Contributor-Iam')]",
+      "resourceGroup": "[parameters('aksVnetResourceGroup')]",
+      "subscriptionId": "[subscription().subscriptionId]",
+      "properties": {
+      "mode": "Incremental",
+      "template": {
+        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {},
+        "variables": {},
+        "resources": [
+          {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[if(contains(parameters('aksclusterName'), '00'), parameters('contributor_Iam_Guid_00'), parameters('contributor_Iam_Guid_01'))]",
+            "properties": {
+              "roleDefinitionId": "[variables('contributor')]",
+              "principalId": "[reference(resourceId('Microsoft.ContainerService/managedClusters/', parameters('aksclusterName')), '2020-06-01', 'Full').identity.principalId]",
+              "scope":"[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('aksVnetResourceGroup'))]",
+              "principalType": "ServicePrincipal"
+          }
+        }
+        ]
+      },
+      "parameters": {}
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "copy": {
+      "name": "iam_loop",
+      "count": "[length(parameters('iam').permissions)]"
+      },
+      "dependsOn": [
+          "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aksClusterName'))]"
+      ],
+      "apiVersion": "2020-06-01",
+      "name": "[concat(parameters('iam').permissions[copyIndex()].name, '-Iam-aks-',parameters('aksclusterName'))]",
+      "resourceGroup": "[parameters('iam').permissions[copyIndex()].resourceGroup]",
+      "subscriptionId": "[parameters('iam').permissions[copyIndex()].subscriptionId]",
+      "properties": {
+      "mode": "Incremental",
+      "template": {
+        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {},
+        "variables": {},
+        "resources": [
+          {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion":  "2020-04-01-preview",
+            "name": "[if(contains(parameters('aksclusterName'), '00'), parameters('iam').permissions[copyIndex()].guid_00, parameters('iam').permissions[copyIndex()].guid_01)]",
+            "properties": {
+              "roleDefinitionId": "[parameters('iam').permissions[copyIndex()].roleDefinitionId]",
+              "principalId": "[reference(parameters('aksClusterName'), '2020-03-01').identityProfile.kubeletidentity.objectId]",
+              "scope": "[parameters('iam').permissions[copyIndex()].scope]",
+              "principalType": "ServicePrincipal"
+          }
+        }
+        ]
+      },
+      "parameters": {}
       }
     }
   ],
