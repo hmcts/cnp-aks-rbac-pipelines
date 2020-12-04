@@ -19,6 +19,52 @@
     },
     "vmSize": {
       "value": "Standard_D4s_v3"
+    },
+    "Virtual_Machine_Contributor_Iam_Guid_00": {
+      "value": "2fe1d4cc-e14d-46aa-94b8-dbc1143ad7ff"
+    },
+    "Virtual_Machine_Contributor_Iam_Guid_01": {
+      "value": "afcd94ab-80f9-4a9a-ab00-4cbb76ccb22c"
+    },
+    "contributor_Iam_Guid_00": {
+      "value": "47384b0f-f2fa-4217-ac01-73c4a8d41712"
+    },
+    "contributor_Iam_Guid_01": {
+      "value": "e09ba355-6ead-4210-a81e-263f7294d29f"
+    },
+    "iam": {
+      "value": {
+          "permissions": [
+          {
+            "name": "ManagedIdentityOperator1",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]",
+            "resourcegroup": "managed-identities-demo-rg",
+            "scope": "[resourceGroup().id]",
+            "guid_00": "13a0d4a3-43a9-44f5-ad3e-796ec0b8c190",
+            "guid_01": "2410d465-7b92-4a79-a2e6-24b27248cc78",
+            "subscriptionId": "d025fece-ce99-4df2-b7a9-b649d3ff2060"
+          },
+          {
+            "name": "ManagedIdentityOperator2",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]",
+            "resourcegroup": "managed-identities-demo-rg",
+            "scope": "[resourceGroup().id]",
+            "guid_00": "50dc4dbe-f311-4424-b272-30e9d153a476",
+            "guid_01": "901fc89c-965d-4ccb-aa8d-7cf181a41b48",
+            "subscriptionId": "1c4f0704-a29e-403d-b719-b90c34ef14c9"
+          },
+          {
+            "name": "AcrPull",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+            "resourcegroup": "rpe-acr-prod-rg",
+            "scope": "[resourceGroup().id]",
+            "guid_00": "23318d9d-9486-42f9-be95-a5190cd48164",
+            "guid_01": "d4679a30-06ed-467e-a127-447d7031288b",
+            "subscriptionId": "8999dec3-0104-4a27-94ee-6588559729d1"
+          }
+          ]
+        }
+      }
+    
     }
   }
-}
