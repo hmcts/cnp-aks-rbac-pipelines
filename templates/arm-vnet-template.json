@@ -189,6 +189,7 @@
         "destinationPortRanges": "[variables('aksnsgSecurityRules')[copyIndex()].destinationPortRanges]",
         "sourcePortRanges": "[variables('aksnsgSecurityRules')[copyIndex()].sourcePortRanges]",
         "destinationAddressPrefix": "[variables('aksnsgSecurityRules')[copyIndex()].destinationAddressPrefix]",
+        "destinationAddressPrefixes": "[variables('aksnsgSecurityRules')[copyIndex()].destinationAddressPrefixes]",
         "access": "[variables('aksnsgSecurityRules')[copyIndex()].access]",
         "direction": "[variables('aksnsgSecurityRules')[copyIndex()].direction]"
       },
