@@ -49,7 +49,7 @@
       "value": "#aks-monitor-prod"
     },
     "Subscription.AKS.NSG.Settings": {
-      "value": "{ \"securityRules\": [{\"name\":\"BulkscanToCrimeStorage\",\"description\":\"Permit access from bulkscan microservice to Crime storage endpoint located in a remote vpn network\",\"direction\":\"Outbound\",\"priority\":100,\"sourceAddressPrefix\":\"VirtualNetwork\",\"destinationAddressPrefix\":\"10.200.66.12\",\"sourcePortRange\":\"*\",\"destinationPortRange\":\"443\",\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[],\"sourcePortRanges\":[]}] }"
+      "value": "{ \"securityRules\": [{\"name\":\"BulkscanToCrimeStorage\",\"description\":\"Permit access from bulkscan microservice to Crime storage endpoint located in a remote vpn network\",\"direction\":\"Outbound\",\"priority\":100,\"sourceAddressPrefix\":\"VirtualNetwork\",\"destinationAddressPrefix\":\"10.200.66.12\",\"destinationAddressPrefixes\":[],\"sourcePortRange\":\"*\",\"destinationPortRange\":\"443\",\"access\":\"Allow\",\"protocol\":\"Tcp\",\"destinationPortRanges\":[],\"sourcePortRanges\":[]}] }"
     },
     "Dynatrace.KeyVault.Name":{
       "value": "cftptl-intsvc"
