@@ -193,7 +193,6 @@
         },
         "aadProfile": {
           "managed": true,
-          "enableAzureRBAC": true,
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
