@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "kubernetesVersion": {
-      "value": "1.19.6"
+      "value": "1.18.8"
     },
     "nodeMinCount": {
       "value": 30
@@ -21,10 +21,7 @@
       "value": 50
     },
     "vmSize": {
-      "value": "Standard_DS3_v2"
-    },
-    "osDiskType": {
-      "value": "Ephemeral"
+      "value": "Standard_D4s_v3"
     },
     "Virtual_Machine_Contributor_Iam_Guid_00": {
       "value": "afa59330-39cf-4941-b1f4-9b27c6a365a9"
