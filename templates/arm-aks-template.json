@@ -12,6 +12,10 @@
       "type": "string",
       "defaultValue": "Standard_B4ms"
     },
+    "osDiskType": {
+      "type": "string",
+      "defaultValue": "Managed"
+    },
     "nodeMinCount": {
       "type": "int"
     },
@@ -124,7 +128,7 @@
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2020-04-01",
+      "apiVersion": "2020-09-01",
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "SystemAssigned"
@@ -153,6 +157,7 @@
             "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
             "type": "[parameters('type')]",
             "orchestratorVersion": "[parameters('kubernetesVersion')]",
+            "osDiskType": "[parameters('osDiskType')]",
             "scaleSetPriority": "string",
             "scaleSetEvictionPolicy": "string",
             "vmSize": "[parameters('vmSize')]",
@@ -188,7 +193,6 @@
         },
         "aadProfile": {
           "managed": true,
-          "enableAzureRBAC": true,
           "tenantID": "[subscription().tenantId]"
         },
         "networkProfile": {
