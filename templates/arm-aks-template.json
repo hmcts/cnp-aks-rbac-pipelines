@@ -14,7 +14,7 @@
     },
     "osDiskType": {
       "type": "string",
-      "defaultValue": "Managed"
+      "defaultValue": "Ephemeral"
     },
     "nodeMinCount": {
       "type": "int"
