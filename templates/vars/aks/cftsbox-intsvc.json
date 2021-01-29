@@ -20,9 +20,6 @@
     "vmSize": {
       "value": "Standard_DS3_v2"
     },
-    "osDiskType": {
-      "value": "Ephemeral"
-    },
     "Virtual_Machine_Contributor_Iam_Guid_00": {
       "value": "c17867b7-2edd-4ee5-8071-c0d84b6f5d68"
     },
