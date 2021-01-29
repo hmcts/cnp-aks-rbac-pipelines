@@ -408,9 +408,6 @@
               "serviceEndpoints": "[parameters('serviceEndpoints')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
-              },
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
@@ -421,6 +418,9 @@
               "serviceEndpoints": "[parameters('serviceEndpoints')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           }
