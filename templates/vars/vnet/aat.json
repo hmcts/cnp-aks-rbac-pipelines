@@ -66,6 +66,12 @@
           "service": "Microsoft.Storage"
         }
       ]
+    },
+    "bastionSubnetPrefix": {
+      "value": "10.48.0.0/27"
+    },
+    "paloaltoIPNextHop": {
+      "value": "10.11.8.36"
     }
   }
 }
