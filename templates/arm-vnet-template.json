@@ -119,22 +119,16 @@
       "type": "array",
       "defaultValue": []
     },
-    "routes": {
+    "routetableName": {
+      "type": "string",
+      "metadata": {
+        "description": "The full ID of the hub vnet to peer to"
+      }
+    },
+    "routetableRoutes": {
       "type": "array",
       "metadata": {
         "description": "The address prefix of the bastion subnet"
-      }
-    },
-    "bastionSubnetPrefix": {
-      "type": "string",
-      "metadata": {
-        "description": "The address prefix of the bastion subnet"
-      }
-    },
-    "paloaltoIPNextHop": {
-      "type": "string",
-      "metadata": {
-        "description": "The next hop to reach the bastion vnet (Hub network; Palo Alto Load Balancer)"
       }
     }
   },
@@ -142,8 +136,6 @@
   "variables": {
     "primarySubnetName": "[concat('aks-',parameters('aksPrimarySubnetName'))]",
     "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]",
-    "routeTableName": "aks-route-table",
-    "internetcidr": "0.0.0.0/0",
     "nsgRulesMapping": {
       "true": "[parameters('aksNetworkSecurityGroupsSettings').securityRules]",
       "false": [{
@@ -317,7 +309,7 @@
     },
     {
       "type": "Microsoft.Network/routeTables",
-      "name": "[variables('routeTableName')]",
+      "name": "[parameters('routeTableName')]",
       "apiVersion": "2020-05-01",
       "location": "[resourceGroup().location]",
       "tags" : {
@@ -337,13 +329,13 @@
           "copy": [
               {
                   "name": "routes",
-                  "count": "[length(parameters('routes'))]",
+                  "count": "[length(parameters('routeTableRoutes'))]",
                   "input": {
-                      "name": "[parameters('routes')[copyIndex('routes')].name]",
+                      "name": "[parameters('routeTableRoutes')[copyIndex('routes')].name]",
                       "properties": {
-                          "addressPrefix": "[parameters('routes')[copyIndex('routes')].addressPrefix]",
-                          "nextHopType": "[parameters('routes')[copyIndex('routes')].nextHopType]",
-                          "nextHopIpAddress": "[parameters('routes')[copyIndex('routes')].nextHopIpAddress]"
+                          "addressPrefix": "[parameters('routeTableRoutes')[copyIndex('routes')].addressPrefix]",
+                          "nextHopType": "[parameters('routeTableRoutes')[copyIndex('routes')].nextHopType]",
+                          "nextHopIpAddress": "[parameters('routeTableRoutes')[copyIndex('routes')].nextHopIpAddress]"
                       }
                   }
               }
