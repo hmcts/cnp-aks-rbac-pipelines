@@ -119,6 +119,12 @@
       "type": "array",
       "defaultValue": []
     },
+    "routes": {
+      "type": "array",
+      "metadata": {
+        "description": "The address prefix of the bastion subnet"
+      }
+    },
     "bastionSubnetPrefix": {
       "type": "string",
       "metadata": {
@@ -326,25 +332,22 @@
         "environment": "[parameters('environment')]",
         "criticality": "[parameters('criticality')]"
       },
+
       "properties": {
-        "routes": [
-          {
-            "name": "BastionMgmtVnet",
-            "properties": {
-              "addressPrefix": "[parameters('bastionSubnetPrefix')]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('paloaltoIPNextHop')]"
-            }
-          },
-          {
-            "name": "Internet",
-            "properties": {
-              "addressPrefix": "[variables('internetcidr')]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('paloaltoIPNextHop')]"
-            }
-          }
-        ]
+          "copy": [
+              {
+                  "name": "routes",
+                  "count": "[length(parameters('routes'))]",
+                  "input": {
+                      "name": "[parameters('routes')[copyIndex('routes')].name]",
+                      "properties": {
+                          "addressPrefix": "[parameters('routes')[copyIndex('routes')].addressPrefix]",
+                          "nextHopType": "[parameters('routes')[copyIndex('routes')].nextHopType]",
+                          "nextHopIpAddress": "[parameters('routes')[copyIndex('routes')].nextHopIpAddress]"
+                      }
+                  }
+              }
+          ]
       }
     },
     {
