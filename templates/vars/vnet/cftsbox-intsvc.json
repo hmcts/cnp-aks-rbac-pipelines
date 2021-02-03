@@ -47,11 +47,25 @@
         }
       ]
     },
-    "bastionSubnetPrefix": {
-      "value": "10.48.0.96/27"
+    "routetableName": {
+      "value": "aks-route-table"
     },
-    "paloaltoIPNextHop": {
-      "value": "10.10.200.36"
-    }
+    "routetableRoutes": {
+      "value": [
+          {
+          "name": "BastionMgmtVnet",
+          "nextHopType": "VirtualAppliance",
+          "nextHopIpAddress": "10.10.200.36",
+          "addressPrefix": "10.48.0.96/27"
+          },
+          {
+          "name": "Internet",
+          "nextHopType": "VirtualAppliance",
+          "nextHopIpAddress": "10.10.200.36",
+          "addressPrefix": "0.0.0.0/0"
+        }
+      ]
   }
+
+}
 }
