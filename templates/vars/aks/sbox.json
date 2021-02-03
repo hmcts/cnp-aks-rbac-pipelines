@@ -65,7 +65,7 @@
           {
             "name": "AcrPull2",        
             "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
-            "resourcegroup": "hmctssandbox",
+            "resourcegroup": "cnp-acr-rg",
             "scope": "[resourceGroup().id]",
             "guid_00": "0c0a1391-d6b6-4650-ba93-c6683046d13a",
             "guid_01": "87213164-50cf-4cc7-b1f2-bcd1899cbdca",
