@@ -53,7 +53,7 @@
       ]
     },
     "routetableName": {
-      "value": "aks-route-table"
+      "value": "aks-ithc-rt"
     },
     "routetableRoutes": {
       "value": [
