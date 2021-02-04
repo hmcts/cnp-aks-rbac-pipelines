@@ -54,13 +54,22 @@
             "subscriptionId": "bf308a5c-0624-4334-8ff8-8dca9fd43783"
           },
           {
-            "name": "AcrPull",        
+            "name": "AcrPull1",        
             "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
             "resourcegroup": "rpe-acr-prod-rg",
             "scope": "[resourceGroup().id]",
             "guid_00": "b3c2e5a4-e223-400d-9560-2c93cbb60026",
             "guid_01": "5e011c3f-c9a6-4baa-aa6f-6037190b9760",
             "subscriptionId": "8999dec3-0104-4a27-94ee-6588559729d1"
+          },
+          {
+            "name": "AcrPull2",        
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+            "resourcegroup": "cnp-acr-rg",
+            "scope": "[resourceGroup().id]",
+            "guid_00": "0c0a1391-d6b6-4650-ba93-c6683046d13a",
+            "guid_01": "87213164-50cf-4cc7-b1f2-bcd1899cbdca",
+            "subscriptionId": "bf308a5c-0624-4334-8ff8-8dca9fd43783"
           }
           ]
         }
