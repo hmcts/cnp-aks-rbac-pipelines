@@ -397,7 +397,7 @@
               "addressPrefix": "[parameters('appgwSubnetCIDR')]",
               "serviceEndpoints": "[parameters('serviceEndpoints')]",
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('appgwNsgName'))]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
               }
             }
           },
