@@ -58,9 +58,6 @@
     "paloaltoIPNextHop": {
       "value": "10.11.8.36"
     },
-    "routetableName": {
-      "value": "aks-route-table"
-    },
     "routetableRoutes": {
       "value": [
           {

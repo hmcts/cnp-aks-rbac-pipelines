@@ -119,12 +119,6 @@
       "type": "array",
       "defaultValue": []
     },
-    "routetableName": {
-      "type": "string",
-      "metadata": {
-        "description": "The full ID of the hub vnet to peer to"
-      }
-    },
     "routetableRoutes": {
       "type": "array",
       "metadata": {
@@ -309,7 +303,7 @@
     },
     {
       "type": "Microsoft.Network/routeTables",
-      "name": "[parameters('routeTableName')]",
+      "name": "aks-route-table",
       "apiVersion": "2020-05-01",
       "location": "[resourceGroup().location]",
       "tags" : {

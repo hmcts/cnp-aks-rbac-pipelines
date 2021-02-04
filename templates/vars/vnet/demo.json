@@ -52,9 +52,6 @@
         }
       ]
     },
-    "routetableName": {
-      "value": "aks-route-table"
-    },
     "routetableRoutes": {
       "value": [
           {
