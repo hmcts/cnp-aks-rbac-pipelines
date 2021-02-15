@@ -34,6 +34,11 @@
           "name": "privatelink.blob.core.windows.net",
           "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
           "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "privatelink.postgres.database.azure.com",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
         }
       ]
     },
