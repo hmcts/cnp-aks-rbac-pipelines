@@ -12,6 +12,10 @@
       "type": "string",
       "defaultValue": "Standard_B4ms"
     },
+    "enableAKSaz": {
+      "type": "bool",
+      "defaultValue": false
+    },
     "osDiskType": {
       "type": "string",
       "defaultValue": "Ephemeral"
@@ -166,7 +170,8 @@
             "maxPods": "[parameters('maxPods')]",
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
             "osType": "[variables('osType')]",
-            "mode": "[variables('nodepoolMode')]"
+            "mode": "[variables('nodepoolMode')]",
+            "availabilityZones": "[if(parameters('enableAKSaz'), pickZones('Microsoft.ContainerService', 'managedClusters', resourceGroup().location), json('null'))]"
           }
         ],
         "linuxProfile": {

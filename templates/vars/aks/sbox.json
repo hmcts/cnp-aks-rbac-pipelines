@@ -20,6 +20,9 @@
     "vmSize": {
       "value": "Standard_DS3_v2"
     },
+    "enableAKSaz": {
+      "value": true
+    },
     "Virtual_Machine_Contributor_Iam_Guid_00": {
       "value": "abf6414c-9bcc-4508-ac79-98361bd72cd8"
     },
