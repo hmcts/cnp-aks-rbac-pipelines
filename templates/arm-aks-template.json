@@ -132,7 +132,7 @@
     {
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('aksClusterName')]",
-      "apiVersion": "2020-09-01",
+      "apiVersion": "2020-12-01",
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "SystemAssigned"
@@ -171,7 +171,7 @@
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
             "osType": "[variables('osType')]",
             "mode": "[variables('nodepoolMode')]",
-            "availabilityZones": "[pickZones('Microsoft.ContainerService', 'managedClusters', resourceGroup().location)]"
+            "availabilityZones": ["1", "2", "3"]
           }
         ],
         "linuxProfile": {
