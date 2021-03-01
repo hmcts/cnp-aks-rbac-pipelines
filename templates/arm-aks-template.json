@@ -171,7 +171,7 @@
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
             "osType": "[variables('osType')]",
             "mode": "[variables('nodepoolMode')]",
-            "availabilityZones": ["1", "2", "3"]
+            "availabilityZones": "[if(not(empty(pickZones('Microsoft.ContainerService', 'managedClusters', resourceGroup().location))), string(add(mod(copyIndex(),3),1)), json('null'))]"
           }
         ],
         "linuxProfile": {
