@@ -137,6 +137,12 @@
           "nextHopType": "VirtualAppliance",
           "nextHopIpAddress": "10.11.8.36",
           "addressPrefix": "0.0.0.0/0"
+        },
+        {
+          "name": "sdsdev",
+          "nextHopType": "VirtualAppliance",
+          "nextHopIpAddress": "10.11.72.36",
+          "addressPrefix": "10.145.0.0/18"
         }
       ]
   }
