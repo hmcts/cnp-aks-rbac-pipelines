@@ -60,12 +60,6 @@
     "routetableRoutes": {
       "value": [
           {
-            "name": "BastionMgmtVnet",
-            "nextHopType": "VirtualAppliance",
-            "nextHopIpAddress": "10.11.72.36",
-            "addressPrefix": "10.48.0.0/27"
-          },
-          {
             "name": "Internet",
             "nextHopType": "VirtualAppliance",
             "nextHopIpAddress": "10.11.72.36",
