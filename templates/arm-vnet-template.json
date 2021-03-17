@@ -122,7 +122,7 @@
     "routetableRoutes": {
       "type": "array",
       "metadata": {
-        "description": "The address prefix of the bastion subnet"
+        "description": "The route table routes array from parameters file"
       }
     }
   },
