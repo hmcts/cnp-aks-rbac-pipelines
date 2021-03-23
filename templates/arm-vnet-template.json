@@ -118,11 +118,19 @@
     "serviceEndpoints": {
       "type": "array",
       "defaultValue": []
+    },
+    "routetableRoutes": {
+      "type": "array",
+      "metadata": {
+        "description": "The route table routes array from parameters file"
+      }
     }
   },
+  
   "variables": {
     "primarySubnetName": "[concat('aks-',parameters('aksPrimarySubnetName'))]",
     "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]",
+    "routeTableName": "aks-route-table",
     "nsgRulesMapping": {
       "true": "[parameters('aksNetworkSecurityGroupsSettings').securityRules]",
       "false": [{
@@ -295,6 +303,41 @@
       ]
     },
     {
+      "type": "Microsoft.Network/routeTables",
+      "name": "[variables('routeTableName')]",
+      "apiVersion": "2020-05-01",
+      "location": "[resourceGroup().location]",
+      "tags" : {
+        "EnvironmentName": "[parameters('environmentName')]",
+        "Branch":"[parameters('branch')]",
+        "managedBy":"[parameters('managedBy')]",
+        "solutionOwner": "[parameters('solutionOwner')]",
+        "activityName": "[parameters('activityName')]",
+        "dataClassification":"[parameters('dataClassification')]",
+        "automation": "[parameters('automation')]",
+        "costCentre":"[parameters('costCentre')]",
+        "environment": "[parameters('environment')]",
+        "criticality": "[parameters('criticality')]"
+      },
+
+      "properties": {
+          "copy": [
+              {
+                  "name": "routes",
+                  "count": "[length(parameters('routeTableRoutes'))]",
+                  "input": {
+                      "name": "[parameters('routeTableRoutes')[copyIndex('routes')].name]",
+                      "properties": {
+                          "addressPrefix": "[parameters('routeTableRoutes')[copyIndex('routes')].addressPrefix]",
+                          "nextHopType": "[parameters('routeTableRoutes')[copyIndex('routes')].nextHopType]",
+                          "nextHopIpAddress": "[parameters('routeTableRoutes')[copyIndex('routes')].nextHopIpAddress]"
+                      }
+                  }
+              }
+          ]
+      }
+    },
+    {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('aksVnetName')]",
       "apiVersion": "2019-04-01",
@@ -329,6 +372,9 @@
               "serviceEndpoints": "[parameters('serviceEndpoints')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
@@ -339,6 +385,9 @@
               "serviceEndpoints": "[parameters('serviceEndpoints')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           },
@@ -359,6 +408,9 @@
               "serviceEndpoints": "[parameters('serviceEndpoints')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
             }
           }
@@ -422,7 +474,8 @@
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('aksNsgName'))]",
         "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]",
-        "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]"
+        "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('iaasNsgName'))]",
+        "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
       ]
     },
     {

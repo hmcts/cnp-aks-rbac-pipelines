@@ -51,6 +51,17 @@
           "service": "Microsoft.Storage"
         }
       ]
-    }
+    },
+    "routetableRoutes": {
+      "value": [
+          {
+          "name": "Internet",
+          "nextHopType": "VirtualAppliance",
+          "nextHopIpAddress": "10.10.200.36",
+          "addressPrefix": "0.0.0.0/0"
+        }
+      ]
   }
+
+}
 }
