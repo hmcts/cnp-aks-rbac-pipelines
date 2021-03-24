@@ -5,6 +5,10 @@
     "aksClusterName": {
       "type": "string"
     },
+    "tier": {
+      "type": "string",
+      "defaultValue": "Free"
+    },
     "kubernetesVersion": {
       "type": "string"
     },
@@ -132,6 +136,10 @@
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "SystemAssigned"
+      },
+      "sku": {
+        "name": "Basic",
+        "tier": "[parameters('tier')]"
       },
       "tags" : {
         "EnvironmentName": "[parameters('environmentName')]",
