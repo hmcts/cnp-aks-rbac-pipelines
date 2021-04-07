@@ -114,6 +114,11 @@
           "name": "privatelink.postgres.database.azure.com",
           "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
           "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "dev.platform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
         }
       ]
     },
@@ -137,6 +142,12 @@
           "nextHopType": "VirtualAppliance",
           "nextHopIpAddress": "10.11.8.36",
           "addressPrefix": "0.0.0.0/0"
+        },
+        {
+          "name": "sdsdev",
+          "nextHopType": "VirtualAppliance",
+          "nextHopIpAddress": "10.11.72.36",
+          "addressPrefix": "10.145.0.0/18"
         }
       ]
   }
