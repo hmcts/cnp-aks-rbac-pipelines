@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "kubernetesVersion": {
-      "value": "1.19.9"
+      "value": "1.19.7"
     },
     "nodeMinCount": {
       "value": 10
