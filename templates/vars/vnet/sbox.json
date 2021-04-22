@@ -52,8 +52,8 @@
         },
         {
           "name": "privatelink.blob.core.windows.net",
-          "subscriptionId": "a8140a9e-f1b0-481f-a4de-09e2ee23f7ab",
-          "resourceGroup": "cvp-recordings-sbox-rg"
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
         }
       ]
     },
