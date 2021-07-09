@@ -12,7 +12,7 @@ else
   ENV=${CLUSTER_ENV}
 fi
 
-CLUSTER_NAME=echo ${CLUSTER_FULLNAME} | cut -d'-' -f 2
+CLUSTER_NAME= $(echo ${CLUSTER_FULLNAME} | cut -d'-' -f 2)
 
 # Install Flux
 kubectl apply -f ${FLUX_CONFIG_URL}/apps/flux-system/base/gotk-components.yaml
