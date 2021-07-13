@@ -8,6 +8,8 @@ FLUX_CONFIG_URL=https://raw.githubusercontent.com/hmcts/cnp-flux-config/master
 
 if [ ${CLUSTER_ENV}=="mgmt-sandbox" ]; then
   ENV="sbox-intsvc"
+elif [ ${CLUSTER_ENV}=="cftptl-intsvc" ]; then
+  ENV="ptl-intsvc"
 else 
   ENV=${CLUSTER_ENV}
 fi
@@ -35,7 +37,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: flux-system
 resources:
-  - ${FLUX_CONFIG_URL}/apps/flux-system/base/kustomize.yaml
+    - ${FLUX_CONFIG_URL}/apps/flux-system/base/kustomize.yaml
 patchesStrategicMerge:
   - ${FLUX_CONFIG_URL}/apps/flux-system/${ENV}/${CLUSTER_NAME}/kustomize.yaml
 EOF
