@@ -6,9 +6,9 @@ CLUSTER_ENV=$1
 CLUSTER_FULLNAME=$2
 FLUX_CONFIG_URL=https://raw.githubusercontent.com/hmcts/cnp-flux-config/master
 
-if [ ${CLUSTER_ENV}=="mgmt-sandbox" ]; then
+if [ ${CLUSTER_ENV} == "mgmt-sandbox" ]; then
   ENV="sbox-intsvc"
-elif [ ${CLUSTER_ENV}=="cftptl-intsvc" ]; then
+elif [ ${CLUSTER_ENV} == "cftptl-intsvc" ]; then
   ENV="ptl-intsvc"
 else 
   ENV=${CLUSTER_ENV}
