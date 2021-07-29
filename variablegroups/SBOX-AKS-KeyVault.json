@@ -53,7 +53,7 @@
   "type": "AzureKeyVault",
   "name": "SBOX-AKS-KeyVault",
   "providerData": {
-    "serviceEndpointId": "a6794204-7cef-4b23-8dd4-fa8dd9c5ffe8",
+    "serviceEndpointId": "c79eea76-244f-488c-a204-125de34d6d33",
     "vault": "cftapps-sbox",
     "lastRefreshedOn": "2019-07-03T13:24:20.107Z"
   },
