@@ -53,7 +53,7 @@
     "type": "AzureKeyVault",
     "name": "DEV-AKS-KeyVault",
     "providerData": {
-      "serviceEndpointId": "50b2ff9d-e17d-4595-bfcc-bd2ad906a974",
+      "serviceEndpointId": "ddae2bf5-9348-4988-bd8e-6087f15a47b5",
       "vault": "cftapps-dev",
       "lastRefreshedOn": "2020-05-05T10:23:33.471Z"
     },
