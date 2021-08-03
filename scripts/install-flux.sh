@@ -63,9 +63,6 @@ kubectl apply -f ${FLUX_CONFIG_URL}/apps/flux-system/${CLUSTER_ENV}/base/git-cre
 #Create Flux Sync CRDs
 kubectl apply -f ${FLUX_CONFIG_URL}/apps/flux-system/base/flux-config-gitrepo.yaml
 
-#Install kustomize
-curl -s "https://raw.githubusercontent.com/\
-kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 TMP_DIR=/tmp/flux/${CLUSTER_ENV}/${CLUSTER_NAME}
 mkdir -p $TMP_DIR
 # -----------------------------------------------------------
