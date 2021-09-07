@@ -119,6 +119,11 @@
           "name": "dev.platform.hmcts.net",
           "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
           "resourceGroup": "core-infra-intsvc-rg"
+        },
+        {
+          "name": "sandbox.platform.hmcts.net",
+          "subscriptionId": "1baf5470-1c3e-40d3-a6f7-74bfbce4b348",
+          "resourceGroup": "core-infra-intsvc-rg"
         }
       ]
     },
