@@ -11,7 +11,7 @@ variables:
   serviceConnection: azurerm-nonprod
   keyvaultName: infra-vault-nonprod
   terraformVersion: 0.12.8
-  agentPool: 'Ubuntu-16.04'
+  agentPool: 'ubuntu-latest'
 
 stages:
   - stage: CI
