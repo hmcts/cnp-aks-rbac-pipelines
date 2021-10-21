@@ -28,6 +28,12 @@ API_KEY=$(az keyvault secret show \
  --vault-name "${VAULT_NAME}" \
  --query value -o tsv)
 
+if [ -z "$API_KEY" ]; then
+  error_exit "API_KEY not set !! Aborting."
+else
+  echo "API_KEY is set to $API_KEY continuing."
+fi
+
 generate_kubernetes_credentials() {
   cat <<EOF
     {
