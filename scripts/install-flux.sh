@@ -7,7 +7,7 @@ VAULT_NAME=$3
 HELM_REPO=https://charts.fluxcd.io
 VALUES=deployments/fluxcd/values.yaml
 FLUX_HELM_CRD=https://raw.githubusercontent.com/fluxcd/helm-operator/chart-1.2.0/deploy/crds.yaml
-FLUX_V1_CLUSTER=("prod" "demo")
+FLUX_V1_CLUSTER=("demo")
 
 #Install kustomize
 curl -s "https://raw.githubusercontent.com/\
