@@ -124,6 +124,12 @@
       "metadata": {
         "description": "The route table routes array from parameters file"
       }
+    },
+    "routetableRoutesAppGw": {
+      "type": "array",
+      "metadata": {
+        "description": "The route table routes array from parameters file"
+      }
     }
   },
   
@@ -131,6 +137,7 @@
     "primarySubnetName": "[concat('aks-',parameters('aksPrimarySubnetName'))]",
     "secondarySubnetName": "[concat('aks-',parameters('aksSecondarySubnetName'))]",
     "routeTableName": "aks-route-table",
+    "routeTableNameAppGw":"aks-core-prod-appgw-route-table",
     "nsgRulesMapping": {
       "true": "[parameters('aksNetworkSecurityGroupsSettings').securityRules]",
       "false": [{
@@ -338,6 +345,41 @@
       }
     },
     {
+      "type": "Microsoft.Network/routeTables",
+      "name": "[variables('routeTableNameAppGw')]",
+      "apiVersion": "2020-05-01",
+      "location": "[resourceGroup().location]",
+      "tags" : {
+        "EnvironmentName": "[parameters('environmentName')]",
+        "Branch":"[parameters('branch')]",
+        "managedBy":"[parameters('managedBy')]",
+        "solutionOwner": "[parameters('solutionOwner')]",
+        "activityName": "[parameters('activityName')]",
+        "dataClassification":"[parameters('dataClassification')]",
+        "automation": "[parameters('automation')]",
+        "costCentre":"[parameters('costCentre')]",
+        "environment": "[parameters('environment')]",
+        "criticality": "[parameters('criticality')]"
+      },
+
+      "properties": {
+          "copy": [
+              {
+                  "name": "routes",
+                  "count": "[length(parameters('routeTableRoutesAppGw'))]",
+                  "input": {
+                      "name": "[parameters('routeTableRoutesAppGw')[copyIndex('routes')].name]",
+                      "properties": {
+                          "addressPrefix": "[parameters('routeTableRoutesAppGw')[copyIndex('routes')].addressPrefix]",
+                          "nextHopType": "[parameters('routeTableRoutesAppGw')[copyIndex('routes')].nextHopType]",
+                          "nextHopIpAddress": "[parameters('routeTableRoutesAppGw')[copyIndex('routes')].nextHopIpAddress]"
+                      }
+                  }
+              }
+          ]
+      }
+    },
+    {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('aksVnetName')]",
       "apiVersion": "2019-04-01",
@@ -398,6 +440,9 @@
               "serviceEndpoints": "[parameters('serviceEndpoints')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('appgwNsgName'))]"
+              },
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableNameAppGw'))]"
               }
             }
           },
