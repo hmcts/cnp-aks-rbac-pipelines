@@ -12,13 +12,13 @@
       "value": 4
     },
     "systemNodeMaxCount": {
-      "value": 10
+      "value": "10"
     },
     "userNodeMinCount": {
       "value": 50
     },
     "userNodeMaxCount": {
-      "value": 60
+      "value": "60"
     },
     "enableAutoScaling": {
       "value": "true"
