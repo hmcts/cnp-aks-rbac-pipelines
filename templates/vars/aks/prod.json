@@ -8,11 +8,17 @@
     "tier": {
       "value": "Paid"
     },
-    "nodeMinCount": {
-      "value": 40
+    "systemNodeMinCount": {
+      "value": 4
     },
-    "nodeMaxCount": {
-      "value": "50"
+    "systemNodeMaxCount": {
+      "value": 10
+    },
+    "userNodeMinCount": {
+      "value": 50
+    },
+    "userNodeMaxCount": {
+      "value": 60
     },
     "enableAutoScaling": {
       "value": "true"
@@ -68,7 +74,9 @@
 
           ]
         }
-      }
-  
+      },
+    "availabilityZone": {
+      "value": ["1","2","3"]
+    }
   }
 }

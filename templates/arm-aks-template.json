@@ -20,10 +20,16 @@
       "type": "string",
       "defaultValue": "Ephemeral"
     },
-    "nodeMinCount": {
+    "systemNodeMinCount": {
       "type": "int"
     },
-    "nodeMaxCount": {
+    "systemNodeMaxCount": {
+      "type": "string"
+    },
+    "userNodeMinCount": {
+      "type": "int"
+    },
+    "userNodeMaxCount": {
       "type": "string"
     },
     "enableAutoScaling": {
@@ -113,15 +119,20 @@
     },
     "contributor_Iam_Guid_01": {
       "type":"string"
+    },
+    "availabilityZones": {
+      "type":"array"
     }
   },
   "variables": {
-    "osDiskSizeGB": 100, 
-    "nodepoolName" : "nodepool",
+    "osDiskSizeGB": 100,
+    "systemNodepoolName" : "system",
+    "userNodepoolName" : "linux",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
     "adminUsername": "azureuser",
-    "nodepoolMode": "System",
+    "systemNodepoolMode": "System",
+    "userNodepoolMode": "User",
     "aksVnetSubnetId": "[resourceId(parameters('aksVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('aksVnetName'), parameters('subnetName'))]",
     "loadbalancerIpPrefix": "[concat(parameters('aksClusterName'), '-pip')]",
     "MC_RG": "[concat('MC_', resourceGroup().name, '_', parameters('aksclusterName'), '_', 'uksouth')]",
@@ -158,10 +169,10 @@
         "dnsPrefix": "[parameters('dnsPrefix')]",
         "agentPoolProfiles": [
           {
-            "name": "[variables('nodepoolName')]",
-            "count": "[int(parameters('nodeMinCount'))]",
-            "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
-            "minCount": "[int(parameters('nodeMinCount'))]",
+            "name": "[variables('systemNodepoolName')]",
+            "count": "[int(parameters('SystemNodeMinCount'))]",
+            "maxCount": "[if(empty(parameters('SystemNodeMaxCount')), json('null') ,int(parameters('SystemNodeMaxCount')))]",
+            "minCount": "[int(parameters('SystemNoodeMinCount'))]",
             "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
             "type": "[parameters('type')]",
             "orchestratorVersion": "[parameters('kubernetesVersion')]",
@@ -174,7 +185,28 @@
             "maxPods": "[parameters('maxPods')]",
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
             "osType": "[variables('osType')]",
-            "mode": "[variables('nodepoolMode')]"
+            "mode": "[variables('systemNodepoolMode')]",
+            "availabilityZones": "[parameters('availabilityZones')]"
+          },
+          {
+            "name": "[variables('userNodepoolName')]",
+            "count": "[int(parameters('nodeMinCount'))]",
+            "maxCount": "[if(empty(parameters('UserNodeMaxCount')), json('null') ,int(parameters('UserNodeMaxCount')))]",
+            "minCount": "[int(parameters('UserNodeMinCount'))]",
+            "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
+            "type": "[parameters('type')]",
+            "orchestratorVersion": "[parameters('kubernetesVersion')]",
+            "osDiskType": "[parameters('osDiskType')]",
+            "scaleSetPriority": "string",
+            "scaleSetEvictionPolicy": "string",
+            "vmSize": "[parameters('vmSize')]",
+            "osDiskSizeGB": "[variables('osDiskSizeGB')]",
+            "storageProfile": "[variables('storageProfile')]",
+            "maxPods": "[parameters('maxPods')]",
+            "vnetSubnetID": "[variables('aksVnetSubnetId')]",
+            "osType": "[variables('osType')]",
+            "mode": "[variables('userNodepoolMode')]",
+            "availabilityZones": "[parameters('availabilityZones')]"
           }
         ],
         "linuxProfile": {
