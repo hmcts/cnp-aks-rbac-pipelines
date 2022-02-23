@@ -172,7 +172,7 @@
             "name": "[variables('systemNodepoolName')]",
             "count": "[int(parameters('SystemNodeMinCount'))]",
             "maxCount": "[if(empty(parameters('SystemNodeMaxCount')), json('null') ,int(parameters('SystemNodeMaxCount')))]",
-            "minCount": "[int(parameters('SystemNoodeMinCount'))]",
+            "minCount": "[int(parameters('SystemNodeMinCount'))]",
             "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
             "type": "[parameters('type')]",
             "orchestratorVersion": "[parameters('kubernetesVersion')]",
