@@ -190,7 +190,7 @@
           },
           {
             "name": "[variables('userNodepoolName')]",
-            "count": "[int(parameters('nodeMinCount'))]",
+            "count": "[int(parameters('UserNodeMinCount'))]",
             "maxCount": "[if(empty(parameters('UserNodeMaxCount')), json('null') ,int(parameters('UserNodeMaxCount')))]",
             "minCount": "[int(parameters('UserNodeMinCount'))]",
             "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
