@@ -3,16 +3,26 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "kubernetesVersion": {
-      "value": "1.19.11"
+      "value": "1.21.7"
     },
     "tier": {
       "value": "Paid"
     },
-    "nodeMinCount": {
-      "value": 30
+    "systemNodeMinCount": {
+      "value": 4
+    },
+    "systemNodeMaxCount": {
+      "value": "10"
+    },
+    "userNodeMinCount": {
+      "value": 25
     },
     "nodeMaxCount": {
-      "value": "50"
+    "userNodeMaxCount": {
+      "value": "40"
+    },
+    "availabilityZones": {
+      "value": ["1","2","3"]
     },
     "enableAutoScaling": {
       "value": "true"
