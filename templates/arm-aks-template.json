@@ -26,10 +26,10 @@
     "systemNodeMaxCount": {
       "type": "string"
     },
-    "userNodeMinCount": {
+    "linuxNodeMinCount": {
       "type": "int"
     },
-    "userNodeMaxCount": {
+    "linuxNodeMaxCount": {
       "type": "string"
     },
     "enableAutoScaling": {
@@ -190,9 +190,9 @@
           },
           {
             "name": "[variables('userNodepoolName')]",
-            "count": "[int(parameters('UserNodeMinCount'))]",
-            "maxCount": "[if(empty(parameters('UserNodeMaxCount')), json('null') ,int(parameters('UserNodeMaxCount')))]",
-            "minCount": "[int(parameters('UserNodeMinCount'))]",
+            "count": "[int(parameters('linuxNodeMinCount'))]",
+            "maxCount": "[if(empty(parameters('linuxNodeMaxCount')), json('null') ,int(parameters('linuxNodeMaxCount')))]",
+            "minCount": "[int(parameters('linuxNodeMinCount'))]",
             "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
             "type": "[parameters('type')]",
             "orchestratorVersion": "[parameters('kubernetesVersion')]",

@@ -14,10 +14,10 @@
     "systemNodeMaxCount": {
       "value": "10"
     },
-    "userNodeMinCount": {
+    "linuxNodeMinCount": {
       "value": "30"
     },
-    "userNodeMaxCount": {
+    "linuxNodeMaxCount": {
       "value": "50"
     },
     "availabilityZones": {
