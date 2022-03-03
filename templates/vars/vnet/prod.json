@@ -66,6 +66,16 @@
           "addressPrefix": "0.0.0.0/0"
         }
       ]
+  },
+    "routetableRoutesAppGw": {
+      "value": [
+        {
+        "name": "cftptl",
+        "nextHopType": "VirtualAppliance",
+        "nextHopIpAddress": "10.11.8.36",
+        "addressPrefix": "10.10.72.0/21"
+      }
+    ]
   }
   }
 }

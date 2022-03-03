@@ -3,7 +3,11 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "kubernetesVersion": {
+<<<<<<< HEAD
       "value": "1.21.7"
+=======
+      "value": "1.19.11"
+>>>>>>> master
     },
     "tier": {
       "value": "Paid"
