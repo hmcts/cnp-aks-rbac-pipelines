@@ -9,17 +9,16 @@
       "value": "Paid"
     },
     "systemNodeMinCount": {
-      "value": 4
+      "value": "4"
     },
     "systemNodeMaxCount": {
       "value": "10"
     },
     "userNodeMinCount": {
-      "value": 25
+      "value": "30"
     },
-    "nodeMaxCount": {
     "userNodeMaxCount": {
-      "value": "40"
+      "value": "50"
     },
     "availabilityZones": {
       "value": ["1","2","3"]
