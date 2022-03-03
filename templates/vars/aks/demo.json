@@ -21,7 +21,7 @@
       "value": "50"
     },
     "availabilityZones": {
-      "value": ["1","2","3"]
+      "value": []
     },
     "enableAutoScaling": {
       "value": "true"
