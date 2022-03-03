@@ -11,10 +11,10 @@
     "systemNodeMaxCount": {
       "value": "10"
     },
-    "userNodeMinCount": {
+    "linuxNodeMinCount": {
       "value": 25
     },
-    "userNodeMaxCount": {
+    "linuxNodeMaxCount": {
       "value": "40"
     },
     "enableAutoScaling": {
