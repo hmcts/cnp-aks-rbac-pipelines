@@ -116,7 +116,7 @@
     }
   },
   "variables": {
-    "osDiskSizeGB": 100, 
+    "osDiskSizeGB": 100,
     "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
@@ -174,8 +174,7 @@
             "maxPods": "[parameters('maxPods')]",
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
             "osType": "[variables('osType')]",
-            "mode": "[variables('nodepoolMode')]",
-            "availabilityZones": "[parameters('availabilityZones')]"
+            "mode": "[variables('nodepoolMode')]"
           }
         ],
         "linuxProfile": {
