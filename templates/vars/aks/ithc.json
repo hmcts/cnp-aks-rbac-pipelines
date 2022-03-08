@@ -3,18 +3,12 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "kubernetesVersion": {
-      "value": "1.21.7"
+      "value": "1.19.7"
     },
-    "systemNodeMinCount": {
-      "value": 4
-    },
-    "systemNodeMaxCount": {
-      "value": "10"
-    },
-    "linuxNodeMinCount": {
+    "nodeMinCount": {
       "value": 25
     },
-    "linuxNodeMaxCount": {
+    "nodeMaxCount": {
       "value": "40"
     },
     "enableAutoScaling": {

@@ -8,17 +8,11 @@
     "tier": {
       "value": "Paid"
     },
-    "systemNodeMinCount": {
-      "value": 4
+    "nodeMinCount": {
+      "value": 40
     },
-    "systemNodeMaxCount": {
-      "value": "10"
-    },
-    "linuxNodeMinCount": {
-      "value": 50
-    },
-    "linuxNodeMaxCount": {
-      "value": "60"
+    "nodeMaxCount": {
+      "value": "50"
     },
     "enableAutoScaling": {
       "value": "true"
