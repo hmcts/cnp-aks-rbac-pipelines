@@ -116,7 +116,7 @@
     }
   },
   "variables": {
-    "osDiskSizeGB": 100,
+    "osDiskSizeGB": 100, 
     "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
