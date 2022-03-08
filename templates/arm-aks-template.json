@@ -116,7 +116,7 @@
     }
   },
   "variables": {
-    "osDiskSizeGB": 100,
+    "osDiskSizeGB": 100, 
     "nodepoolName" : "nodepool",
     "storageProfile": "ManagedDisks",
     "osType": "Linux",
@@ -158,10 +158,10 @@
         "dnsPrefix": "[parameters('dnsPrefix')]",
         "agentPoolProfiles": [
           {
-            "name": "[variables('systemNodepoolName')]",
-            "count": "[int(parameters('systemNodeMinCount'))]",
-            "maxCount": "[if(empty(parameters('systemNodeMaxCount')), json('null') ,int(parameters('systemNodeMaxCount')))]",
-            "minCount": "[int(parameters('systemNodeMinCount'))]",
+            "name": "[variables('nodepoolName')]",
+            "count": "[int(parameters('nodeMinCount'))]",
+            "maxCount": "[if(empty(parameters('nodeMaxCount')), json('null') ,int(parameters('nodeMaxCount')))]",
+            "minCount": "[int(parameters('nodeMinCount'))]",
             "enableAutoScaling": "[if(empty(parameters('enableAutoScaling')), json('null'), bool(parameters('enableAutoScaling')))]",
             "type": "[parameters('type')]",
             "orchestratorVersion": "[parameters('kubernetesVersion')]",
@@ -174,7 +174,7 @@
             "maxPods": "[parameters('maxPods')]",
             "vnetSubnetID": "[variables('aksVnetSubnetId')]",
             "osType": "[variables('osType')]",
-            "mode": "[variables('systemNodepoolMode')]",
+            "mode": "[variables('nodepoolMode')]",
             "availabilityZones": "[parameters('availabilityZones')]"
           }
         ],
