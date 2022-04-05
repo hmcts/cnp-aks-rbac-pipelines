@@ -9,10 +9,10 @@
       "value": "Paid"
     },
     "nodeMinCount": {
-      "value": 40
+      "value": 50
     },
     "nodeMaxCount": {
-      "value": "50"
+      "value": "75"
     },
     "enableAutoScaling": {
       "value": "true"
