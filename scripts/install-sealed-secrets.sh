@@ -13,6 +13,6 @@ az keyvault secret download \
 
 kubectl apply -f sealed-secrets-pki.yaml
 
-helm repo add hmctspublic https://hmctspublic.azurecr.io/helm/v1/repo
-helm upgrade sealed-secrets hmctspublic/sealed-secrets --version 1.12.0 --install --namespace ${NAMESPACE} \
+helm repo add bitnami-labs https://bitnami-labs.github.io/sealed-secrets/
+helm upgrade sealed-secrets bitnami-labs/sealed-secrets --version 2.1.6 --install --namespace ${NAMESPACE} \
      -f  deployments/sealed-secrets/values.yaml --set secretName=sealed-secrets-pki --wait \
