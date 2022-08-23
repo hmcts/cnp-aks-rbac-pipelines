@@ -6,7 +6,7 @@ CLUSTER_NAME=$2
 VAULT_NAME=$3
 HELM_REPO=https://charts.fluxcd.io
 VALUES=deployments/fluxcd/values.yaml
-FLUX_HELM_CRD=https://raw.githubusercontent.com/fluxcd/helm-operator/chart-1.2.0/deploy/crds.yaml
+FLUX_HELM_CRD=https://raw.githubusercontent.com/fluxcd/helm-operator/chart-1.4.2/deploy/crds.yaml
 FLUX_V1_CLUSTER=("prod" "demo")
 
 #Install kustomize
@@ -18,7 +18,7 @@ if [[ " ${FLUX_V1_CLUSTER[*]} " =~ " ${ENV} " ]]; then
 
   kubectl apply -f ${FLUX_HELM_CRD}
   kubectl -n admin delete secret flux-helm-repositories || true
-  helm upgrade flux-helm-operator fluxcd/helm-operator --install --namespace admin   -f  deployments/fluxcd/helm-operator-values.yaml --version 1.2.0 --wait
+  helm upgrade flux-helm-operator fluxcd/helm-operator --install --namespace admin   -f  deployments/fluxcd/helm-operator-values.yaml --version 1.4.2 --wait
 
   TMP_DIR=/tmp/flux/${ENV}/${CLUSTER_NAME}
   mkdir -p $TMP_DIR
